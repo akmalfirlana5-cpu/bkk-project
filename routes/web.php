@@ -42,8 +42,11 @@ Route::get('/lowongan/detail/{id}', VacancyDetail::class)->name('lowongan-detail
 
 // Route User Login
 
+use App\Livewire\User\SuccessTracerStudy;
+
 Route::middleware('auth.modal')->group(function () {
     Route::get('/isi-tracer-study', FillTracerStudy::class)->middleware('auth.modal')->name('isi-tracer-study')->prefix('user');
+    Route::get('/tracer-study-sukses', SuccessTracerStudy::class)->middleware('auth.modal')->name('tracer-study-sukses')->prefix('user');
     Route::get('/data-pribadi', PersonalData::class)->middleware('auth.modal')->name('data-pribadi')->prefix('user');
     Route::get('/riwayat-lamaran', ApplicationHistory::class)->middleware('auth.modal')->name('riwayat-lamaran')->prefix('user');
 }); 

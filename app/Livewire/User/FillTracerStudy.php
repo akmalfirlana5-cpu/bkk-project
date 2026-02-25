@@ -115,7 +115,7 @@ class FillTracerStudy extends Component
         });
 
         session()->flash('success', 'Data tracer study berhasil diperbarui!');
-        return redirect()->route('beranda');
+        return redirect()->route('tracer-study-sukses');
     }
 
     public function render()
