@@ -66,7 +66,7 @@
                                 :class="openDropdown === 'profilBkk' ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700'"
                                 @mouseenter="openDropdown = 'profilBkk'">
                                 <span>
-                                    Profil Bkk
+                                    Profil BKK
                                 </span>
                                 <svg 
                                     class="transition duration-300"
@@ -257,7 +257,7 @@
                         <div class="flex items-center justify-between">
                             <div 
                                 class="paragraph-16s transition duration-300">
-                                Profil Bkk
+                                Profil BKK
                             </div>
                             <svg 
                                 class="transition duration-300"
