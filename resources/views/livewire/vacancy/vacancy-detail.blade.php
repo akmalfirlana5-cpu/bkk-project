@@ -76,6 +76,15 @@
                 </div>
                 {{-- Tampilkan jika loker tipenya bkk --}}
                 @if ($vacancy->loker_tipe == 'kebkk')
+                    @if (session()->has('error_cv'))
+                        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 paragraph-14r">
+                            Anda belum melengkapi CV. Silakan melengkapi 
+                            <a href="{{ route('data-pribadi') }}" class="font-bold underline text-red-700 hover:text-red-800">
+                                Data Diri Anda
+                            </a> 
+                            terlebih dahulu sebelum melamar.
+                        </div>
+                    @endif
                     <div 
                         wire:click="applyNow"
                         wire:loading.attr="disabled"

@@ -55,6 +55,12 @@ class VacancyDetail extends Component
             return;
         }
 
+        // Cek apakah user sudah melengkapi CV
+        if (empty(auth()->user()->CVuser)) {
+            session()->flash('error_cv', true);
+            return;
+        }
+
         if (!$this->alredyApplied) {
             Application::create([
                 'id_vacancy' => $this->vacancy->id,
