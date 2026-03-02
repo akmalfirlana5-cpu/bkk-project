@@ -74,11 +74,12 @@
     &.fi-active {
         & > .fi-sidebar-item-btn {
             & > .fi-sidebar-item-label {
-                color: white;
+                color: white !important;
             }
         }
     }
 }
+
 
 .fi-sidebar-item {
     &.fi-active {
