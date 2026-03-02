@@ -15,6 +15,28 @@ class HomepageSettingSeeder extends Seeder
         $settings = [
             // Hero section visibility
             ['section' => 'hero', 'key' => 'is_visible', 'value' => 'true'],
+            ['section' => 'hero', 'key' => 'slides', 'value' => json_encode([
+                [
+                    'type' => 'slide',
+                    'data' => [
+                        'title' => 'Selamat Datang di BKK SMK Negeri 4 Malang',
+                        'description' => 'Bursa Kerja Khusus yang menghubungkan lulusan SMK Negeri 4 Malang dengan dunia industri.',
+                        'image' => null,
+                        'cta_text' => 'Lihat Lowongan',
+                        'cta_link' => '/lowongan',
+                    ],
+                ],
+                [
+                    'type' => 'slide',
+                    'data' => [
+                        'title' => 'Raih Karier Impianmu',
+                        'description' => 'Temukan peluang kerja terbaik sesuai kompetensi keahlianmu bersama BKK SMKN 4 Malang.',
+                        'image' => null,
+                        'cta_text' => 'Daftar Sekarang',
+                        'cta_link' => '/register',
+                    ],
+                ],
+            ])],
             
             // Statistics visibility (data computed dynamically)
             ['section' => 'statistics', 'key' => 'is_visible', 'value' => 'true'],
