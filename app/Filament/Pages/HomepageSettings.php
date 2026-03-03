@@ -37,121 +37,100 @@ class HomepageSettings extends Page implements HasForms
 
     protected string $view = 'filament.pages.homepage-settings';
 
-    // Section visibility toggles
-    public bool $hero_visible = true;
-    public bool $statistics_visible = true;
-    public bool $welcome_visible = true;
-    public bool $vacancies_visible = true;
-    public bool $tracer_study_visible = true;
-    public bool $announcements_visible = true;
-    public bool $survey_visible = true;
-    public bool $testimonials_visible = true;
-
-    // Hero slides (Builder data stored as JSON)
-    public ?array $hero_slides = [];
-
-    // Welcome / Sambutan section
-    public string $welcome_title = '';
-    public string $welcome_person_name = '';
-    public string $welcome_person_position = '';
-    public ?array $welcome_image = [];
-    public string $welcome_content = '';
-
-    // Vacancies section
-    public string $vacancies_title = '';
-    public string $vacancies_description = '';
-
-    // Tracer Study section
-    public string $tracer_study_title = '';
-    public string $tracer_study_description = '';
-    public string $tracer_study_card_1_title = '';
-    public string $tracer_study_card_1_description = '';
-    public string $tracer_study_card_2_title = '';
-    public string $tracer_study_card_2_description = '';
-    public string $tracer_study_card_3_title = '';
-    public string $tracer_study_card_3_description = '';
-    public string $tracer_study_cta_text = '';
-    public string $tracer_study_cta_link = '';
-
-    // Announcements section
-    public string $announcements_title = '';
-    public string $announcements_description = '';
-
-    // Survey section
-    public string $survey_title = '';
-    public string $survey_description = '';
-    public string $survey_cta_text = '';
-    public string $survey_cta_link = '';
-    public ?array $survey_image = [];
+    /**
+     * Single data property for Filament's form state management.
+     * Using fill() / getState() ensures FileUpload components
+     * properly process uploads (save to disk, return clean paths).
+     */
+    public ?array $data = [];
 
     public function mount(): void
     {
-        $this->loadSettings();
+        $this->form->fill($this->loadSettings());
     }
 
-    protected function loadSettings(): void
+    protected function loadSettings(): array
     {
-        // Load visibility toggles
-        $this->hero_visible = HomepageSetting::getValue('hero', 'is_visible', 'true') === 'true';
-        $this->statistics_visible = HomepageSetting::getValue('statistics', 'is_visible', 'true') === 'true';
-        $this->welcome_visible = HomepageSetting::getValue('welcome', 'is_visible', 'true') === 'true';
-        $this->vacancies_visible = HomepageSetting::getValue('vacancies', 'is_visible', 'true') === 'true';
-        $this->tracer_study_visible = HomepageSetting::getValue('tracer_study', 'is_visible', 'true') === 'true';
-        $this->announcements_visible = HomepageSetting::getValue('announcements', 'is_visible', 'true') === 'true';
-        $this->survey_visible = HomepageSetting::getValue('survey', 'is_visible', 'true') === 'true';
-        $this->testimonials_visible = HomepageSetting::getValue('testimonials', 'is_visible', 'true') === 'true';
-
         // Load Hero slides (stored as JSON)
         $slidesJson = HomepageSetting::getValue('hero', 'slides', '[]');
-        $this->hero_slides = json_decode($slidesJson, true) ?? [];
+        $heroSlides = json_decode($slidesJson, true) ?? [];
 
         // Load Welcome section
         $welcome = HomepageSetting::getBySection('welcome');
-        $this->welcome_title = $welcome['title'] ?? '';
-        $this->welcome_person_name = $welcome['person_name'] ?? '';
-        $this->welcome_person_position = $welcome['person_position'] ?? '';
-        $this->welcome_image = !empty($welcome['image']) ? [$welcome['image']] : [];
-        $this->welcome_content = $welcome['content'] ?? '';
-
-        // Load Vacancies section
-        $vacancies = HomepageSetting::getBySection('vacancies');
-        $this->vacancies_title = $vacancies['title'] ?? '';
-        $this->vacancies_description = $vacancies['description'] ?? '';
-
-        // Load Tracer Study section
-        $tracer = HomepageSetting::getBySection('tracer_study');
-        $this->tracer_study_title = $tracer['title'] ?? '';
-        $this->tracer_study_description = $tracer['description'] ?? '';
-        $this->tracer_study_card_1_title = $tracer['card_1_title'] ?? '';
-        $this->tracer_study_card_1_description = $tracer['card_1_description'] ?? '';
-        $this->tracer_study_card_2_title = $tracer['card_2_title'] ?? '';
-        $this->tracer_study_card_2_description = $tracer['card_2_description'] ?? '';
-        $this->tracer_study_card_3_title = $tracer['card_3_title'] ?? '';
-        $this->tracer_study_card_3_description = $tracer['card_3_description'] ?? '';
-        $this->tracer_study_cta_text = $tracer['cta_text'] ?? '';
-        $this->tracer_study_cta_link = $tracer['cta_link'] ?? '';
-
-        // Load Announcements section
-        $announcements = HomepageSetting::getBySection('announcements');
-        $this->announcements_title = $announcements['title'] ?? '';
-        $this->announcements_description = $announcements['description'] ?? '';
+        $welcomeImg = $welcome['image'] ?? '';
+        // Only load images that exist on the storage disk
+        $welcomeImageArray = (!empty($welcomeImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($welcomeImg))
+            ? [$welcomeImg] : [];
 
         // Load Survey section
         $survey = HomepageSetting::getBySection('survey');
-        $this->survey_title = $survey['title'] ?? '';
-        $this->survey_description = $survey['description'] ?? '';
-        $this->survey_cta_text = $survey['cta_text'] ?? '';
-        $this->survey_cta_link = $survey['cta_link'] ?? '';
-        $this->survey_image = !empty($survey['image']) ? [$survey['image']] : [];
+        $surveyImg = $survey['image'] ?? '';
+        $surveyImageArray = (!empty($surveyImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($surveyImg))
+            ? [$surveyImg] : [];
+
+        // Load other sections
+        $vacancies = HomepageSetting::getBySection('vacancies');
+        $tracer = HomepageSetting::getBySection('tracer_study');
+        $announcements = HomepageSetting::getBySection('announcements');
+
+        return [
+            // Visibility toggles
+            'hero_visible' => HomepageSetting::getValue('hero', 'is_visible', 'true') === 'true',
+            'statistics_visible' => HomepageSetting::getValue('statistics', 'is_visible', 'true') === 'true',
+            'welcome_visible' => HomepageSetting::getValue('welcome', 'is_visible', 'true') === 'true',
+            'vacancies_visible' => HomepageSetting::getValue('vacancies', 'is_visible', 'true') === 'true',
+            'tracer_study_visible' => HomepageSetting::getValue('tracer_study', 'is_visible', 'true') === 'true',
+            'announcements_visible' => HomepageSetting::getValue('announcements', 'is_visible', 'true') === 'true',
+            'survey_visible' => HomepageSetting::getValue('survey', 'is_visible', 'true') === 'true',
+            'testimonials_visible' => HomepageSetting::getValue('testimonials', 'is_visible', 'true') === 'true',
+
+            // Hero slides
+            'hero_slides' => $heroSlides,
+
+            // Welcome
+            'welcome_title' => $welcome['title'] ?? '',
+            'welcome_person_name' => $welcome['person_name'] ?? '',
+            'welcome_person_position' => $welcome['person_position'] ?? '',
+            'welcome_image' => $welcomeImageArray,
+            'welcome_content' => $welcome['content'] ?? '',
+
+            // Vacancies
+            'vacancies_title' => $vacancies['title'] ?? '',
+            'vacancies_description' => $vacancies['description'] ?? '',
+
+            // Tracer Study
+            'tracer_study_title' => $tracer['title'] ?? '',
+            'tracer_study_description' => $tracer['description'] ?? '',
+            'tracer_study_card_1_title' => $tracer['card_1_title'] ?? '',
+            'tracer_study_card_1_description' => $tracer['card_1_description'] ?? '',
+            'tracer_study_card_2_title' => $tracer['card_2_title'] ?? '',
+            'tracer_study_card_2_description' => $tracer['card_2_description'] ?? '',
+            'tracer_study_card_3_title' => $tracer['card_3_title'] ?? '',
+            'tracer_study_card_3_description' => $tracer['card_3_description'] ?? '',
+            'tracer_study_cta_text' => $tracer['cta_text'] ?? '',
+            'tracer_study_cta_link' => $tracer['cta_link'] ?? '',
+
+            // Announcements
+            'announcements_title' => $announcements['title'] ?? '',
+            'announcements_description' => $announcements['description'] ?? '',
+
+            // Survey
+            'survey_title' => $survey['title'] ?? '',
+            'survey_description' => $survey['description'] ?? '',
+            'survey_cta_text' => $survey['cta_text'] ?? '',
+            'survey_cta_link' => $survey['cta_link'] ?? '',
+            'survey_image' => $surveyImageArray,
+        ];
     }
 
     public function form(Schema $schema): Schema
     {
-        return $schema->schema([
+        return $schema->statePath('data')->schema([
             Tabs::make('homepage_settings')
                 ->tabs([
                     Tab::make('Visibility')
                         ->label('Tampilkan / Sembunyikan')
+                        ->icon(Heroicon::OutlinedEye)
                         ->schema([
                             Section::make('Atur Section yang Ditampilkan')
                                 ->description('Aktifkan atau nonaktifkan section yang tampil di halaman beranda.')
@@ -169,6 +148,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('HeroCarousel')
                         ->label('Hero Carousel')
+                        ->icon(Heroicon::OutlinedPhoto)
                         ->schema([
                             Section::make('Kelola Slide Hero Carousel')
                                 ->description('Tambah, edit, atau hapus slide yang tampil di bagian atas halaman beranda.')
@@ -192,6 +172,7 @@ class HomepageSettings extends Page implements HasForms
                                                         ->disk('public')
                                                         ->directory('hero-slides')
                                                         ->image()
+                                                        ->preserveFilenames()
                                                         ->required(),
                                                     TextInput::make('cta_text')
                                                         ->label('Teks Tombol CTA')
@@ -211,6 +192,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('Sambutan')
                         ->label('Sambutan Kepsek')
+                        ->icon(Heroicon::OutlinedUser)
                         ->schema([
                             Section::make('Konten Sambutan Kepala Sekolah')
                                 ->schema([
@@ -227,7 +209,8 @@ class HomepageSettings extends Page implements HasForms
                                         ->label('Foto Kepala Sekolah')
                                         ->disk('public')
                                         ->directory('homepage')
-                                        ->image(),
+                                        ->image()
+                                        ->preserveFilenames(),
                                     Textarea::make('welcome_content')
                                         ->label('Isi Sambutan')
                                         ->rows(8)
@@ -237,6 +220,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('Lowongan')
                         ->label('Lowongan Kerja')
+                        ->icon(Heroicon::OutlinedBriefcase)
                         ->schema([
                             Section::make('Judul & Deskripsi Section Lowongan')
                                 ->description('Data lowongan diambil dari database. Anda hanya bisa mengatur judul dan deskripsi section.')
@@ -252,6 +236,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('TracerStudy')
                         ->label('Tracer Study')
+                        ->icon(Heroicon::OutlinedChartBar)
                         ->schema([
                             Section::make('Konten Section Tracer Study')
                                 ->schema([
@@ -297,6 +282,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('Pengumuman')
                         ->label('Pengumuman')
+                        ->icon(Heroicon::OutlinedBellAlert)
                         ->schema([
                             Section::make('Judul & Deskripsi Section Pengumuman')
                                 ->description('Data pengumuman diambil dari database. Anda hanya bisa mengatur judul dan deskripsi section.')
@@ -312,6 +298,7 @@ class HomepageSettings extends Page implements HasForms
 
                     Tab::make('Survei')
                         ->label('Survei Kepuasan')
+                        ->icon(Heroicon::OutlinedClipboardDocumentCheck)
                         ->schema([
                             Section::make('Konten Section Survei Kepuasan')
                                 ->schema([
@@ -329,7 +316,8 @@ class HomepageSettings extends Page implements HasForms
                                         ->label('Gambar Survei')
                                         ->disk('public')
                                         ->directory('homepage')
-                                        ->image(),
+                                        ->image()
+                                        ->preserveFilenames(),
                                 ]),
                         ]),
                 ])
@@ -339,53 +327,66 @@ class HomepageSettings extends Page implements HasForms
 
     public function save(): void
     {
+        // getState() triggers Filament's form processing pipeline:
+        // - FileUpload components save files to disk and return clean paths
+        // - Builder data gets properly structured with resolved file paths
+        $state = $this->form->getState();
+
+        // Extract image path from FileUpload array (single file = first element)
+        $welcomeImage = is_array($state['welcome_image'] ?? null)
+            ? (collect($state['welcome_image'])->first() ?? '')
+            : ($state['welcome_image'] ?? '');
+        $surveyImage = is_array($state['survey_image'] ?? null)
+            ? (collect($state['survey_image'])->first() ?? '')
+            : ($state['survey_image'] ?? '');
+
         $settingsMap = [
             // Visibility
-            ['hero', 'is_visible', $this->hero_visible ? 'true' : 'false'],
-            ['statistics', 'is_visible', $this->statistics_visible ? 'true' : 'false'],
-            ['welcome', 'is_visible', $this->welcome_visible ? 'true' : 'false'],
-            ['vacancies', 'is_visible', $this->vacancies_visible ? 'true' : 'false'],
-            ['tracer_study', 'is_visible', $this->tracer_study_visible ? 'true' : 'false'],
-            ['announcements', 'is_visible', $this->announcements_visible ? 'true' : 'false'],
-            ['survey', 'is_visible', $this->survey_visible ? 'true' : 'false'],
-            ['testimonials', 'is_visible', $this->testimonials_visible ? 'true' : 'false'],
+            ['hero', 'is_visible', ($state['hero_visible'] ?? true) ? 'true' : 'false'],
+            ['statistics', 'is_visible', ($state['statistics_visible'] ?? true) ? 'true' : 'false'],
+            ['welcome', 'is_visible', ($state['welcome_visible'] ?? true) ? 'true' : 'false'],
+            ['vacancies', 'is_visible', ($state['vacancies_visible'] ?? true) ? 'true' : 'false'],
+            ['tracer_study', 'is_visible', ($state['tracer_study_visible'] ?? true) ? 'true' : 'false'],
+            ['announcements', 'is_visible', ($state['announcements_visible'] ?? true) ? 'true' : 'false'],
+            ['survey', 'is_visible', ($state['survey_visible'] ?? true) ? 'true' : 'false'],
+            ['testimonials', 'is_visible', ($state['testimonials_visible'] ?? true) ? 'true' : 'false'],
 
-            // Hero slides (stored as JSON)
-            ['hero', 'slides', json_encode($this->hero_slides)],
+            // Hero slides (saved as JSON with processed image paths)
+            ['hero', 'slides', json_encode($state['hero_slides'] ?? [])],
 
             // Welcome
-            ['welcome', 'title', $this->welcome_title],
-            ['welcome', 'person_name', $this->welcome_person_name],
-            ['welcome', 'person_position', $this->welcome_person_position],
-            ['welcome', 'image', is_array($this->welcome_image) ? ($this->welcome_image[0] ?? '') : $this->welcome_image],
-            ['welcome', 'content', $this->welcome_content],
+            ['welcome', 'title', $state['welcome_title'] ?? ''],
+            ['welcome', 'person_name', $state['welcome_person_name'] ?? ''],
+            ['welcome', 'person_position', $state['welcome_person_position'] ?? ''],
+            ['welcome', 'image', $welcomeImage],
+            ['welcome', 'content', $state['welcome_content'] ?? ''],
 
             // Vacancies
-            ['vacancies', 'title', $this->vacancies_title],
-            ['vacancies', 'description', $this->vacancies_description],
+            ['vacancies', 'title', $state['vacancies_title'] ?? ''],
+            ['vacancies', 'description', $state['vacancies_description'] ?? ''],
 
             // Tracer Study
-            ['tracer_study', 'title', $this->tracer_study_title],
-            ['tracer_study', 'description', $this->tracer_study_description],
-            ['tracer_study', 'card_1_title', $this->tracer_study_card_1_title],
-            ['tracer_study', 'card_1_description', $this->tracer_study_card_1_description],
-            ['tracer_study', 'card_2_title', $this->tracer_study_card_2_title],
-            ['tracer_study', 'card_2_description', $this->tracer_study_card_2_description],
-            ['tracer_study', 'card_3_title', $this->tracer_study_card_3_title],
-            ['tracer_study', 'card_3_description', $this->tracer_study_card_3_description],
-            ['tracer_study', 'cta_text', $this->tracer_study_cta_text],
-            ['tracer_study', 'cta_link', $this->tracer_study_cta_link],
+            ['tracer_study', 'title', $state['tracer_study_title'] ?? ''],
+            ['tracer_study', 'description', $state['tracer_study_description'] ?? ''],
+            ['tracer_study', 'card_1_title', $state['tracer_study_card_1_title'] ?? ''],
+            ['tracer_study', 'card_1_description', $state['tracer_study_card_1_description'] ?? ''],
+            ['tracer_study', 'card_2_title', $state['tracer_study_card_2_title'] ?? ''],
+            ['tracer_study', 'card_2_description', $state['tracer_study_card_2_description'] ?? ''],
+            ['tracer_study', 'card_3_title', $state['tracer_study_card_3_title'] ?? ''],
+            ['tracer_study', 'card_3_description', $state['tracer_study_card_3_description'] ?? ''],
+            ['tracer_study', 'cta_text', $state['tracer_study_cta_text'] ?? ''],
+            ['tracer_study', 'cta_link', $state['tracer_study_cta_link'] ?? ''],
 
             // Announcements
-            ['announcements', 'title', $this->announcements_title],
-            ['announcements', 'description', $this->announcements_description],
+            ['announcements', 'title', $state['announcements_title'] ?? ''],
+            ['announcements', 'description', $state['announcements_description'] ?? ''],
 
             // Survey
-            ['survey', 'title', $this->survey_title],
-            ['survey', 'description', $this->survey_description],
-            ['survey', 'cta_text', $this->survey_cta_text],
-            ['survey', 'cta_link', $this->survey_cta_link],
-            ['survey', 'image', is_array($this->survey_image) ? ($this->survey_image[0] ?? '') : $this->survey_image],
+            ['survey', 'title', $state['survey_title'] ?? ''],
+            ['survey', 'description', $state['survey_description'] ?? ''],
+            ['survey', 'cta_text', $state['survey_cta_text'] ?? ''],
+            ['survey', 'cta_link', $state['survey_cta_link'] ?? ''],
+            ['survey', 'image', $surveyImage],
         ];
 
         foreach ($settingsMap as [$section, $key, $value]) {
