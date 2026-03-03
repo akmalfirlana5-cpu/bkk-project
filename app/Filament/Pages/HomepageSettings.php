@@ -14,6 +14,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -184,6 +185,7 @@ class HomepageSettings extends Page implements HasForms
                                                 ->columns(2),
                                         ])
                                         ->reorderable()
+                                        ->deletable()
                                         ->collapsible()
                                         ->blockNumbers(false)
                                         ->addActionLabel('Tambah Slide Baru'),
@@ -211,10 +213,12 @@ class HomepageSettings extends Page implements HasForms
                                         ->directory('homepage')
                                         ->image()
                                         ->preserveFilenames(),
-                                    Textarea::make('welcome_content')
+                                    RichEditor::make('welcome_content')
                                         ->label('Isi Sambutan')
-                                        ->rows(8)
-                                        ->required(),
+                                        ->json()
+                                        ->required()
+                                        ->columnSpan('full')
+                                        ->extraInputAttributes(['style' => 'min-height: 200px;']),
                                 ]),
                         ]),
 

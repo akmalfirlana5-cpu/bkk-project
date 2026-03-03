@@ -17,7 +17,7 @@
                     <a href="{{ route('dokumen-pendukung') }}">Dokumen Pendukung</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Profil Bkk
+                    Profil BKK
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[60%]">
                     Mengenal Bursa Kerja Khusus (BKK) lebih dekat melalui informasi seputar peran, program, dan kegiatan yang diselenggarakan sebagai upaya mendukung kesiapan lulusan memasuki dunia kerja secara terarah dan berkelanjutan.
