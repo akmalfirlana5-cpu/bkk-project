@@ -103,10 +103,13 @@ class HomepageSettings extends Page implements HasForms
             'tracer_study_title' => $tracer['title'] ?? '',
             'tracer_study_description' => $tracer['description'] ?? '',
             'tracer_study_card_1_title' => $tracer['card_1_title'] ?? '',
+            'tracer_study_card_1_icon' => $tracer['card_1_icon'] ?? '',
             'tracer_study_card_1_description' => $tracer['card_1_description'] ?? '',
             'tracer_study_card_2_title' => $tracer['card_2_title'] ?? '',
+            'tracer_study_card_2_icon' => $tracer['card_2_icon'] ?? '',
             'tracer_study_card_2_description' => $tracer['card_2_description'] ?? '',
             'tracer_study_card_3_title' => $tracer['card_3_title'] ?? '',
+            'tracer_study_card_3_icon' => $tracer['card_3_icon'] ?? '',
             'tracer_study_card_3_description' => $tracer['card_3_description'] ?? '',
             'tracer_study_cta_text' => $tracer['cta_text'] ?? '',
             'tracer_study_cta_link' => $tracer['cta_link'] ?? '',
@@ -255,6 +258,12 @@ class HomepageSettings extends Page implements HasForms
                                 ->schema([
                                     TextInput::make('tracer_study_card_1_title')
                                         ->label('Judul Card 1'),
+                                    FileUpload::make('tracer_study_card_1_icon')
+                                        ->label('Icon Card 1')
+                                        ->disk('public')
+                                        ->directory('homepage')
+                                        ->image()
+                                        ->preserveFilenames(),
                                     Textarea::make('tracer_study_card_1_description')
                                         ->label('Deskripsi Card 1')
                                         ->rows(2),
@@ -263,6 +272,12 @@ class HomepageSettings extends Page implements HasForms
                                 ->schema([
                                     TextInput::make('tracer_study_card_2_title')
                                         ->label('Judul Card 2'),
+                                    FileUpload::make('tracer_study_card_2_icon')
+                                        ->label('Icon Card 2')
+                                        ->disk('public')
+                                        ->directory('homepage')
+                                        ->image()
+                                        ->preserveFilenames(),
                                     Textarea::make('tracer_study_card_2_description')
                                         ->label('Deskripsi Card 2')
                                         ->rows(2),
@@ -271,6 +286,12 @@ class HomepageSettings extends Page implements HasForms
                                 ->schema([
                                     TextInput::make('tracer_study_card_3_title')
                                         ->label('Judul Card 3'),
+                                    FileUpload::make('tracer_study_card_3_icon')
+                                        ->label('Icon Card 3')
+                                        ->disk('public')
+                                        ->directory('homepage')
+                                        ->image()
+                                        ->preserveFilenames(),
                                     Textarea::make('tracer_study_card_3_description')
                                         ->label('Deskripsi Card 3')
                                         ->rows(2),
@@ -336,13 +357,17 @@ class HomepageSettings extends Page implements HasForms
         // - Builder data gets properly structured with resolved file paths
         $state = $this->form->getState();
 
-        // Extract image path from FileUpload array (single file = first element)
-        $welcomeImage = is_array($state['welcome_image'] ?? null)
-            ? (collect($state['welcome_image'])->first() ?? '')
-            : ($state['welcome_image'] ?? '');
-        $surveyImage = is_array($state['survey_image'] ?? null)
-            ? (collect($state['survey_image'])->first() ?? '')
-            : ($state['survey_image'] ?? '');
+        // Extract image paths from FileUpload arrays
+        $extractImage = fn ($key) => is_array($state[$key] ?? null)
+            ? (collect($state[$key])->first() ?? '')
+            : ($state[$key] ?? '');
+
+        $welcomeImage = $extractImage('welcome_image');
+        $surveyImage = $extractImage('survey_image');
+        $tracerIcon = $extractImage('tracer_study_icon');
+        $tracerCard1Icon = $extractImage('tracer_study_card_1_icon');
+        $tracerCard2Icon = $extractImage('tracer_study_card_2_icon');
+        $tracerCard3Icon = $extractImage('tracer_study_card_3_icon');
 
         $settingsMap = [
             // Visibility
@@ -373,10 +398,13 @@ class HomepageSettings extends Page implements HasForms
             ['tracer_study', 'title', $state['tracer_study_title'] ?? ''],
             ['tracer_study', 'description', $state['tracer_study_description'] ?? ''],
             ['tracer_study', 'card_1_title', $state['tracer_study_card_1_title'] ?? ''],
+            ['tracer_study', 'card_1_icon', $tracerCard1Icon],
             ['tracer_study', 'card_1_description', $state['tracer_study_card_1_description'] ?? ''],
             ['tracer_study', 'card_2_title', $state['tracer_study_card_2_title'] ?? ''],
+            ['tracer_study', 'card_2_icon', $tracerCard2Icon],
             ['tracer_study', 'card_2_description', $state['tracer_study_card_2_description'] ?? ''],
             ['tracer_study', 'card_3_title', $state['tracer_study_card_3_title'] ?? ''],
+            ['tracer_study', 'card_3_icon', $tracerCard3Icon],
             ['tracer_study', 'card_3_description', $state['tracer_study_card_3_description'] ?? ''],
             ['tracer_study', 'cta_text', $state['tracer_study_cta_text'] ?? ''],
             ['tracer_study', 'cta_link', $state['tracer_study_cta_link'] ?? ''],

@@ -13,9 +13,11 @@ class companie extends Model
         'companies_name',
         'companies_logo',
         'companies_profile',
-        'location',
+        'address',
         'field',
         'employee',
+        'short_address',
+        'mou',
     ];
 
     public function vacancies(): HasMany

@@ -40,9 +40,12 @@ class CompanieResource extends Resource
             TextInput::make('companies_name')->required()->label('nama perusahaan'),
             FileUpload::make('companies_logo')->label('logo perusahaan')->disk('public')->directory('companies')->image(),
             Textarea::make('companies_profile')->label('profil perusahaan'),
-            TextInput::make('location')->label('lokasi perusahaan'),
             TextInput::make('field')->label('bidang perusahaan'),
             TextInput::make('employee')->label('jumlah karyawan')->numeric(),
+            FileUpload::make('mou')->label('mou')->disk('public')->directory('companies'),
+            TextInput::make('address')->label('alamat perusahaan'),
+            TextInput::make('short_address')->label('alamat singkat perusahaan'),
+            
         ]);
     }
 
@@ -52,7 +55,7 @@ class CompanieResource extends Resource
             Tables\Columns\TextColumn::make('companies_name')->label('nama perusahaan')->searchable()->sortable(),
             Tables\Columns\ImageColumn::make('companies_logo')->label('logo perusahaan')->disk('public'),
             Tables\Columns\TextColumn::make('companies_profile')->label('profil perusahaan')->limit(50),
-            Tables\Columns\TextColumn::make('location')->label('lokasi perusahaan')->searchable()->sortable(),  
+            Tables\Columns\TextColumn::make('address')->label('alamat perusahaan')->searchable()->sortable(),  
         ])
         ->actions([
             EditAction::make()
