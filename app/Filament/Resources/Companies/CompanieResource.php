@@ -55,7 +55,7 @@ class CompanieResource extends Resource
             Tables\Columns\TextColumn::make('companies_name')->label('nama perusahaan')->searchable()->sortable(),
             Tables\Columns\ImageColumn::make('companies_logo')->label('logo perusahaan')->disk('public'),
             Tables\Columns\TextColumn::make('companies_profile')->label('profil perusahaan')->limit(50),
-            Tables\Columns\TextColumn::make('address')->label('alamat perusahaan')->searchable()->sortable(),  
+            Tables\Columns\TextColumn::make('short_address')->label('alamat singkat perusahaan')->searchable()->sortable(),  
         ])
         ->actions([
             EditAction::make()
