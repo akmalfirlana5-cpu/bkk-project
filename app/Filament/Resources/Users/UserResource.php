@@ -44,18 +44,18 @@ class UserResource extends Resource
         return $schema->schema([
 
             TextInput::make('nisn')->required()->unique(ignoreRecord: true)->label('NISN'),
-            TextInput::make('full_name')->required()->label('nama lengkap'),
+            TextInput::make('full_name')->required()->label('Nama lengkap'),
             FileUpload::make('photo')->label('Foto Profil')->disk('public')->directory('user-photos'),
             TextInput::make('email')->email()->unique(ignoreRecord: true)->label('Email'),
             Select::make('major')->options(User::MAJORS)->required()->label('Jurusan'),
-            Select::make('role')->options(User::ROLES)->label('role'),
-            TextArea::make('address')->label('alamat'),    
-            TextInput::make('birth_place')->label('tempat lahir'),
-            TextInput::make('no_hp')->tel()->label('nomor hp'),
+            Select::make('role')->options(User::ROLES)->label('Role'),
+            TextArea::make('address')->label('Alamat'),    
+            TextInput::make('birth_place')->label('Tempat Lahir'),
+            TextInput::make('no_hp')->tel()->label('Nomor HP'),
             FileUpload::make('CVuser')->label('CV')->disk('public')->directory('cv-users'),
-            FileUpload::make('certificate')->label('sertifikat')->disk('public')->directory('certificates'),
-            Select::make('status')->options(User::STATUSES)->label('status'),
-            DatePicker::make('graduation_year')->label('tahun kelulusan'),
+            FileUpload::make('certificate')->label('Sertifikat')->disk('public')->directory('certificates'),
+            Select::make('status')->options(User::STATUSES)->label('Status'),
+            DatePicker::make('graduation_year')->label('Tahun Kelulusan'),
         ]);
     }
 
@@ -70,7 +70,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 EditAction::make()
-                    ->label('edit'),
+                    ->label('Edit'),
                 DeleteAction::make()
                     ->label('Hapus'),
             ])->actionsColumnLabel('Aksi');

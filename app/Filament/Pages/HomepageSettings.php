@@ -32,7 +32,7 @@ class HomepageSettings extends Page implements HasForms
 
     protected static ?string $title = 'Pengaturan Beranda';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Pengaturan Beranda';
+    protected static string|UnitEnum|null $navigationGroup = 'Pengaturan Halaman';
 
     protected static ?int $navigationSort = 9;
 

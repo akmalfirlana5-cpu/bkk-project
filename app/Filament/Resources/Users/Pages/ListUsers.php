@@ -22,10 +22,10 @@ class ListUsers extends ListRecords
     {
         return [
             CreateAction::make()
-            ->label('tambah user baru'),
+            ->label('Tambah User Baru'),
             
             Action::make('import')
-                ->label('Import pengguna baru')
+                ->label('Import Pengguna Baru')
                 ->color('success')
                 ->form([
                     Action::make('downloadTemplate')

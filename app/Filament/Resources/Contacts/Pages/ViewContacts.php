@@ -10,15 +10,15 @@ class ViewContacts extends ViewRecord
 {
     protected static string $resource = ContactsResource::class;
 
-    protected static string $pruralModelLabel = 'daftar pesan';
+    protected static string $pruralModelLabel = 'daftar masukan';
 
-    protected static ?string $navigationLabel = 'pesan';
+    protected static ?string $navigationLabel = 'Masukan';
 
-    protected static ?string $modelLabel = 'pesan';
+    protected static ?string $modelLabel = 'Masukan';
 
     public function getTitle(): string
     {
-        return 'Lihat Pesan';
+        return 'Lihat Masukan';
     }
 
     protected function getHeaderActions(): array

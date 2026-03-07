@@ -14,17 +14,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
-use App\Models\companie;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Illuminate\Validation\Rules\Numeric;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Components\RichEditor;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -122,9 +118,9 @@ class VacancieResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('company.companies_name')->label('Perusahaan')->searchable(),
-            Tables\Columns\TextColumn::make('vacancy_name')->label('judul Lowongan')->searchable(),
+            Tables\Columns\TextColumn::make('vacancy_name')->label('Jabatan')->searchable(),
             Tables\Columns\TextColumn::make('location')->label('Lokasi')->searchable(),
-            Tables\Columns\TextColumn::make('vacancy_number')->label('kuota Lowongan')->searchable(),
+            Tables\Columns\TextColumn::make('vacancy_number')->label('Kuota')->searchable(),
             Tables\Columns\TextColumn::make('deadline')->label('Batas waktu')->date()->sortable(),
         ])
         ->actions([
