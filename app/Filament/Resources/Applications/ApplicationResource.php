@@ -6,8 +6,6 @@ use App\Filament\Resources\Applications\Pages\CreateApplication;
 use App\Filament\Resources\Applications\Pages\EditApplication;
 use App\Filament\Resources\Applications\Pages\ListApplications;
 use App\Models\Application;
-use App\Models\User;
-use App\Models\vacancie;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -15,8 +13,6 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
 use Filament\Tables;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\BulkAction;
@@ -48,11 +44,11 @@ class ApplicationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user.full_name')
-                    ->label('Nama Pelamar')
+                    ->label('Nama')
                     ->searchable(),
                     
                 Tables\Columns\TextColumn::make('vacancy.vacancy_name')
-                    ->label('Lowongan')
+                    ->label('Jabatan')
                     ->searchable(),
                     
                 Tables\Columns\TextColumn::make('vacancy.company.companies_name')

@@ -7,19 +7,15 @@ use App\Filament\Resources\Contacts\Pages\EditContacts;
 use App\Filament\Resources\Contacts\Pages\ViewContacts;
 use App\Filament\Resources\Contacts\Pages\ListContacts;
 use App\Filament\Resources\Contacts\Schemas\ContactsForm;
-use App\Filament\Resources\Contacts\Tables\ContactsTable;
 use App\Models\Contacts;
 use BackedEnum;
-use Dom\Text;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Filament\Forms;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
@@ -32,13 +28,13 @@ class ContactsResource extends Resource
 {
     protected static ?string $model = Contacts::class;
 
-    protected static ?string $navigationLabel = 'pesan';
+    protected static ?string $navigationLabel = 'Masukan';
 
-    protected static ?string $modelLabel = 'pesan';
+    protected static ?string $modelLabel = '=Masukan';
 
     protected static ?int $navigationSort = 7;
 
-    protected static ?string $pluralModelLabel = 'daftar pesan';
+    protected static ?string $pluralModelLabel = 'daftar masukan';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
 

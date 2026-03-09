@@ -67,9 +67,9 @@ class AnnouncementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('headline')->label('judul pengumuman')->searchable(),
-            Tables\Columns\ImageColumn::make('image')->label('gambar pengumuman')->disk('public'),
-            Tables\Columns\TextColumn::make('active_until')->label('aktif hingga')->date()->sortable(),
+            Tables\Columns\TextColumn::make('headline')->label('Judul')->searchable(),
+            Tables\Columns\ImageColumn::make('image')->label('Gambar')->disk('public'),
+            Tables\Columns\TextColumn::make('active_until')->label('Aktif Sampai')->date()->sortable(),
         ])
         ->actions([
             EditAction::make()

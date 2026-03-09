@@ -37,14 +37,14 @@ class CompanieResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            TextInput::make('companies_name')->required()->label('nama perusahaan'),
-            FileUpload::make('companies_logo')->label('logo perusahaan')->disk('public')->directory('companies')->image(),
-            Textarea::make('companies_profile')->label('profil perusahaan'),
-            TextInput::make('field')->label('bidang perusahaan'),
-            TextInput::make('employee')->label('jumlah karyawan')->numeric(),
-            FileUpload::make('mou')->label('mou')->disk('public')->directory('companies'),
-            TextInput::make('address')->label('alamat perusahaan'),
-            TextInput::make('short_address')->label('alamat singkat perusahaan'),
+            TextInput::make('companies_name')->required()->label('Nama'),
+            FileUpload::make('companies_logo')->label('Logo')->disk('public')->directory('companies')->image(),
+            Textarea::make('companies_profile')->label('Profil'),
+            TextInput::make('field')->label('Bidang Perusahaan'),
+            TextInput::make('employee')->label('Jumlah Karyawan')->numeric(),
+            FileUpload::make('mou')->label('MOU')->disk('public')->directory('companies'),
+            TextInput::make('address')->label('Alamat Perusahaan'),
+            TextInput::make('short_address')->label('Alamat Singkat Perusahaan'),
             
         ]);
     }
@@ -52,10 +52,10 @@ class CompanieResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('companies_name')->label('nama perusahaan')->searchable()->sortable(),
-            Tables\Columns\ImageColumn::make('companies_logo')->label('logo perusahaan')->disk('public'),
-            Tables\Columns\TextColumn::make('companies_profile')->label('profil perusahaan')->limit(50),
-            Tables\Columns\TextColumn::make('address')->label('alamat perusahaan')->searchable()->sortable(),  
+            Tables\Columns\TextColumn::make('companies_name')->label('Nama')->searchable()->sortable(),
+            Tables\Columns\ImageColumn::make('companies_logo')->label('Logo')->disk('public'),
+            Tables\Columns\TextColumn::make('companies_profile')->label('Profil')->limit(50),
+            Tables\Columns\TextColumn::make('short_address')->label('Kota / Provinsi')->searchable()->sortable(),  
         ])
         ->actions([
             EditAction::make()

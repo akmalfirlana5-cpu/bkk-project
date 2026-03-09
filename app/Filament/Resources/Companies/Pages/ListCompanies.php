@@ -16,7 +16,7 @@ class ListCompanies extends ListRecords
     {
         return [
             CreateAction::make()
-            ->label('tambah perusahaan baru'),
+            ->label('Tambah Perusahaan'),
         ];
     }
 }

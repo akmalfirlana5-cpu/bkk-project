@@ -9,5 +9,5 @@ class CreateCompanie extends CreateRecord
 {
     protected static string $resource = CompanieResource::class;
 
-    protected static ?string $title = 'Tambah Perusahaan Baru';
+    protected static ?string $title = 'Tambah Perusahaan';
 }
