@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->favicon(asset('assets/static/logo/icon/logo-bkk-crop.webp'))
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->brandLogo(asset('assets/static/logo/logo-bkk.png'))

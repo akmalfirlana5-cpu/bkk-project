@@ -67,7 +67,6 @@ class InformationSettings extends Page implements HasForms
             'tracer_cta_title' => $tracer['cta_title'] ?? '',
             'tracer_cta_description' => $tracer['cta_description'] ?? '',
             'tracer_cta_text' => $tracer['cta_text'] ?? '',
-            'tracer_cta_link' => $tracer['cta_link'] ?? '',
             'tracer_cta_image' => $this->resolveStorageImage($tracer['cta_image'] ?? ''),
         ]);
     }
@@ -190,8 +189,6 @@ class InformationSettings extends Page implements HasForms
                                         ->rows(2),
                                     TextInput::make('tracer_cta_text')
                                         ->label('Teks Tombol CTA'),
-                                    TextInput::make('tracer_cta_link')
-                                        ->label('Link Tombol CTA'),
                                     FileUpload::make('tracer_cta_image')
                                         ->label('Gambar Ilustrasi')
                                         ->disk('public')
