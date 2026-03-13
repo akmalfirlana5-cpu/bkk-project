@@ -1,7 +1,7 @@
 <div>
     <section class="pt-30 lg:pt-25">
         <div 
-            style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
+            style="background-image: url('{{ asset('storage/' . $workContent['hero']['image']) }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
             <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/45 z-1"></div>
             <div class="relative z-2 w-full h-full flex flex-col justify-center mx-0 lg:mx-14">
@@ -17,10 +17,10 @@
                     <a href="{{ route('program-kerja') }}">Program Kerja</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Profil BKK
+                    {{ $workContent['hero']['title'] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[60%]">
-                    Mengenal Bursa Kerja Khusus (BKK) lebih dekat melalui informasi seputar peran, program, dan kegiatan yang diselenggarakan sebagai upaya mendukung kesiapan lulusan memasuki dunia kerja secara terarah dan berkelanjutan.
+                    {{ $workContent['hero']['description'] }}
                 </div>
             </div>
         </div>
@@ -28,15 +28,15 @@
     <section class="py-15 md:py-20">
         <div class="container mx-auto px-5 lg:px-0">
             <h2 class="heading-48s text-bkkNeutral-900 mb-4">
-                Program Kerja
+                {{ $workContent['program_kerja']['section_title'] }}
             </h2>
             <div class="paragraph-16r text-bkkNeutral-700 mb-9">
-                Berikut merupakan program kerja BKK SMK Negeri 4 Malang:
+                {{ $workContent['program_kerja']['section_description'] }}
             </div>
             <div>
                 <iframe 
                     class="w-full h-[350px] lg:h-[560px]"
-                    src="https://drive.google.com/file/d/1xvD7VYZ4D2Mfr68oUo8gdaxH6OegkgMb/preview?usp=embed_googleplus" allowfullscreen>
+                    src="{{ $workContent['program_kerja']['link_gdrive'] }}" allowfullscreen>
                 </iframe>
             </div>
     </section>

@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\announcement;
+use App\Models\HomepageSetting;
+use App\Models\User;
 use App\Models\vacancie;
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -13,58 +15,9 @@ use Livewire\Attributes\Layout;
 
 class Homepage extends Component
 {
-    public $heroSwiperContent = [
-        [
-            'title' => 'Bursa Kerja Khusus SMK Negeri 4 Malang',
-            'description' => 'Bursa Kerja Khusus (BKK) SMK Negeri 4 Malang berperan sebagai penghubung strategis antara alumni dan dunia industri melalui penyediaan informasi lowongan kerja yang aktual, penyaluran, serta penempatan tenaga kerja secara terstruktur dan berkelanjutan.',
-            'image' => '/assets/static/background/hero-section.png',
-            'cta_link' => '#',
-        ],
-        [
-            'title' => 'Bursa Kerja Khusus SMK Negeri 4 Malang (2)',
-            'description' => 'Bursa Kerja Khusus (BKK) SMK Negeri 4 Malang berperan sebagai penghubung strategis antara alumni dan dunia industri melalui penyediaan informasi lowongan kerja yang aktual, penyaluran, serta penempatan tenaga kerja secara terstruktur dan berkelanjutan.',
-            'image' => '/assets/static/background/hero-section.png',
-            'cta_link' => '#',
-        ],
-        [
-            'title' => 'Bursa Kerja Khusus SMK Negeri 4 Malang (3)',
-            'description' => 'Bursa Kerja Khusus (BKK) SMK Negeri 4 Malang berperan sebagai penghubung strategis antara alumni dan dunia industri melalui penyediaan informasi lowongan kerja yang aktual, penyaluran, serta penempatan tenaga kerja secara terstruktur dan berkelanjutan.',
-            'image' => '/assets/static/background/hero-section.png',
-            'cta_link' => '#',
-        ]
-    ];
+    public $homepageContent;
 
-    public $statisticContent = [
-    [
-        'title' => 'Mitra Industri',
-        'amount' => 260,
-        'suffix' => '+',
-    ],
-    [
-        'title' => 'Lulusan Terserap',
-        'amount' => 1200,
-        'suffix' => '+',
-    ],
-    [
-        'title' => 'Tingkat Keterserapan',
-        'amount' => 85,
-        'suffix' => '%',
-    ],
-    [
-        'title' => 'Program Rekrutmen & Magang',
-        'amount' => 50,
-        'suffix' => '+',
-    ],
-];
-
-    public $welcomeContent = [
-        [
-            'title' => 'Sambutan Kepala Sekolah',
-            'image' => '/assets/static/partial/Principal.png',
-            'person_name' => 'Dr. Drs. Gunawan Dwiyono, S.ST., M.Pd.',
-            'person_position' => 'Kepala SMK Negeri 4 Malang',
-        ],
-    ];
+    public $statisticContent = [];
 
     public $testimoniSwiperContent = [
         [
@@ -112,12 +65,66 @@ class Homepage extends Component
     ];
 
     public $vacancies;
+    public $vacanciesTotal;
     public $announcements;
+    public $heroSlides = [];
+    public $graduates_absorbed;
 
     public function mount()
     {
-        $this->vacancies = vacancie::latest()->take(6)->get();
-        $this->announcements = announcement::latest()->take(3)->get();
+        $this->vacancies = vacancie::where('deadline', '>=', now())
+            ->latest()->take(6)->get();
+        $this->announcements = announcement::where('active_until', '>=', now())
+            ->latest()->take(3)->get();
+        // Ambil data Homepage settings
+        $this->homepageContent = HomepageSetting::all()
+            ->groupBy('section')
+            ->map(function ($items) {
+               return $items->pluck('value', 'key');
+            })
+            ->toArray();
+        // json decode field json
+        if (isset($this->homepageContent['hero']['slides'])) {
+            $rawSlides = json_decode($this->homepageContent['hero']['slides'], true);
+
+            $this->heroSlides = collect($rawSlides)
+            ->map(function ($item) {
+                $data = $item['data'];
+
+                return $data;
+            })->values()->all();
+        }
+
+        // Lulusan Terserap
+        $this->graduates_absorbed = User::where('status', '!=', 'menganggur')
+            ->whereNotNull('status')
+            ->count();
+        // Jumlah loker tersedia
+        $this->vacanciesTotal = vacancie::where('deadline', '>=', now())
+            ->count();
+
+        $this-> statisticContent = [
+            [
+                'title' => 'Mitra Industri',
+                'amount' => 260,
+                'suffix' => '+',
+            ],
+            [
+                'title' => 'Lulusan Terserap',
+                'amount' => $this->graduates_absorbed,
+                'suffix' => '+',
+            ],
+            [
+                'title' => 'Tingkat Keterserapan',
+                'amount' => 85,
+                'suffix' => '%',
+            ],
+            [
+                'title' => 'Program Rekrutmen & Magang',
+                'amount' => $this->vacanciesTotal,
+                'suffix' => '+',
+            ],
+        ];
     }
 
     public function render()

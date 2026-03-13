@@ -1,7 +1,7 @@
 <div>
     <section class="pt-30 lg:pt-25">
         <div 
-            style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
+            style="background-image: url('{{ asset('storage/' . $vacancyContent['lowongan']['hero_image']) }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
             <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/45 z-1"></div>
             <div class="relative z-2 w-full h-full flex flex-col justify-center mx-0 lg:mx-14">
@@ -13,10 +13,10 @@
                     <a href="{{ route('lowongan') }}">Lowongan</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Lowongan Kerja
+                    {{ $vacancyContent['lowongan']['hero_title'] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[50%]">
-                    Informasi lowongan kerja terbaru dari berbagai perusahaan mitra yang telah bekerja sama dengan BKK, guna membantu siswa dan alumni memperoleh kesempatan kerja yang sesuai dengan kompetensi dan minat, dan kualifikasi yang dimiliki.
+                    {{ $vacancyContent['lowongan']['hero_description'] }}
                 </div>
             </div>
         </div>
@@ -44,7 +44,9 @@
                 </div>
             </div>
             <div>
-                <h2 class="heading-42s text-bkkNeutral-900 mb-9">Cari Lowongan Kerja</h2>
+                <h2 class="heading-42s text-bkkNeutral-900 mb-9">
+                    {{ $vacancyContent['lowongan']['section_title'] }}
+                </h2>
                 <div class="flex flex-col lg:flex-row gap-8 relative">
                     {{-- Filter section --}}
                     <div 
@@ -197,7 +199,7 @@
                                         <path d="M5.75 7.75C5.75 8.85457 6.64543 9.75 7.75 9.75C8.85457 9.75 9.75 8.85457 9.75 7.75C9.75 6.64543 8.85457 5.75 7.75 5.75C6.64543 5.75 5.75 6.64543 5.75 7.75Z" stroke="#364153" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                         <div class="paragraph-16r text-bkkNeutral-700 capitalize">
-                                            {{ $vacancy->company->location }}
+                                            {{ $vacancy->company->short_address }}
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-4">

@@ -10,26 +10,28 @@
                     <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L5 5L1 9" stroke="#FBFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <a href="#">Kontak</a>
+                    <a href="{{ route('kontak') }}">Kontak</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Kontak
+                    {{ $contactContent['hero_title'][0] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[60%]">
-                    Menyediakan informasi dan sarana komunikasi bagi siswa, alumni, maupun mitra industri untuk menghubungi BKK terkait layanan, kerja sama, serta informasi lebih lanjut secara mudah dan responsif.
+                    {{ $contactContent['hero_description'][0] }}
                 </div>
             </div>
         </div>
     </section>
     <section class="py-15 lg:py-20">
         <div class="container mx-auto px-5 lg:px-0">
-            <h2 class="heading-42s text-bkkNeutral-900 mb-4">Butuh Bantuan BKK?</h1>
-            <div class="paragraph-16r text-bkkNeutral-700 mb-9">Silakan hubungi BKK SMK Negeri 4 Malang untuk mendapatkan informasi dan bantuan terkait layanan, program, dan kerja sama.</div>
+            <h2 class="heading-42s text-bkkNeutral-900 mb-4">{{ $contactContent['section_title'][0] }}</h1>
+            <div class="paragraph-16r text-bkkNeutral-700 mb-9">
+                {{ $contactContent['section_description'][0] }}
+            </div>
             <div class="flex flex-col lg:flex-row rounded-3xl shadow-lg bg-white overflow-hidden">
                 <div class="w-full lg:w-[50%] h-[350px] lg:h-[600px]">
                     <iframe 
                         class="w-full h-full"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.088191723806!2d112.62473577415871!3d-7.98982897968068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd6281b75ea5485%3A0x90fd5c6fcedf6acf!2sSMK%20Negeri%204%20Kota%20Malang!5e0!3m2!1sid!2sid!4v1769496969328!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        src="{{ $contactContent['map_embed_url'][0] }}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div
                     x-on:scroll-to-top.window="document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth' })" 
@@ -83,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="w-full md:w-[50%] flex flex-col gap-3 relative">
-                                <label for="lastName" class="heading-16 text-bkkNeutral-900">Nama Depan</label>
+                                <label for="lastName" class="heading-16 text-bkkNeutral-900">Nama Belakang</label>
                                 <input 
                                     id="lastName"
                                     type="text" 

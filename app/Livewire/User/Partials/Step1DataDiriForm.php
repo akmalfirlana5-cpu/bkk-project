@@ -19,9 +19,9 @@ class Step1DataDiriForm extends Component
         $validated = $this->validate([
             'full_name' => 'required|max:255',
             'nisn'      => 'required|max:20',
-            'nik'       => 'required|max:20',
+            'nik'       => 'required|min:16|max:16',
             'address'   => 'required',
-            'no_hp'     => 'required|max:15',
+            'no_hp'     => 'required|min:12',
             'major'     => 'required',
             'graduation_year' => 'required',
             'status'    => 'required',

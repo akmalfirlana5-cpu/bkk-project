@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Announcement as AnnouncementModel;
+use App\Models\InfoSetting;
 
 #[Title('Pengumuman - BKK SMKN 4 MALANG')]
 #[Layout('layouts.app')]
@@ -16,10 +17,21 @@ class Announcement extends Component
     use WithPagination;
     #[Url('s')]
     public $filterSearch = null;
+    public $announcementContent;
 
     public function updatedFilterSearch()
     {
         $this->resetPage();
+    }
+
+    public function mount() {
+        // Ambil data announcement settings
+        $this->announcementContent = InfoSetting::all()
+            ->groupBy('section')
+            ->map(function ($items) {
+               return $items->pluck('value', 'key');
+            })
+            ->toArray();
     }
 
     public function render()

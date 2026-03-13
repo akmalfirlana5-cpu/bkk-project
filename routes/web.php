@@ -14,11 +14,13 @@ use App\Livewire\Vacancy\VacancyDetail;
 use App\Livewire\Information\TracerStudy;
 use App\Livewire\Information\Announcement;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Company\Company;
 use App\Livewire\Profil\SupportingDocuments;
 use App\Livewire\Profil\OrganizationStructure;
 use App\Livewire\Information\AnnouncementDetail;
 use App\Livewire\User\ApplicationHistory\ApplicationHistory;
 use App\Livewire\User\Profile\PersonalData;
+use App\Livewire\User\SuccessTracerStudy;
 
 Route::get('/', Homepage::class)->name('beranda');
 Route::get('/faq', Faq::class)->name('faq');
@@ -40,10 +42,10 @@ Route::get('/tracer-study', TracerStudy::class)->name('tracer-study');
 Route::get('/lowongan', Vacancy::class)->name('lowongan');
 Route::get('/lowongan/detail/{id}', VacancyDetail::class)->name('lowongan-detail');
 
+// Perusahaan
+Route::get('/perusahaan', Company::class)->name('perusahaan');
+
 // Route User Login
-
-use App\Livewire\User\SuccessTracerStudy;
-
 Route::middleware('auth.modal')->group(function () {
     Route::get('/isi-tracer-study', FillTracerStudy::class)->middleware('auth.modal')->name('isi-tracer-study')->prefix('user');
     Route::get('/tracer-study-sukses', SuccessTracerStudy::class)->middleware('auth.modal')->name('tracer-study-sukses')->prefix('user');

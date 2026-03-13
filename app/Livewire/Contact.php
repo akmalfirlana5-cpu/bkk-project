@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\ContactSetting;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 class Contact extends Component
 {
     public $contact = [];
+    public $contactContent;
 
     public function submitContact() 
     {
@@ -45,6 +47,16 @@ class Contact extends Component
         $this->reset('contact');
 
         $this->dispatch('scroll-to-top');
+    }
+
+    public function mount() {
+        // Ambil data contact settings
+        $this->contactContent = ContactSetting::all()
+            ->groupBy('key')
+            ->map(function ($items) {
+               return $items->pluck('value');
+            })
+            ->toArray();
     }
 
     public function render()

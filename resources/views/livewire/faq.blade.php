@@ -1,7 +1,7 @@
 <div>
     <section class="pt-30 lg:pt-25">
         <div 
-            style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
+            style="background-image: url('{{ asset('storage/' . $faqContent['hero_image'][0]) }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
             <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/45 z-1"></div>
             <div class="relative z-2 w-full h-full flex flex-col justify-center mx-0 lg:mx-14">
@@ -10,24 +10,24 @@
                     <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L5 5L1 9" stroke="#FBFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <a href="#">Faq</a>
+                    <a href="{{ route('faq') }}">Faq</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    FAQ
+                    {{ $faqContent['hero_title'][0] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[50%]">
-                    Temukan jawaban atas pertanyaan yang sering diajukan terkait layanan, program, dan mekanisme BKK, guna membantu siswa, alumni, dan mitra industri memperoleh informasi yang dibutuhkan.
+                    {{ $faqContent['hero_description'][0] }}
                 </div>
             </div>
         </div>
     </section>
     <section class="py-15 lg:py-20">
         <div class="container mx-auto px-5 lg:px-0">
-            <h2 class="heading-42s text-bkkNeutral-900 mb-4">Pertanyaan Umum BKK</h2>
-            <div class="paragraph-16r text-bkkNeutral-700 mb-9">Jawaban atas berbagai pertanyaan umum terkait layanan BKK yang sering dibutuhkan guna membantu memahami layanan BKK.</div>
+            <h2 class="heading-42s text-bkkNeutral-900 mb-4">{{ $faqContent['section_title'][0] }}</h2>
+            <div class="paragraph-16r text-bkkNeutral-700 mb-9">{{ $faqContent['section_description'][0] }}</div>
             <div 
                 class="lg:p-10 lg:shadow-lg rounded-3xl space-y-4">
-                @foreach ($faqContent as $faq)
+                @foreach ($faqItems as $items)
                     <div 
                         x-data="{open: false,openFaq : null}"
                         class="p-4 rounded-[20px] border border-bkkNeutral-200">
@@ -35,7 +35,10 @@
                             @click="open = !open; openFaq = {{ $loop->index }}"
                             class="flex items-center justify-between transition duration-300 cursor-pointer"
                             :class="open === true && openFaq == {{ $loop->index }} ? 'text-bkkBlue-700' : 'text-bkkNeutral-900'">
-                            <h2 class="heading-16s">{{ $faq['title'] }}</h2>
+                            <h2 class="heading-16s">
+                                {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make
+                                ($items['title']) }}
+                            </h2>
                             <div 
                                 class="w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
                                 <svg
@@ -51,7 +54,8 @@
                             x-collapse
                             x-cloak
                             x-show="open && openFaq == {{ $loop->index }}">
-                            <div>{{ $faq['content'] }}</div>
+                            <div>{{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make
+                            ($items['content']) }}</div>
                         </div>
                     </div>
                 @endforeach
