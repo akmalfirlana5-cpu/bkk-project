@@ -36,7 +36,6 @@ class TracerStudyDashboard extends Page
             WorkFillsTableWidget::class,
             CollegeFillsTableWidget::class,
             EntrepreneurFillsTableWidget::class,
-            
         ];
     }
 

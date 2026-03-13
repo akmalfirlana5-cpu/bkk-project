@@ -67,10 +67,12 @@ class AnnouncementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('headline')->label('Judul')->searchable(),
             Tables\Columns\ImageColumn::make('image')->label('Gambar')->disk('public'),
-            Tables\Columns\TextColumn::make('active_until')->label('Aktif Sampai')->date()->sortable(),
+            Tables\Columns\TextColumn::make('headline')->label('Judul')->searchable(),
+            Tables\Columns\TextColumn::make('active_until')->label('Aktif Sampai')->date()->sortable()
+                ->color(fn ($record) => $record->active_until && \Carbon\Carbon::parse($record->active_until)->isPast() ? 'danger' : null),
         ])
+        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN active_until < NOW() THEN 1 ELSE 0 END ASC, active_until ASC'))
         ->actions([
             EditAction::make()
                 ->label('edit'),

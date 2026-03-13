@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Vacancies;
 use App\Filament\Resources\Vacancies\Pages\CreateVacancie;
 use App\Filament\Resources\Vacancies\Pages\EditVacancie;
 use App\Filament\Resources\Vacancies\Pages\ListVacancies;
+use App\Filament\Resources\Vacancies\Pages\ListVacancyApplications;
 use App\Filament\Resources\Vacancies\Schemas\VacancieForm;
 use App\Filament\Resources\Vacancies\Tables\VacanciesTable;
 use App\Models\Vacancie;
@@ -119,14 +120,20 @@ class VacancieResource extends Resource
         return $table->columns([
             Tables\Columns\TextColumn::make('company.companies_name')->label('Perusahaan')->searchable(),
             Tables\Columns\TextColumn::make('vacancy_name')->label('Jabatan')->searchable(),
-            Tables\Columns\TextColumn::make('location')->label('Lokasi')->searchable(),
             Tables\Columns\TextColumn::make('vacancy_number')->label('Kuota')->searchable(),
-            Tables\Columns\TextColumn::make('deadline')->label('Batas waktu')->date()->sortable(),
+            Tables\Columns\TextColumn::make('deadline')->label('Batas waktu')->date()->sortable()
+                ->color(fn ($record) => $record->deadline && $record->deadline->isPast() ? 'danger' : null),
         ])
+        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN deadline < NOW() THEN 1 ELSE 0 END ASC, deadline ASC'))
         ->actions([
-            EditAction::make()
+            \Filament\Actions\Action::make('lihatLamaran')
+                ->label('Lihat Lamaran')
+                ->icon('heroicon-o-document-text')
+                ->color('success')
+                ->url(fn ($record) => static::getUrl('applications', ['record' => $record])),
+                EditAction::make()
                 ->label('edit'),
-            DeleteAction::make()
+                DeleteAction::make()
                 ->label('Hapus'),
         ])->actionsColumnLabel('Aksi');
     }
@@ -144,6 +151,7 @@ class VacancieResource extends Resource
             'index' => ListVacancies::route('/'),
             'create' => CreateVacancie::route('/create'),
             'edit' => EditVacancie::route('/{record}/edit'),
+            'applications' => ListVacancyApplications::route('/{record}/applications'),
         ];
     }
 

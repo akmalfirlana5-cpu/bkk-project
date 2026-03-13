@@ -52,8 +52,8 @@ class CompanieResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('companies_name')->label('Nama')->searchable()->sortable(),
             Tables\Columns\ImageColumn::make('companies_logo')->label('Logo')->disk('public'),
+            Tables\Columns\TextColumn::make('companies_name')->label('Nama')->searchable()->sortable(),
             Tables\Columns\TextColumn::make('companies_profile')->label('Profil')->limit(50),
             Tables\Columns\TextColumn::make('short_address')->label('Kota / Provinsi')->searchable()->sortable(),  
         ])

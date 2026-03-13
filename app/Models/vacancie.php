@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 
@@ -45,7 +46,12 @@ class vacancie extends Model
         static::creating(function ($vacancy) {
             $vacancy->entryId = 'lowongan-' . date('Y') . '-' . Str::random(6);
         });
-    }   
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class, 'id_vacancy');
+    }
 
     public const MAJORS = [
         'Animasi' => 'Animasi',

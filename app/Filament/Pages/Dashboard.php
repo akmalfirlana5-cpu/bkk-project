@@ -6,6 +6,7 @@ use Filament\Pages\Dashboard as BaseDashboard;
 use App\Filament\Widgets\TracerStudyLineChart;
 use App\Filament\Widgets\TracerStudyPieChart;
 use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\ContactsTableWidget;
 
 class Dashboard extends BaseDashboard
 {
@@ -19,7 +20,8 @@ class Dashboard extends BaseDashboard
         return [
             StatsOverview::class,           
             TracerStudyLineChart::class,    
-            TracerStudyPieChart::class,    
+            TracerStudyPieChart::class,
+            ContactsTableWidget::class,
         ];
     }
 }
