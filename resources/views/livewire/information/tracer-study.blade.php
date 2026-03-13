@@ -1,7 +1,7 @@
 <div>
     <section class="pt-30 lg:pt-25">
         <div 
-            style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
+            style="background-image: url('{{ asset('storage/' . $tracerContent['tracer_study']['hero_image']) }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
             <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/45 z-1"></div>
             <div class="relative z-2 w-full h-full flex flex-col justify-center mx-0 lg:mx-14">
@@ -17,10 +17,10 @@
                     <a href="{{ route('tracer-study') }}">Tracer Study</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Tracer Study
+                    {{ $tracerContent['tracer_study']['hero_title'] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[50%]">
-                    Informasi dan pendataan Tracer Study alumni sebagai sarana pelacakan kelanjutan karier, pendidikan, dan relevansi kompetensi lulusan, guna mendukung evaluasi dan peningkatan mutu sekolah.
+                    {{ $tracerContent['tracer_study']['hero_description'] }}
                 </div>
             </div>
         </div>
@@ -28,10 +28,10 @@
     <section class="py-15 lg:py-20">
         <div class="container mx-auto px-5 lg:px-0">
             <h2 class="heading-42s text-bkkNeutral-900 mb-2">
-                Hasil Tracer Study Alumni
+                {{ $tracerContent['tracer_study']['section_title'] }}
             </h2>
             <div class="paragraph-16r text-bkkNeutral-700 mb-9">
-                    Menyajikan ringkasan kondisi alumni setelah lulus, termasuk status pekerjaan, pendidikan, dan kegiatan lainnya.
+                    {{ $tracerContent['tracer_study']['section_description'] }}
             </div>
             {{-- Chart js cdn --}}
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -56,14 +56,16 @@
         <div class="container flex flex-col-reverse lg:flex-row items-center mx-auto px-5 lg:px-0 gap-5 lg:gap-0">
             <div class="w-full lg:w-[50%]">
                 <h2 class="heading-42s text-bkkNeutral-900 mb-4">
-                Hasil Tracer Study Alumni
+                {{ $tracerContent['tracer_study']['cta_title'] }}
                 </h2>
                 <div class="paragraph-16r text-bkkNeutral-700 mb-12">
-                    Partisipasi Anda dalam Tracer Study membantu sekolah meningkatkan kualitas pendidikan dan layanan karier.
+                    {{ $tracerContent['tracer_study']['cta_description'] }}
                 </div>
                 <a  href="{{ route('isi-tracer-study') }}"
                     class="w-full lg:w-auto justify-self-start flex justify-center items-center gap-3 py-3 px-6 bg-bkkBlue-700 hover:bg-bkkBlue-800 transition duration-300 rounded-[8px] group">
-                    <span class="paragraph-16s text-bkkNeutral-50">Isi Tracer Study Sekarang</span>
+                    <span class="paragraph-16s text-bkkNeutral-50">
+                        {{ $tracerContent['tracer_study']['cta_text'] }}
+                    </span>
                     <svg class="shrink-0 group-hover:translate-x-1 transition duration-300" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -72,7 +74,7 @@
             <div class="w-full lg:w-[50%]">
                 <img 
                     class="w-full h-full object-contain object-center"
-                    src="{{ asset('/assets/static/partial/hasil_tracer.webp') }}"
+                    src="{{ asset('storage/' . $tracerContent['tracer_study']['cta_image']) }}"
                 />
             </div>
         </div>
@@ -91,7 +93,7 @@
                 data: {
                     labels: ['Bekerja', 'Kuliah', 'Wiraswasta', 'Mencari Kerja'],
                     datasets: [{
-                        data: [65, 20, 10, 5],
+                        data: @json($pieData),
                         backgroundColor: ['#073AE4', '#FFBE0A', '#3261F9', '#DFE4EA'],
                     }]
                 },
@@ -126,7 +128,9 @@
 
                                     return data.labels.map((label, i) => {
                                         const value = dataset.data[i];
-                                        const percentage = ((value / total) * 100).toFixed(1) + '%';
+                                        const percentage = total > 0 
+                                        ? ((value / total) * 100).toFixed(1) + '%'
+                                        : '0%';
                                         
                                         return {
                                             text: `${label} (${percentage})`, 
@@ -165,29 +169,29 @@
             new Chart(elBar, {
                 type: "bar",
                 data: {
-                    labels: ['2020', '2021', '2022', '2023', '2024'],
+                    labels: @json($barLabels),
                     datasets: [
                         {
                             label: 'Bekerja',
-                            data: [200, 250, 220, 280, 300], 
+                            data: @json($barDatasets[0]['data']), 
                             backgroundColor: '#073AE4', 
                             borderRadius: 6,
                         },
                         {
                             label: 'Wirausaha',
-                            data: [50, 80, 70, 90, 110], 
+                            data: @json($barDatasets[1]['data']), 
                             backgroundColor: '#3261F9',
                             borderRadius: 6,
                         },
                         {
                             label: 'Kuliah',
-                            data: [100, 120, 110, 150, 140], 
+                            data: @json($barDatasets[2]['data']), 
                             backgroundColor: '#FFBE0A', 
                             borderRadius: 6,
                         },
                         {
                             label: 'Lain-lain',
-                            data: [30, 40, 50, 30, 20], 
+                            data: @json($barDatasets[3]['data']), 
                             backgroundColor: '#DFE4EA', 
                             borderRadius: 6,
                         }

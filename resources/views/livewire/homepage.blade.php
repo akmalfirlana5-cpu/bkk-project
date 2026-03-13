@@ -3,23 +3,23 @@
     <div class="container mx-auto px-5 lg:px-0">
         <div class="swiper hero-swiper w-full h-[85vh] overflow-hidden rounded-[24px]">
             <div class="swiper-wrapper relative">
-                @foreach ($heroSwiperContent as $heroContent )
+                @foreach ($heroSlides as $slides )
                     <div 
-                    style="background-image: url('{{ asset($heroContent['image']) }}')"
+                    style="background-image: url('{{ asset( 'storage/' . $slides['image']) }}')"
                     class="swiper-slide bg-cover bg-center relative">
                         <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/20 z-1"></div>
                         <div class="absolute flex flex-col justify-end inset-0 z-2 px-5 lg:px-20 pb-[10vh]">
                             <h1 class="heading-48s text-bkkNeutral-50 mb-6 lg:w-[55%]">
-                                {{ $heroContent['title'] }}
+                                {{ $slides['title'] }}
                             </h1>
                             <div class="paragraph-16r text-bkkNeutral-50 mb-6 lg:mb-16 lg:w-[65%]">
-                                {{ $heroContent['description'] }}
+                                {{ $slides['description'] }}
                             </div>
                             <div class="flex justify-between items-center">
                                 <a 
-                                    href="{{ $heroContent['cta_link'] }}"
+                                    href="{{ $slides['cta_link'] }}"
                                     class="flex items-center gap-3 paragraph-16s text-bkkNeutral-50 py-3 px-8 bg-bkkBlue-700 hover:bg-bkkBlue-800 rounded-[12px] transition duration-300">
-                                    <span>Lihat Selengkapnya</span>
+                                    <span>{{ $slides['cta_text'] }}</span>
                                     <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
@@ -57,7 +57,7 @@
                  x-data="{ 
                     current: 0, 
                     target: {{ $statistic['amount'] }}, 
-                    time: 1500,
+                    time: 1000,
                     startCounter() {
                         let start = null;
                         const step = (timestamp) => {
@@ -83,45 +83,43 @@
         @endforeach
     </div>
 </section>
-<section class="py-15">
+@if ( $homepageContent['welcome']['is_visible'] === 'true')
+    <section class="py-15">
     <div class="container mx-auto px-5 lg:px-0 flex flex-col lg:flex-row items-start gap-12 lg:gap-18">
         <div class="w-full lg:w-[45%] shadow-lg rounded-[20px]">
             <img  
                 class="w-full h-[250px] md:h-[324px] object-cover object-center rounded-t-[20px]"
-                src="{{ asset($welcomeContent[0]['image']) }}"/>
+                src="{{ asset( 'storage/' . $homepageContent['welcome']['image']) }}"/>
             <div class="p-6 space-y-2">
                 <h3 class="heading-22s text-bkkNeutral-900">
-                    {{ $welcomeContent[0]['person_name'] }}
+                    {{ $homepageContent['welcome']['title'] }}
                 </h3>
                 <div class="paragraph-16r text-bkkNeutral-700">
-                    {{ $welcomeContent[0]['person_position'] }}
+                    {{ $homepageContent['welcome']['person_position'] }}
                 </div>
             </div>
         </div>
         <div class="w-full lg:w-[55%]">
             <h2 class="heading-42s text-bkkNeutral-900 mb-4">
-                {{ $welcomeContent[0]['title'] }}
+                {{ $homepageContent['welcome']['title'] }}
             </h2>
             <div class="paragraph-16r text-bkkNeutral-700 space-y-4">
-                <div>
-                Selamat datang di laman BKK SMK Negeri 4 Malang, yang menjadi sumber informasi bagi warga sekolah maupun masyarakat umum. Di sini, berbagai informasi terkait Bursa Kerja Khusus (BKK) dapat diakses dengan mudah dan terstruktur, termasuk pengumuman, panduan, serta kegiatan BKK yang bermanfaat bagi siswa dan alumni.
-                </div>
-                <div>
-                Seiring perkembangan teknologi dan internet, informasi kini dapat diperoleh lebih cepat dan luas dibandingkan sumber konvensional. SMK Negeri 4 Malang memanfaatkan jaringan internet sekolah untuk mendukung peningkatan kualitas sumber daya manusia serta mutu pendidikan secara berkelanjutan. Pemanfaatan teknologi ini juga memudahkan guru, siswa, dan alumni mengakses referensi, materi, dan informasi pendidikan secara efektif.
-                </div>
-                <div>
-                Website ini berfungsi sebagai sarana komunikasi antara sekolah dengan guru, siswa, orang tua/wali murid, alumni, dan pemangku kepentingan lainnya. Kehadiran website ini membuat penyebaran informasi lebih cepat, interaktif, dan mendukung tercapainya pendidikan yang lebih berkualitas di SMK Negeri 4 Malang.
-                </div>
+                {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make
+                ($homepageContent['welcome']['content']) }}
             </div>
         </div>
     </div>
 </section>
-
+@endif
 <section>
     <div class="container mx-auto px-5 lg:px-0 relative py-16 md:py-32">
-        <h2 class="heading-42s text-bkkNeutral-900 mb-4">Lowongan Kerja Terbaru</h2>
+        <h2 class="heading-42s text-bkkNeutral-900 mb-4">
+            {{ $homepageContent['vacancies']['title'] }}
+        </h2>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-9 gap-6 lg:gap-0">
-            <div class="paragraph-16r text-neutral-700">Temukan peluang kerja sesuai dengan kompetensi keahlianmu.</div>
+            <div class="paragraph-16r text-neutral-700">
+                {{ $homepageContent['vacancies']['description'] }}
+            </div>
             {{-- Control Button --}}
             <div class="flex items-center gap-4">
                 <div class="lokerSwiper-button-prev w-12 h-12 flex items-center justify-center text-bkkNeutral-600 hover:text-bkkNeutral-50 bg-transparent hover:bg-bkkNeutral-600 border border-bkkNeutral-600 transition duration-300 rounded-full cursor-pointer">
@@ -233,8 +231,12 @@
     <div 
         style="background-image: url('{{ asset('/assets/static/background/Tracer-Home.webp') }}')"
         class="container mx-auto px-5 lg:px-16 py-8 lg:py-16 bg-white shadow-lg rounded-[24px] bg-cover bg-left">
-        <h2 class="heading-42s text-bkkNeutral-900 mb-4">Tracer Study</h2>
-        <div class="paragraph-16r text-bkkNeutral-700 mb-10 lg:mb-[56px]">Kami melacak karier alumni untuk meningkatkan mutu pembelajaran dan relevansi dengan industri.</div>
+        <h2 class="heading-42s text-bkkNeutral-900 mb-4">
+            {{ $homepageContent['tracer_study']['title'] }}
+        </h2>
+        <div class="paragraph-16r text-bkkNeutral-700 mb-10 lg:mb-[56px]">
+            {{ $homepageContent['tracer_study']['description'] }}
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-14">
             <div class="flex flex-col items-start p-6 shadow-md rounded-[20px] bg-white">
                 <div class="p-2 rounded-[12px] border border-bkkNeutral-100 mb-4">
@@ -243,10 +245,10 @@
                     </svg>
                 </div>
                 <h3 class="heading-20s text-black mb-3">
-                    Jejak Karier
+                    {{ $homepageContent['tracer_study']['card_1_title'] }}
                 </h3>
                 <div class="paragraph-16r text-bkkNeutral-700">
-                    Memantau jejak karier alumni secara berkelanjutan setelah lulus.
+                    {{ $homepageContent['tracer_study']['card_1_description'] }}
                 </div>
             </div>
             <div class="flex flex-col items-start p-6 shadow-md rounded-[20px] bg-white">
@@ -256,10 +258,10 @@
                     </svg>
                 </div>
                 <h3 class="heading-20s text-black mb-3">
-                    Evaluasi Sekolah
+                    {{ $homepageContent['tracer_study']['card_2_title'] }}
                 </h3>
                 <div class="paragraph-16r text-bkkNeutral-700">
-                    Data alumni membantu sekolah melakukan evaluasi dan perbaikan.
+                    {{ $homepageContent['tracer_study']['card_1_description'] }}
                 </div>
             </div>
             <div class="flex flex-col items-start p-6 shadow-md rounded-[20px] bg-white">
@@ -269,16 +271,18 @@
                     </svg>
                 </div>
                 <h3 class="heading-20s text-black mb-3">
-                    Relevansi Industri
+                    {{ $homepageContent['tracer_study']['card_3_title'] }}
                 </h3>
                 <div class="paragraph-16r text-bkkNeutral-700">
-                    Memastikan lulusan tetap relevan dengan kebutuhan industri.
+                    {{ $homepageContent['tracer_study']['card_3_description'] }}
                 </div>
             </div>
         </div>
-        <a  href="{{ route('tracer-study') }}"
+        <a  href="{{ $homepageContent['tracer_study']['cta_link'] }}"
             class="w-full lg:w-auto justify-self-center flex justify-center items-center gap-3 py-3 px-6 bg-bkkBlue-700 hover:bg-bkkBlue-800 transition duration-300 rounded-[8px] group">
-            <span class="paragraph-16s text-bkkNeutral-50">Lihat Laporan Tracer Study</span>
+            <span class="paragraph-16s text-bkkNeutral-50">
+                {{ $homepageContent['tracer_study']['cta_text'] }}
+            </span>
             <svg class="shrink-0 group-hover:translate-x-1 transition duration-300" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -289,9 +293,13 @@
 
 <section>  
     <div class="container mx-auto px-5 lg:px-0 relative py-16 md:py-32">
-        <h2 class="heading-42s text-bkkNeutral-900 mb-4">Pengumuman & Informasi</h2>
+        <h2 class="heading-42s text-bkkNeutral-900 mb-4">
+            {{ $homepageContent['announcements']['title'] }}
+        </h2>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-9 gap-6 lg:gap-0">
-            <div class="paragraph-16r text-neutral-700">Update terbaru terkait kegiatan, seleksi, dan program BKK.</div>
+            <div class="paragraph-16r text-neutral-700">
+                {{ $homepageContent['announcements']['description'] }}
+            </div>
             {{-- Control Button --}}
             <div class="flex items-center gap-4">
                 <div class="beritaSwiper-button-prev w-12 h-12 flex items-center justify-center text-bkkNeutral-600 hover:text-bkkNeutral-50 bg-transparent hover:bg-bkkNeutral-600 border border-bkkNeutral-600 transition duration-300 rounded-full cursor-pointer">
@@ -313,7 +321,9 @@
                         <div class="w-full h-[256px]">
                             <img 
                                 class="w-full h-full object-cover object-center"
-                                src="{{ asset('storage/' . $announcement->image) }}" />
+                                src="{{ $announcement->image 
+                                    ? asset('storage/' . $announcement->image)
+                                    : asset('assets/static/partial/fallbackUser.webp') }}" />
                         </div>
                         <div class="p-5 lg:p-6">
                             <h3 class="heading-20s text-black line-clamp-1 mb-4">
@@ -366,11 +376,17 @@
     <div class="container mx-auto px-5 lg:px-16 py-8 lg:py-24 bg-white shadow-lg rounded-[24px]">
         <div class="flex flex-col-reverse lg:flex-row items-center gap-5 md:gap-10">
             <div class="w-full lg:w-[50%]">
-                <h2 class="heading-42s text-bkkNeutral-900 mb-4">Survei Kepuasan</h2>
-                <div class="paragraph-16r text-bkkNeutral-700 mb-12">Bantu kami meningkatkan layanan BKK dengan mengisi survei kepuasan. Partisipasi anda sangat berarti untuk kemajuan sekolah kami.</div>
-                <a  href="#"
+                <h2 class="heading-42s text-bkkNeutral-900 mb-4">
+                    {{ $homepageContent['survey']['title'] }}
+                </h2>
+                <div class="paragraph-16r text-bkkNeutral-700 mb-12">
+                    {{ $homepageContent['survey']['description'] }}
+                </div>
+                <a  href="{{ $homepageContent['tracer_study']['cta_link'] }}"
                     class="w-full lg:w-auto justify-self-start flex justify-center items-center gap-3 py-3 px-6 bg-bkkBlue-700 hover:bg-bkkBlue-800 transition duration-300 rounded-[8px] group">
-                    <span class="paragraph-16s text-bkkNeutral-50">Isi Survei Kepuasan</span>
+                    <span class="paragraph-16s text-bkkNeutral-50">
+                        {{ $homepageContent['survey']['cta_text'] }}
+                    </span>
                     <svg class="shrink-0 group-hover:translate-x-1 transition duration-300" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>

@@ -62,7 +62,7 @@ class FillTracerStudy extends Component
                     'address' => $data['address'],
                     'no_hp' => $data['no_hp'],
                     'major' => $data['major'],
-                    'graduation_year' => $data['graduation_year'],
+                    'graduation_year' => \Carbon\Carbon::parse($data['graduation_year'])->format('Y'),
                     'status' => $data['status'],
                 ]
             );

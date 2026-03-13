@@ -1,7 +1,7 @@
 <div>
     <section class="pt-30 lg:pt-25">
         <div 
-            style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
+            style="background-image: url('{{ asset('storage/' . $announcementContent['pengumuman']['hero_image']) }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
             <div class="absolute inset-0 bg-linear-to-t from-bkkNeutral-900/90 to-88% to-bkkNeutral-900/45 z-1"></div>
             <div class="relative z-2 w-full h-full flex flex-col justify-center mx-0 lg:mx-14">
@@ -17,10 +17,10 @@
                     <a href="{{ route('pengumuman') }}">Pengumuman</a>
                 </div>
                 <h1 class="heading-48s text-bkkNeutral-50 mb-3 lg:w-[55%]">
-                    Pengumuman
+                    {{ $announcementContent['pengumuman']['hero_title'] }}
                 </h1>
                 <div class="paragraph-16r text-bkkNeutral-100 w-full lg:w-[50%]">
-                    Memuat pengumuman resmi dan pemberitahuan penting dari BKK dan sekolah sebagai sarana penyampaian informasi terkini kepada siswa, alumni, dan mitra terkait kegiatan, jadwal, dan layanan.
+                    {{ $announcementContent['pengumuman']['hero_description'] }}
                 </div>
             </div>
         </div>
@@ -29,11 +29,11 @@
     <section class="py-15 lg:py-20">
         <div class="container mx-auto px-5 lg:px-0">
             <h2 class="heading-42s text-bkkNeutral-900">
-                Pengumuman Resmi BKK
+                {{ $announcementContent['pengumuman']['section_title'] }}
             </h2>
             <div class="flex flex-col lg:flex-row items-end justify-between mb-9 gap-6 lg:gap-0">
                 <div class="paragraph-16r text-bkkNeutral-700 w-full lg:w-[65%]">
-                    Pengumuman resmi dan informasi terbaru dari BKK untuk siswa dan alumni terkait kegiatan dan layanan.
+                    {{ $announcementContent['pengumuman']['section_description'] }}
                 </div>
                 <div class="flex justify-end gap-3 w-full lg:w-[35%]">
                     <input 
