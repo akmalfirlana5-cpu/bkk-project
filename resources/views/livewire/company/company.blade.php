@@ -199,14 +199,17 @@
                                     {{-- Divider --}}
                                     <div class="h-px w-full bg-bkkNeutral-200 my-6"></div>
                                     <div class="paragraph-16r text-bkkNeutral-700">
-                                        {{ $company->companies_profile }}
+                                        
+                                        {{ $company->companies_profile 
+                                        ? \Filament\Forms\Components\RichEditor\RichContentRenderer::make($company->companies_profile)
+                                        : 'Belum ada deskripsi perusahaan' }}
                                     </div>
                                     <h3 
                                         class="heading-20s text-black capitalize mt-6">
                                         Alamat Lengkap Perusahaan
                                     </h3>
-                                    <div class="paragraph-16r text-bkkNeutral-700">
-                                        {{ $company->address }}
+                                    <div class="paragraph-16r text-bkkNeutral-700 mt-2">
+                                        {{ $company->address ?? 'Belum ada alamat perusahaan' }}
                                     </div>
                                 </div>
                             </div>

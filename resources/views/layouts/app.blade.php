@@ -106,6 +106,11 @@
                             </div>
                         </div>
                         <a 
+                            href="{{ route('perusahaan') }}" 
+                            class="paragraph-16s {{ request()->routeIs('perusahaan') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300 py-2">
+                            Perusahaan
+                        </a>
+                        <a 
                             href="{{ route('lowongan') }}" 
                             class="paragraph-16s {{ request()->routeIs('lowongan') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300"
                             @mouseenter="openDropdown = null">
@@ -292,6 +297,11 @@
                             </a>
                         </div>
                     </div>
+                    <a 
+                        href="{{ route('perusahaan') }}" 
+                        class="paragraph-16s {{ request()->routeIs('perusahaan') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300 py-2">
+                        Perusahaan
+                    </a>
                     <a 
                         href="{{ route('lowongan') }}" 
                         class="paragraph-16s {{ request()->routeIs('lowongan') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300">
