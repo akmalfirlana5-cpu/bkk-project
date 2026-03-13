@@ -14,9 +14,10 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 
 class CompanieResource extends Resource
 {
@@ -39,8 +40,7 @@ class CompanieResource extends Resource
         return $schema->schema([
             TextInput::make('companies_name')->required()->label('Nama'),
             FileUpload::make('companies_logo')->label('Logo')->disk('public')->directory('companies')->image(),
-            Textarea::make('companies_profile')->label('Profil'),
-            TextInput::make('field')->label('Bidang Perusahaan'),
+            RichEditor::make('companies_profile')->label('Profil Perusahaan')->columnSpan('full')->extraInputAttributes(['style' => 'min-height: 200px;']),
             TextInput::make('employee')->label('Jumlah Karyawan')->numeric(),
             FileUpload::make('mou')->label('MOU')->disk('public')->directory('companies'),
             TextInput::make('address')->label('Alamat Perusahaan'),

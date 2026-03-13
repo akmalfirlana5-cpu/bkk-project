@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('faq_settings', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('companies', function (Blueprint $table) {
+            $table->longText('companies_profile')->nullable()->change();
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('faq_settings');
+        Schema::table('companies', function (Blueprint $table) {
+            //
+        });
     }
 };
