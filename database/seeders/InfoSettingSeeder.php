@@ -37,7 +37,6 @@ class InfoSettingSeeder extends Seeder
             ['section' => 'tracer_study', 'key' => 'cta_title', 'value' => 'Hasil Tracer Study Alumni'],
             ['section' => 'tracer_study', 'key' => 'cta_description', 'value' => 'Partisipasi Anda dalam Tracer Study membantu sekolah meningkatkan kualitas pendidikan dan layanan karier.'],
             ['section' => 'tracer_study', 'key' => 'cta_text', 'value' => 'Isi Tracer Study Sekarang'],
-            ['section' => 'tracer_study', 'key' => 'cta_link', 'value' => '/isi-tracer-study'],
             ['section' => 'tracer_study', 'key' => 'cta_image', 'value' => ''],
         ];
 
