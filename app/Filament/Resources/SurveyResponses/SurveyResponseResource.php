@@ -43,15 +43,12 @@ class SurveyResponseResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('No HP'),
-                Tables\Columns\TextColumn::make('identity_data')
+                Tables\Columns\TextColumn::make('nama')
                     ->label('Nama')
-                    ->formatStateUsing(function ($state) {
-                        if (is_array($state)) {
-                            return $state['nama_lengkap']
-                                ?? $state['nama_perusahaan']
-                                ?? '-';
-                        }
-                        return '-';
+                    ->getStateUsing(function ($record) {
+                        return $record->identity_data['nama_lengkap']
+                            ?? $record->identity_data['nama_perusahaan']
+                            ?? '-';
                     }),
                 Tables\Columns\TextColumn::make('answers_count')
                     ->label('Jawaban')
@@ -81,7 +78,13 @@ class SurveyResponseResource extends Resource
                             }
 
                             $export = new \App\Exports\SurveyResponsesExport($records);
-                            $fileName = 'Survey_' . str()->slug($firstRecord->category->name ?? 'survey') . '_' . now()->format('Ymd') . '.xlsx';
+                            
+                            $categoryIds = $records->pluck('category_id')->unique();
+                            $namePart = $categoryIds->count() > 1 
+                                ? 'Multi_Kategori' 
+                                : str()->slug($firstRecord->category->name ?? 'survey');
+
+                            $fileName = 'Survey_' . $namePart . '_' . now()->format('Ymd') . '.xlsx';
 
                             return $export->download($fileName);
                         })

@@ -13,6 +13,8 @@ use App\Livewire\User\FillTracerStudy;
 use App\Livewire\Vacancy\VacancyDetail;
 use App\Livewire\Information\TracerStudy;
 use App\Livewire\Information\Announcement;
+use App\Livewire\Information\Survey;
+use App\Livewire\Information\SuccessSurvey;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Company\Company;
 use App\Livewire\Profil\SupportingDocuments;
@@ -25,6 +27,10 @@ use App\Livewire\User\SuccessTracerStudy;
 Route::get('/', Homepage::class)->name('beranda');
 Route::get('/faq', Faq::class)->name('faq');
 Route::get('/kontak', Contact::class)->name('kontak');
+
+// Survey Routes
+Route::get('/survey/{slug}', Survey::class)->name('survey.show');
+Route::get('/survey/{slug}/terima-kasih', SuccessSurvey::class)->name('survey.thanks');
 
 // ProfilRoute
 Route::get('/visi-misi', VisiMisi::class)->name('visi-misi')->prefix('profil');
