@@ -12,11 +12,20 @@
         @foreach($category->identity_fields as $field)
             <div style="margin-bottom: 10px;">
                 <label>{{ $field['label'] }} {{ $field['required'] ? '*' : '' }}</label><br>
-                @if($field['type'] === 'number')
+                
+                @if($field['key'] === 'tahun_kelulusan')
+                    <select wire:model.defer="identity.{{ $field['key'] }}">
+                        <option value="">-- Pilih Tahun Lulus --</option>
+                        @for($year = date('Y'); $year >= 2010; $year--)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endfor
+                    </select>
+                @elseif($field['type'] === 'number')
                     <input type="number" wire:model.defer="identity.{{ $field['key'] }}">
                 @else
                     <input type="text" wire:model.defer="identity.{{ $field['key'] }}">
                 @endif
+                
                 @error('identity.'.$field['key']) <span style="color: red; font-size: 12px;">{{ $message }}</span> @enderror
             </div>
         @endforeach
