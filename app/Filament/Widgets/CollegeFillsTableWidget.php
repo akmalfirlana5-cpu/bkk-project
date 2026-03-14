@@ -9,7 +9,7 @@ use App\Models\CollegeFill;
 
 class CollegeFillsTableWidget extends BaseWidget
 {
-    protected static ?string $heading = 'Data Alumni Kuliah';
+    protected static ?string $heading = '';
     protected int|string|array $columnSpan = 'full';
     protected static ?int $sort = 4;
 
@@ -27,6 +27,12 @@ class CollegeFillsTableWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('university_name')
                     ->label('Universitas')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('major')
+                    ->label('Jurusan'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable(),
             ])
             ->recordUrl(null)
             ->defaultSort('created_at', 'desc');

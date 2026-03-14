@@ -12,7 +12,6 @@ class GlobalSettingSeeder extends Seeder
         $settings = [
             // ── Navbar ──
             ['section' => 'navbar', 'key' => 'logo', 'value' => ''],
-            ['section' => 'navbar', 'key' => 'name', 'value' => 'BKK SMKN 4 MALANG'],
 
             // ── Footer ──
             ['section' => 'footer', 'key' => 'logo', 'value' => ''],
@@ -54,8 +53,6 @@ class GlobalSettingSeeder extends Seeder
 
             // ── Tema ──
             ['section' => 'theme', 'key' => 'primary_color', 'value' => '#073AE4'],
-            ['section' => 'theme', 'key' => 'secondary_color', 'value' => '#FFBE0A'],
-            ['section' => 'theme', 'key' => 'neutral_color', 'value' => '#232B36'],
         ];
 
         foreach ($settings as $setting) {

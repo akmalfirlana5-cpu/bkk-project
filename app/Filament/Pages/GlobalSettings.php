@@ -15,8 +15,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
@@ -48,7 +46,6 @@ class GlobalSettings extends Page implements HasForms
         $this->form->fill([
             // Navbar
             'navbar_logo' => $this->resolveStorageImage($navbar['logo'] ?? ''),
-            'navbar_name' => $navbar['name'] ?? '',
 
             // Footer
             'footer_logo' => $this->resolveStorageImage($footer['logo'] ?? ''),
@@ -68,8 +65,6 @@ class GlobalSettings extends Page implements HasForms
 
             // Theme
             'primary_color' => $theme['primary_color'] ?? '#073AE4',
-            'secondary_color' => $theme['secondary_color'] ?? '#FFBE0A',
-            'neutral_color' => $theme['neutral_color'] ?? '#232B36',
         ]);
     }
 
@@ -84,155 +79,126 @@ class GlobalSettings extends Page implements HasForms
     public function form(Schema $schema): Schema
     {
         return $schema->statePath('data')->schema([
-            Tabs::make('global_settings')
-                ->tabs([
-                    // ── Navbar ──
-                    Tab::make('Navbar')
-                        ->label('Navbar')
-                        ->icon(Heroicon::OutlinedBars3)
+            // ── Tema ──
+            Section::make('Warna Tema')
+                ->icon(Heroicon::OutlinedSwatch)
+                ->description('Atur warna utama website.')
+                ->schema([
+                    ColorPicker::make('primary_color')
+                        ->label('Warna Utama')
+                        ->required(),
+                ]),
+
+            // ── Navbar ──
+            Section::make('Logo Navbar')
+                ->icon(Heroicon::OutlinedBars3)
+                ->description('Logo yang tampil di navigasi atas website.')
+                ->schema([
+                    FileUpload::make('navbar_logo')
+                        ->label('Logo Navbar')
+                        ->disk('public')
+                        ->directory('global')
+                        ->image()
+                        ->preserveFilenames(),
+                ]),
+
+            // ── Footer ──
+            Section::make('Logo & Deskripsi Footer')
+                ->icon(Heroicon::OutlinedBars3BottomLeft)
+                ->description('Logo dan deskripsi singkat yang tampil di footer.')
+                ->schema([
+                    FileUpload::make('footer_logo')
+                        ->label('Logo Footer (versi putih)')
+                        ->disk('public')
+                        ->directory('global')
+                        ->image()
+                        ->preserveFilenames(),
+                    Textarea::make('footer_description')
+                        ->label('Deskripsi')
+                        ->rows(3),
+                ]),
+
+            Section::make('Media Sosial')
+                ->description('Link akun media sosial yang tampil di footer.')
+                ->schema([
+                    TextInput::make('social_telegram')
+                        ->label('Telegram')
+                        ->placeholder('https://t.me/...'),
+                    TextInput::make('social_facebook')
+                        ->label('Facebook')
+                        ->placeholder('https://facebook.com/...'),
+                    TextInput::make('social_instagram')
+                        ->label('Instagram')
+                        ->placeholder('https://instagram.com/...'),
+                ]),
+
+            Section::make('Link Terkait')
+                ->description('Daftar link terkait yang tampil di footer.')
+                ->schema([
+                    Repeater::make('related_links')
+                        ->label('')
                         ->schema([
-                            Section::make('Logo Navbar')
-                                ->description('Logo yang tampil di navigasi atas website.')
-                                ->schema([
-                                    FileUpload::make('navbar_logo')
-                                        ->label('Logo Navbar')
-                                        ->disk('public')
-                                        ->directory('global')
-                                        ->image()
-                                        ->preserveFilenames(),
-                                ]),
-                            Section::make('Nama Website')
-                                ->description('Nama yang tampil di navbar (tidak mengubah link).')
-                                ->schema([
-                                    TextInput::make('navbar_name')
-                                        ->label('Nama')
-                                        ->placeholder('BKK SMKN 4 MALANG'),
-                                ]),
-                        ]),
+                            TextInput::make('label')
+                                ->label('Label')
+                                ->required(),
+                            TextInput::make('url')
+                                ->label('URL')
+                                ->required(),
+                        ])
+                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                        ->reorderable()
+                        ->deletable()
+                        ->addActionLabel('Tambah Link')
+                        ->collapsible()
+                        ->defaultItems(0),
+                ]),
 
-                    // ── Footer ──
-                    Tab::make('Footer')
-                        ->label('Footer')
-                        ->icon(Heroicon::OutlinedBars3BottomLeft)
+            Section::make('Layanan Kami')
+                ->description('Daftar link layanan yang tampil di footer.')
+                ->schema([
+                    Repeater::make('service_links')
+                        ->label('')
                         ->schema([
-                            Section::make('Logo & Deskripsi Footer')
-                                ->description('Logo dan deskripsi singkat yang tampil di footer.')
-                                ->schema([
-                                    FileUpload::make('footer_logo')
-                                        ->label('Logo Footer (versi putih)')
-                                        ->disk('public')
-                                        ->directory('global')
-                                        ->image()
-                                        ->preserveFilenames(),
-                                    Textarea::make('footer_description')
-                                        ->label('Deskripsi')
-                                        ->rows(3),
-                                ]),
+                            TextInput::make('label')
+                                ->label('Label')
+                                ->required(),
+                            TextInput::make('url')
+                                ->label('URL')
+                                ->required(),
+                        ])
+                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                        ->reorderable()
+                        ->deletable()
+                        ->addActionLabel('Tambah Link')
+                        ->collapsible()
+                        ->defaultItems(0),
+                ]),
 
-                            Section::make('Media Sosial')
-                                ->description('Link akun media sosial yang tampil di footer.')
-                                ->schema([
-                                    TextInput::make('social_telegram')
-                                        ->label('Telegram')
-                                        ->placeholder('https://t.me/...'),
-                                    TextInput::make('social_facebook')
-                                        ->label('Facebook')
-                                        ->placeholder('https://facebook.com/...'),
-                                    TextInput::make('social_instagram')
-                                        ->label('Instagram')
-                                        ->placeholder('https://instagram.com/...'),
-                                ]),
+            Section::make('Kontak')
+                ->description('Informasi kontak yang tampil di footer.')
+                ->schema([
+                    Textarea::make('contact_address')
+                        ->label('Alamat')
+                        ->rows(2),
+                    TextInput::make('contact_address_url')
+                        ->label('URL Google Maps')
+                        ->placeholder('https://maps.app.goo.gl/...'),
+                    TextInput::make('contact_email')
+                        ->label('Email'),
+                    TextInput::make('contact_phone')
+                        ->label('Telepon'),
+                ]),
 
-                            Section::make('Link Terkait')
-                                ->description('Daftar link terkait yang tampil di footer.')
-                                ->schema([
-                                    Repeater::make('related_links')
-                                        ->label('')
-                                        ->schema([
-                                            TextInput::make('label')
-                                                ->label('Label')
-                                                ->required(),
-                                            TextInput::make('url')
-                                                ->label('URL')
-                                                ->required(),
-                                        ])
-                                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
-                                        ->reorderable()
-                                        ->deletable()
-                                        ->addActionLabel('Tambah Link')
-                                        ->collapsible()
-                                        ->defaultItems(0),
-                                ]),
-
-                            Section::make('Layanan Kami')
-                                ->description('Daftar link layanan yang tampil di footer.')
-                                ->schema([
-                                    Repeater::make('service_links')
-                                        ->label('')
-                                        ->schema([
-                                            TextInput::make('label')
-                                                ->label('Label')
-                                                ->required(),
-                                            TextInput::make('url')
-                                                ->label('URL')
-                                                ->required(),
-                                        ])
-                                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
-                                        ->reorderable()
-                                        ->deletable()
-                                        ->addActionLabel('Tambah Link')
-                                        ->collapsible()
-                                        ->defaultItems(0),
-                                ]),
-
-                            Section::make('Kontak')
-                                ->description('Informasi kontak yang tampil di footer.')
-                                ->schema([
-                                    Textarea::make('contact_address')
-                                        ->label('Alamat')
-                                        ->rows(2),
-                                    TextInput::make('contact_address_url')
-                                        ->label('URL Google Maps')
-                                        ->placeholder('https://maps.app.goo.gl/...'),
-                                    TextInput::make('contact_email')
-                                        ->label('Email'),
-                                    TextInput::make('contact_phone')
-                                        ->label('Telepon'),
-                                ]),
-
-                            Section::make('Bagian Bawah Footer')
-                                ->description('Copyright dan link kebijakan.')
-                                ->schema([
-                                    TextInput::make('copyright')
-                                        ->label('Teks Copyright'),
-                                    TextInput::make('privacy_policy_url')
-                                        ->label('URL Kebijakan Privasi'),
-                                    TextInput::make('terms_url')
-                                        ->label('URL Syarat & Ketentuan'),
-                                ]),
-                        ]),
-
-                    // ── Tema ──
-                    Tab::make('Tema')
-                        ->label('Tema')
-                        ->icon(Heroicon::OutlinedSwatch)
-                        ->schema([
-                            Section::make('Warna Tema')
-                                ->description('Atur warna utama website. Perubahan akan diterapkan oleh tim frontend.')
-                                ->schema([
-                                    ColorPicker::make('primary_color')
-                                        ->label('Warna Utama')
-                                        ->required(),
-                                    ColorPicker::make('secondary_color')
-                                        ->label('Warna Sekunder')
-                                        ->required(),
-                                    ColorPicker::make('neutral_color')
-                                        ->label('Warna Netral')
-                                        ->required(),
-                                ]),
-                        ]),
-                ])
-                ->columnSpanFull(),
+            Section::make('Bagian Bawah Footer')
+                ->description('Copyright dan link kebijakan.')
+                ->schema([
+                    TextInput::make('copyright')
+                        ->label('Teks Copyright'),
+                    TextInput::make('privacy_policy_url')
+                        ->label('URL Kebijakan Privasi'),
+                    TextInput::make('terms_url')
+                        ->label('URL Syarat & Ketentuan'),
+                ]),
         ]);
     }
 
@@ -247,7 +213,6 @@ class GlobalSettings extends Page implements HasForms
         $settingsMap = [
             // Navbar
             ['navbar', 'logo', $extractImage('navbar_logo')],
-            ['navbar', 'name', $state['navbar_name'] ?? ''],
 
             // Footer
             ['footer', 'logo', $extractImage('footer_logo')],
@@ -267,8 +232,6 @@ class GlobalSettings extends Page implements HasForms
 
             // Theme
             ['theme', 'primary_color', $state['primary_color'] ?? ''],
-            ['theme', 'secondary_color', $state['secondary_color'] ?? ''],
-            ['theme', 'neutral_color', $state['neutral_color'] ?? ''],
         ];
 
         foreach ($settingsMap as [$section, $key, $value]) {
