@@ -20,6 +20,9 @@ use Filament\Tables;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
 
 use function Laravel\Prompts\select;
 
@@ -73,7 +76,19 @@ class UserResource extends Resource
                     ->label('Edit'),
                 DeleteAction::make()
                     ->label('Hapus'),
-            ])->actionsColumnLabel('Aksi');
+            ])->actionsColumnLabel('Aksi')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('deleteSelected')
+                    ->label('Hapus Pilihan')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->action(function (Collection $records) {
+                        $records->each->delete();
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                ])->label('Aksi'),
+            ]);
     }
 
     public static function getEloquentQuery(): Builder

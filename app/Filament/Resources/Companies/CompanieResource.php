@@ -18,6 +18,9 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Illuminate\Database\Eloquent\Collection;
 
 class CompanieResource extends Resource
 {
@@ -62,7 +65,19 @@ class CompanieResource extends Resource
                 ->label('edit'),
             DeleteAction::make()
                 ->label('Hapus'),
-        ])->actionsColumnLabel('Aksi');;;
+        ])->actionsColumnLabel('Aksi')
+        ->toolbarActions([
+            BulkActionGroup::make([
+                BulkAction::make('deleteSelected')
+                ->label('Hapus Pilihan')
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->action(function (Collection $records) {
+                    $records->each->delete();
+                })
+                ->deselectRecordsAfterCompletion(),
+            ])->label('Aksi'),
+        ]);
     }
 
     public static function getRelations(): array

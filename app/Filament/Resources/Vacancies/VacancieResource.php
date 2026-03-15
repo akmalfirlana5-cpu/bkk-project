@@ -25,6 +25,9 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Actions\BulkActionGroup;
 
 
 class VacancieResource extends Resource
@@ -124,7 +127,7 @@ class VacancieResource extends Resource
             Tables\Columns\TextColumn::make('deadline')->label('Batas waktu')->date()->sortable()
                 ->color(fn ($record) => $record->deadline && $record->deadline->isPast() ? 'danger' : null),
         ])
-        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN deadline < NOW() THEN 1 ELSE 0 END ASC, deadline ASC'))
+        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN deadline < NOW() THEN 1 ELSE 0 END ASC, deadline DESC'))
         ->actions([
             \Filament\Actions\Action::make('lihatLamaran')
                 ->label('Lihat Lamaran')
@@ -135,7 +138,52 @@ class VacancieResource extends Resource
                 ->label('edit'),
                 DeleteAction::make()
                 ->label('Hapus'),
-        ])->actionsColumnLabel('Aksi');
+        ])->actionsColumnLabel('Aksi')
+        ->toolbarActions([
+            BulkActionGroup::make([
+                BulkAction::make('deleteSelected')
+                    ->label('Hapus Pilihan')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->action(function (Collection $records) {
+                        $records->each->delete();
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                BulkAction::make('extendDeadline')
+                    ->label('Perpanjang Batas Waktu')
+                    ->icon('heroicon-o-calendar')
+                    ->color('primary')
+                    ->form([
+                        DatePicker::make('new_deadline')
+                            ->label('Atur Batas Waktu Baru')
+                            ->required(),
+                    ])
+                    ->action(function (Collection $records, array $data) {
+                        $newDeadline = $data['new_deadline'];
+                        $records->each(function ($record) use ($newDeadline) {
+                            $record->update(['deadline' => $newDeadline]);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                BulkAction::make('changenumber')
+                    ->label('Ubah Kuota')
+                    ->icon('heroicon-o-user-group')
+                    ->color('secondary')
+                    ->form([
+                        TextInput::make('new_vacancy_number')
+                            ->label('Atur Kuota Baru')
+                            ->numeric()
+                            ->required(),
+                    ])
+                    ->action(function (Collection $records, array $data) {
+                        $newNumber = $data['new_vacancy_number'];
+                        $records->each(function ($record) use ($newNumber) {
+                            $record->update(['vacancy_number' => $newNumber]);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion(),
+            ])->label('Aksi'),
+        ]);
     }
 
     public static function getRelations(): array

@@ -19,6 +19,9 @@ use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
 
 
 
@@ -50,13 +53,19 @@ class ContactsResource extends Resource
         return $table->columns([
 
         Split::make([
-             TextColumn::make('firstname')->label('Nama')->searchable()->sortable(),
+            TextColumn::make('firstname')->label('Nama')->searchable()->sortable(),
             Stack::make([
-                TextColumn::make('email')->label('Email')
-                ->icon('heroicon-m-envelope')->searchable()->sortable(),
-                TextColumn::make('message')->label('Pesan')->limit(50),
-                        ]) 
+                        TextColumn::make('email')
+                        ->label('Email')
+                        ->icon('heroicon-m-envelope')
+                        ->searchable()
+                        ->sortable(),
+                        TextColumn::make('message')
+                        ->label('Pesan'
+                        )->limit(100),
             ]),
+            TextColumn::make('created_at')->label('Dikirim Pada')->dateTime()->sortable(),
+        ]),
         ])
         ->actions([
             ViewAction::make()
@@ -65,7 +74,19 @@ class ContactsResource extends Resource
                 ->label('Hapus'),
         ])
         ->actionsColumnLabel('Aksi')
-        ->actionsAlignment('end');
+        ->actionsAlignment('end')
+        ->toolbarActions([
+            BulkActionGroup::make([
+                BulkAction::make('deleteSelected')
+                ->label('Hapus Pilihan')
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->action(function (Collection $records) {
+                    $records->each->delete();
+                })
+                ->deselectRecordsAfterCompletion(),
+            ])->label('Aksi'),
+        ]);
     }
 
     public static function getRelations(): array

@@ -22,7 +22,9 @@ use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
-use Filament\Tables\Enums\ActionsPosition;
+use Filament\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Actions\BulkActionGroup;
 
 class AnnouncementResource extends Resource
 {
@@ -72,7 +74,7 @@ class AnnouncementResource extends Resource
             Tables\Columns\TextColumn::make('active_until')->label('Aktif Sampai')->date()->sortable()
                 ->color(fn ($record) => $record->active_until && \Carbon\Carbon::parse($record->active_until)->isPast() ? 'danger' : null),
         ])
-        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN active_until < NOW() THEN 1 ELSE 0 END ASC, active_until ASC'))
+        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN active_until < NOW() THEN 1 ELSE 0 END DESC, active_until DESC'))
         ->actions([
             EditAction::make()
                 ->label('edit'),
@@ -80,7 +82,36 @@ class AnnouncementResource extends Resource
                 ->label('Hapus'),
         ])
         ->actionsColumnLabel('Aksi')
-        ->actionsAlignment('start');
+        ->actionsAlignment('start')
+        ->toolbarActions([
+            BulkActionGroup::make([
+            BulkAction::make('deleteSelected')
+                ->label('Hapus Pilihan')
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->action(function (Collection $records) {
+                    $records->each->delete();
+                })
+                ->deselectRecordsAfterCompletion(),
+            BulkAction::make('extendActiveUntil')
+                ->label('Sesuaikan Tanggal Aktif')
+                ->icon('heroicon-o-calendar')
+                ->color('primary')
+                ->form([
+                    DatePicker::make('new_active_until')
+                        ->label('Atur Tanggal Aktif Baru')
+                        ->required(),
+                ])
+                ->action(function (Collection $records, array $data) {
+                    $newDate = $data['new_active_until'];
+                    $records->each(function ($record) use ($newDate) {
+                        $record->update(['active_until' => $newDate]);
+                    });
+                })
+                ->deselectRecordsAfterCompletion(),
+        
+            ])->label('Aksi'),
+        ]) ;
     }
 
     
