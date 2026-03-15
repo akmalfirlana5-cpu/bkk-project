@@ -15,6 +15,9 @@ use App\Models\CollegeFill;
 use App\Models\EntrepreneurFill;
 use App\Models\UnemployedFill;
 use Livewire\Attributes\Url;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use App\Exports\TracerStudyExport;
 
 class TracerStudyDashboard extends Page
 {
@@ -34,6 +37,38 @@ class TracerStudyDashboard extends Page
     public function setTab(string $tab): void
     {
         $this->activeTab = $tab;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('exportExcel')
+                ->label('Export Excel')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('primary')
+                ->form([
+                    Select::make('category')
+                        ->label('Pilih Kategori Laporan')
+                        ->options([
+                            'semua' => 'Semua Kategori (Multi-sheet)',
+                            'bekerja' => 'Bekerja Saja',
+                            'kuliah' => 'Kuliah Saja',
+                            'wirausaha' => 'Wirausaha Saja',
+                            'belum_bekerja' => 'Belum Bekerja Saja',
+                        ])
+                        ->default('semua')
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $type = $data['category'];
+                    $fileName = 'Tracer_Study_' . ucfirst($type) . '_' . date('Y-m-d_H-i-s') . '.xlsx';
+                    
+                    return \Maatwebsite\Excel\Facades\Excel::download(
+                        new TracerStudyExport($type),
+                        $fileName
+                    );
+                }),
+        ];
     }
 
     public function getTabCounts(): array

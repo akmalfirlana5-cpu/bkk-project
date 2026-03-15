@@ -62,6 +62,7 @@ class ApplicationResource extends Resource
                     ->date()
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordUrl(null)
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

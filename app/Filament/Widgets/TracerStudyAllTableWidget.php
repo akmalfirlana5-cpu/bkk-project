@@ -10,6 +10,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TracerStudyAllTableWidget extends BaseWidget
@@ -85,6 +86,22 @@ class TracerStudyAllTableWidget extends BaseWidget
                     ->label('Tanggal')
                     ->dateTime('d M Y')
                     ->sortable(),
+            ])
+            ->bulkActions([
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\BulkAction::make('delete')
+                        ->label('Hapus Laporan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $userIds = $records->pluck('id')->toArray();
+                            \App\Models\WorkFill::whereIn('id_user', $userIds)->delete();
+                            \App\Models\CollegeFill::whereIn('id_user', $userIds)->delete();
+                            \App\Models\EntrepreneurFill::whereIn('id_user', $userIds)->delete();
+                            \App\Models\UnemployedFill::whereIn('id_user', $userIds)->delete();
+                        }),
+                ]),
             ])
             ->recordUrl(null)
             ->defaultSort('filled_at', 'desc');

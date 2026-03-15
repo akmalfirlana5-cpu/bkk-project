@@ -38,7 +38,6 @@
     @livewire($this->getActiveTableWidget(), [], key($activeTab))
 
     <style>
-        .fi-page-header { display: none !important; }
         .fi-wi-table-widget { margin-top: 0 !important; padding: 0 !important; }
         .fi-wi-table .fi-ta-ctn { border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; border-top: 0 !important; }
     </style>

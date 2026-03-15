@@ -6,6 +6,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\EntrepreneurFill;
+use Illuminate\Database\Eloquent\Collection;
 
 class EntrepreneurFillsTableWidget extends BaseWidget
 {
@@ -44,6 +45,21 @@ class EntrepreneurFillsTableWidget extends BaseWidget
                     ->label('Tanggal')
                     ->date('d M Y')
                     ->sortable(),
+            ])
+            ->bulkActions([
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
+                    \Filament\Actions\BulkAction::make('export')
+                        ->label('Ekspor Pilihan')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->action(function (Collection $records) {
+                            $userIds = $records->pluck('id_user')->toArray();
+                            return \Maatwebsite\Excel\Facades\Excel::download(
+                                new \App\Exports\TracerStudyExport('wirausaha', $userIds),
+                                'Tracer_Study_Wirausaha_Terpilih_' . date('Y-m-d_H-i-s') . '.xlsx'
+                            );
+                        }),
+                ]),
             ])
             ->recordUrl(null)
             ->defaultSort('created_at', 'desc');
