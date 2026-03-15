@@ -1,83 +1,82 @@
 <?php
 
-namespace App\Filament\Resources\Applications;
+namespace App\Filament\Resources\Vacancies\Pages;
 
-use App\Filament\Resources\Applications\Pages\CreateApplication;
-use App\Filament\Resources\Applications\Pages\EditApplication;
-use App\Filament\Resources\Applications\Pages\ListApplications;
+use App\Filament\Resources\Vacancies\VacancieResource;
 use App\Models\Application;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Tables;
+use App\Models\vacancie;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkAction;
-use Illuminate\Support\Facades\App;
+use Filament\Forms\Components\Select;
+use Filament\Resources\Pages\Page;
+use Filament\Schemas\Components\EmbeddedTable;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
-class ApplicationResource extends Resource
+class ListVacancyApplications extends Page implements HasTable
 {
-    protected static ?string $model = Application::class;
+    use InteractsWithTable;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+    protected static string $resource = VacancieResource::class;
 
-    protected static ?string $recordTitleAttribute = 'id';
+    protected string $view = 'filament.resources.vacancies.pages.list-vacancy-applications';
 
-    protected static ?string $navigationLabel = 'Lamaran';
+    public vacancie $record;
 
-    protected static ?string $modelLabel = 'Lamaran';
-
-    protected static ?string $pluralModelLabel = 'Lamaran';
-
-    protected static ?int $navigationSort = 5;
-    
-    public static function form(Schema $schema): Schema
+    public function getTitle(): string|Htmlable
     {
-        return ApplicationForm::configure($schema);
+        $vacancyName = $this->record->vacancy_name ?? 'Lowongan';
+
+        return "Lamaran: {$vacancyName}";
     }
 
-    public static function table(Table $table): Table
+    public function getBreadcrumbs(): array
     {
-        return $table
+        return [
+            VacancieResource::getUrl() => 'Daftar Lowongan',
+            '#' => $this->record->vacancy_name ?? 'Lowongan',
+            '' => 'Lamaran',
+        ];
+    }
+
+    protected function makeTable(): Table
+    {
+        return Table::make($this)
+            ->query(
+                Application::query()
+                    ->where('id_vacancy', $this->record->getKey())
+                    ->with(['user', 'vacancy.company'])
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('user.full_name')
                     ->label('Nama')
                     ->searchable(),
-                    
-                Tables\Columns\TextColumn::make('vacancy.vacancy_name')
-                    ->label('Jabatan')
-                    ->searchable(),
-                    
-                Tables\Columns\TextColumn::make('vacancy.company.companies_name')
-                    ->label('Perusahaan')
-                    ->searchable(),
+
                 Tables\Columns\SelectColumn::make('status')
                     ->options(Application::STATUSES)
                     ->label('Status'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Daftar')
                     ->date()
                     ->sortable(),
             ])
-            ->defaultSort('created_at', 'desc')
             ->recordUrl(null)
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
                     ->options(Application::STATUSES),
-
-                Tables\Filters\SelectFilter::make('id_vacancy')
-                    ->label('Lowongan')
-                    ->relationship('vacancy', 'vacancy_name')
-                    ->searchable()
-                    ->preload(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('hapus pilihan'),
+                    DeleteBulkAction::make()->label('Hapus Pilihan'),
 
                     BulkAction::make('updateStatus')
                         ->label('Ubah Status')
@@ -88,7 +87,7 @@ class ApplicationResource extends Resource
                                 ->options(Application::STATUSES)
                                 ->required(),
                         ])
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
+                        ->action(function (Collection $records, array $data): void {
                             $records->each(function ($record) use ($data) {
                                 $record->update(['status' => $data['status']]);
                             });
@@ -98,7 +97,7 @@ class ApplicationResource extends Resource
                     BulkAction::make('export')
                         ->label('Export Terpilih')
                         ->icon('heroicon-o-arrow-down-tray')
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        ->action(function (Collection $records) {
                             $firstApp = $records->first();
                             if (!$firstApp || !$firstApp->vacancy) {
                                 return;
@@ -121,25 +120,11 @@ class ApplicationResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
+    public function content(Schema $schema): Schema
     {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListApplications::route('/'),
-            'create' => CreateApplication::route('/create'),
-            'edit' => EditApplication::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        return parent::getEloquentQuery()
-            ->with(['user', 'vacancy.company']);
+        return $schema
+            ->components([
+                EmbeddedTable::make(),
+            ]);
     }
 }

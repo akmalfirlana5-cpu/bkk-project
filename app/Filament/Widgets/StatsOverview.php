@@ -23,7 +23,7 @@ class StatsOverview extends StatsOverviewWidget
                 'iconColor' => 'text-indigo-600',
                 'iconBg' => 'bg-indigo-200/80',
             ]),
-            Stat::make('Total lowongan', vacancie::count())
+            Stat::make('Total lowongan', vacancie::where('deadline', '>', now())->count())
             ->description('Lowongan tersedia')
             ->icon('heroicon-m-briefcase')
             ->view('filament.widgets.custom-stat')
@@ -31,7 +31,7 @@ class StatsOverview extends StatsOverviewWidget
                 'iconColor' => 'text-emerald-600',
                 'iconBg' => 'bg-emerald-200/80',
             ]),
-            Stat::make('Total lamaran', Application::count())
+            Stat::make('Total lamaran', Application::where('status', 'diproses')->count())
             ->description('Lamaran yang masuk')
             ->icon('heroicon-m-document-text')
             ->view('filament.widgets.custom-stat')
@@ -39,8 +39,8 @@ class StatsOverview extends StatsOverviewWidget
                 'iconColor' => 'text-blue-600',
                 'iconBg' => 'bg-blue-200/80',
             ]),
-            Stat::make('Total pesan', Contacts::count())
-            ->description('Pesan dari pengguna')
+            Stat::make('Total masukan', Contacts::where('created_at', '>=', now()->subDays(30))->count())
+            ->description('Masukan bulan ini')
             ->icon('heroicon-m-chat-bubble-left-right')
             ->view('filament.widgets.custom-stat')
             ->extraAttributes([

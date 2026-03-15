@@ -82,8 +82,6 @@ class ProfileSettings extends Page implements HasForms
             'alur_link_gdrive' => $alurKegiatan['link_gdrive'] ?? '',
 
             // Dokumen Pendukung
-            'dokpen_section_title' => $dokPendukung['section_title'] ?? '',
-            'dokpen_section_description' => $dokPendukung['section_description'] ?? '',
             'dokpen_items' => json_decode($dokPendukung['items'] ?? '[]', true) ?? [],
         ]);
     }
@@ -240,14 +238,6 @@ class ProfileSettings extends Page implements HasForms
                         ->label('Dokumen Pendukung')
                         ->icon(Heroicon::OutlinedDocumentText)
                         ->schema([
-                            Section::make('Section Dokumen Pendukung')
-                                ->schema([
-                                    TextInput::make('dokpen_section_title')
-                                        ->label('Judul Section'),
-                                    Textarea::make('dokpen_section_description')
-                                        ->label('Deskripsi Section')
-                                        ->rows(2),
-                                ]),
                             Section::make('Daftar Dokumen')
                                 ->description('Tambah, edit, hapus, atau susun ulang dokumen.')
                                 ->schema([

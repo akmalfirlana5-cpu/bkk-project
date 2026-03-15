@@ -41,8 +41,6 @@ class ProfileSettingSeeder extends Seeder
             ['section' => 'alur_kegiatan', 'key' => 'link_gdrive', 'value' => 'https://drive.google.com/file/d/1mDHMOi1q4VeYeXIHuLP-e0ehsKBRMHud/preview'],
 
             // Dokumen Pendukung
-            ['section' => 'dokumen_pendukung', 'key' => 'section_title', 'value' => 'Dokumen Pendukung'],
-            ['section' => 'dokumen_pendukung', 'key' => 'section_description', 'value' => ''],
             ['section' => 'dokumen_pendukung', 'key' => 'items', 'value' => json_encode([
                 [
                     'type' => 'sarana_prasarana',

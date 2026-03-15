@@ -2,9 +2,10 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\FooterSetting;
+use App\Models\GlobalSetting;
 use BackedEnum;
 use UnitEnum;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
@@ -18,55 +19,52 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
 
-class FooterSettings extends Page implements HasForms
+class GlobalSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
-    protected static ?string $navigationLabel = 'Pengaturan Footer';
+    protected static ?string $navigationLabel = 'Pengaturan Global';
 
-    protected static ?string $title = 'Pengaturan Footer';
+    protected static ?string $title = 'Pengaturan Global';
 
     protected static string|UnitEnum|null $navigationGroup = 'Pengaturan Halaman';
 
-    protected static ?int $navigationSort = 15;
+    protected static ?int $navigationSort = 1;
 
-    protected string $view = 'filament.pages.footer-settings';
+    protected string $view = 'filament.pages.global-settings';
 
     public ?array $data = [];
 
     public function mount(): void
     {
-        $logoPath = FooterSetting::getValue('logo', '');
+        $navbar = GlobalSetting::getBySection('navbar');
+        $footer = GlobalSetting::getBySection('footer');
+        $theme = GlobalSetting::getBySection('theme');
 
         $this->form->fill([
-            'logo' => $this->resolveStorageImage($logoPath),
-            'description' => FooterSetting::getValue('description', ''),
+            // Navbar
+            'navbar_logo' => $this->resolveStorageImage($navbar['logo'] ?? ''),
 
-            // Social Media
-            'social_telegram' => FooterSetting::getValue('social_telegram', ''),
-            'social_facebook' => FooterSetting::getValue('social_facebook', ''),
-            'social_instagram' => FooterSetting::getValue('social_instagram', ''),
+            // Footer
+            'footer_logo' => $this->resolveStorageImage($footer['logo'] ?? ''),
+            'footer_description' => $footer['description'] ?? '',
+            'social_telegram' => $footer['social_telegram'] ?? '',
+            'social_facebook' => $footer['social_facebook'] ?? '',
+            'social_instagram' => $footer['social_instagram'] ?? '',
+            'related_links' => json_decode($footer['related_links'] ?? '[]', true) ?? [],
+            'service_links' => json_decode($footer['service_links'] ?? '[]', true) ?? [],
+            'contact_address' => $footer['contact_address'] ?? '',
+            'contact_address_url' => $footer['contact_address_url'] ?? '',
+            'contact_email' => $footer['contact_email'] ?? '',
+            'contact_phone' => $footer['contact_phone'] ?? '',
+            'copyright' => $footer['copyright'] ?? '',
+            'privacy_policy_url' => $footer['privacy_policy_url'] ?? '',
+            'terms_url' => $footer['terms_url'] ?? '',
 
-            // Link Terkait
-            'related_links' => json_decode(FooterSetting::getValue('related_links', '[]'), true) ?? [],
-
-            // Layanan Kami
-            'service_links' => json_decode(FooterSetting::getValue('service_links', '[]'), true) ?? [],
-
-            // Kontak
-            'contact_address' => FooterSetting::getValue('contact_address', ''),
-            'contact_address_url' => FooterSetting::getValue('contact_address_url', ''),
-            'contact_email' => FooterSetting::getValue('contact_email', ''),
-            'contact_phone' => FooterSetting::getValue('contact_phone', ''),
-
-            // Copyright
-            'copyright' => FooterSetting::getValue('copyright', ''),
-
-            // Bottom Links
-            'privacy_policy_url' => FooterSetting::getValue('privacy_policy_url', ''),
-            'terms_url' => FooterSetting::getValue('terms_url', ''),
+            // Theme
+            'primary_color' => $theme['primary_color'] ?? '#073AE4',
         ]);
     }
 
@@ -81,16 +79,41 @@ class FooterSettings extends Page implements HasForms
     public function form(Schema $schema): Schema
     {
         return $schema->statePath('data')->schema([
-            Section::make('Logo & Deskripsi')
-                ->description('Logo dan deskripsi singkat yang tampil di footer.')
+            // ── Tema ──
+            Section::make('Warna Tema')
+                ->icon(Heroicon::OutlinedSwatch)
+                ->description('Atur warna utama website.')
                 ->schema([
-                    FileUpload::make('logo')
-                        ->label('Logo Footer (versi putih)')
+                    ColorPicker::make('primary_color')
+                        ->label('Warna Utama')
+                        ->required(),
+                ]),
+
+            // ── Navbar ──
+            Section::make('Logo Navbar')
+                ->icon(Heroicon::OutlinedBars3)
+                ->description('Logo yang tampil di navigasi atas website.')
+                ->schema([
+                    FileUpload::make('navbar_logo')
+                        ->label('Logo Navbar')
                         ->disk('public')
-                        ->directory('footer')
+                        ->directory('global')
                         ->image()
                         ->preserveFilenames(),
-                    Textarea::make('description')
+                ]),
+
+            // ── Footer ──
+            Section::make('Logo & Deskripsi Footer')
+                ->icon(Heroicon::OutlinedBars3BottomLeft)
+                ->description('Logo dan deskripsi singkat yang tampil di footer.')
+                ->schema([
+                    FileUpload::make('footer_logo')
+                        ->label('Logo Footer (versi putih)')
+                        ->disk('public')
+                        ->directory('global')
+                        ->image()
+                        ->preserveFilenames(),
+                    Textarea::make('footer_description')
                         ->label('Deskripsi')
                         ->rows(3),
                 ]),
@@ -110,7 +133,7 @@ class FooterSettings extends Page implements HasForms
                 ]),
 
             Section::make('Link Terkait')
-                ->description('Daftar link terkait yang tampil di footer. Bisa ditambah, dihapus, atau diurutkan ulang.')
+                ->description('Daftar link terkait yang tampil di footer.')
                 ->schema([
                     Repeater::make('related_links')
                         ->label('')
@@ -131,7 +154,7 @@ class FooterSettings extends Page implements HasForms
                 ]),
 
             Section::make('Layanan Kami')
-                ->description('Daftar link layanan yang tampil di footer. Bisa ditambah, dihapus, atau diurutkan ulang.')
+                ->description('Daftar link layanan yang tampil di footer.')
                 ->schema([
                     Repeater::make('service_links')
                         ->label('')
@@ -188,31 +211,38 @@ class FooterSettings extends Page implements HasForms
             : ($state[$key] ?? '');
 
         $settingsMap = [
-            ['logo', $extractImage('logo')],
-            ['description', $state['description'] ?? ''],
-            ['social_telegram', $state['social_telegram'] ?? ''],
-            ['social_facebook', $state['social_facebook'] ?? ''],
-            ['social_instagram', $state['social_instagram'] ?? ''],
-            ['related_links', json_encode($state['related_links'] ?? [])],
-            ['service_links', json_encode($state['service_links'] ?? [])],
-            ['contact_address', $state['contact_address'] ?? ''],
-            ['contact_address_url', $state['contact_address_url'] ?? ''],
-            ['contact_email', $state['contact_email'] ?? ''],
-            ['contact_phone', $state['contact_phone'] ?? ''],
-            ['copyright', $state['copyright'] ?? ''],
-            ['privacy_policy_url', $state['privacy_policy_url'] ?? ''],
-            ['terms_url', $state['terms_url'] ?? ''],
+            // Navbar
+            ['navbar', 'logo', $extractImage('navbar_logo')],
+
+            // Footer
+            ['footer', 'logo', $extractImage('footer_logo')],
+            ['footer', 'description', $state['footer_description'] ?? ''],
+            ['footer', 'social_telegram', $state['social_telegram'] ?? ''],
+            ['footer', 'social_facebook', $state['social_facebook'] ?? ''],
+            ['footer', 'social_instagram', $state['social_instagram'] ?? ''],
+            ['footer', 'related_links', json_encode($state['related_links'] ?? [])],
+            ['footer', 'service_links', json_encode($state['service_links'] ?? [])],
+            ['footer', 'contact_address', $state['contact_address'] ?? ''],
+            ['footer', 'contact_address_url', $state['contact_address_url'] ?? ''],
+            ['footer', 'contact_email', $state['contact_email'] ?? ''],
+            ['footer', 'contact_phone', $state['contact_phone'] ?? ''],
+            ['footer', 'copyright', $state['copyright'] ?? ''],
+            ['footer', 'privacy_policy_url', $state['privacy_policy_url'] ?? ''],
+            ['footer', 'terms_url', $state['terms_url'] ?? ''],
+
+            // Theme
+            ['theme', 'primary_color', $state['primary_color'] ?? ''],
         ];
 
-        foreach ($settingsMap as [$key, $value]) {
-            FooterSetting::updateOrCreate(
-                ['key' => $key],
+        foreach ($settingsMap as [$section, $key, $value]) {
+            GlobalSetting::updateOrCreate(
+                ['section' => $section, 'key' => $key],
                 ['value' => $value]
             );
         }
 
         Notification::make()
-            ->title('Pengaturan footer berhasil disimpan!')
+            ->title('Pengaturan global berhasil disimpan!')
             ->success()
             ->send();
     }

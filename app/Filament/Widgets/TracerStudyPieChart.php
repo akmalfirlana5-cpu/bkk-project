@@ -26,7 +26,7 @@ class TracerStudyPieChart extends ChartWidget
                     'backgroundColor' => ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444'],
                 ],
             ],
-            'labels' => ['Bekerja', 'Kuliah', 'Wiraswasta', 'Menganggur'],
+            'labels' => ['Bekerja', 'Kuliah', 'Wiraswasta', 'belum bekerja'],
         ];
     }
 

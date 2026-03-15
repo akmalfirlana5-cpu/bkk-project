@@ -8,16 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('footer_settings', function (Blueprint $table) {
+        Schema::create('global_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->string('section');
+            $table->string('key');
             $table->longText('value')->nullable();
             $table->timestamps();
+
+            $table->unique(['section', 'key']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('footer_settings');
+        Schema::dropIfExists('global_settings');
     }
 };

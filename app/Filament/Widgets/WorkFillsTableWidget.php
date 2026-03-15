@@ -6,10 +6,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\WorkFill;
+use Illuminate\Database\Eloquent\Collection;
 
 class WorkFillsTableWidget extends BaseWidget
 {
-    protected static ?string $heading = 'Data Alumni Bekerja';
+    protected static ?string $heading = '';
     protected int|string|array $columnSpan = 'full';
     protected static ?int $sort = 3;
 
@@ -27,6 +28,8 @@ class WorkFillsTableWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('company_name')
                     ->label('Perusahaan')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Posisi'),
                 Tables\Columns\TextColumn::make('major_relevance')
                     ->label('Kesesuaian Jurusan')
                     ->badge()
@@ -36,6 +39,25 @@ class WorkFillsTableWidget extends BaseWidget
                         'mungkin' => 'warning',
                         default => 'gray',
                     }),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable(),
+            ])
+            ->bulkActions([
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
+                    \Filament\Actions\BulkAction::make('export')
+                        ->label('Ekspor Pilihan')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->action(function (Collection $records) {
+                            $userIds = $records->pluck('id_user')->toArray();
+                            return \Maatwebsite\Excel\Facades\Excel::download(
+                                new \App\Exports\TracerStudyExport('bekerja', $userIds),
+                                'Tracer_Study_Bekerja_Terpilih_' . date('Y-m-d_H-i-s') . '.xlsx'
+                            );
+                        }),
+                ]),
             ])
             ->recordUrl(null)
             ->defaultSort('created_at', 'desc');

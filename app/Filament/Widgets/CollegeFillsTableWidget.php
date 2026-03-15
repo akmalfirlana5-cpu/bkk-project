@@ -6,10 +6,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\CollegeFill;
+use Illuminate\Database\Eloquent\Collection;
 
 class CollegeFillsTableWidget extends BaseWidget
 {
-    protected static ?string $heading = 'Data Alumni Kuliah';
+    protected static ?string $heading = '';
     protected int|string|array $columnSpan = 'full';
     protected static ?int $sort = 4;
 
@@ -27,6 +28,27 @@ class CollegeFillsTableWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('university_name')
                     ->label('Universitas')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('major')
+                    ->label('Jurusan'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable(),
+            ])
+            ->bulkActions([
+                \Filament\Actions\BulkActionGroup::make([
+                    \Filament\Actions\DeleteBulkAction::make(),
+                    \Filament\Actions\BulkAction::make('export')
+                        ->label('Ekspor Pilihan')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->action(function (Collection $records) {
+                            $userIds = $records->pluck('id_user')->toArray();
+                            return \Maatwebsite\Excel\Facades\Excel::download(
+                                new \App\Exports\TracerStudyExport('kuliah', $userIds),
+                                'Tracer_Study_Kuliah_Terpilih_' . date('Y-m-d_H-i-s') . '.xlsx'
+                            );
+                        }),
+                ]),
             ])
             ->recordUrl(null)
             ->defaultSort('created_at', 'desc');
