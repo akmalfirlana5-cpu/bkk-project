@@ -82,7 +82,8 @@ class Vacancy extends Component
         $userMajor = auth()->check() ? auth()->user()->major : null;
 
         $query = vacancie::with('company')
-            ->where('deadline', '>=', now());
+            ->where('deadline', '>=', now())
+            ->where('quota_status', 'open');
 
         $query->when($this->filterSearch, function ($q) {
             $q->where('vacancy_name', 'like', '%' . $this->filterSearch . '%');

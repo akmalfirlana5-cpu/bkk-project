@@ -6,17 +6,22 @@ use App\Filament\Resources\Applications\Pages\CreateApplication;
 use App\Filament\Resources\Applications\Pages\EditApplication;
 use App\Filament\Resources\Applications\Pages\ListApplications;
 use App\Models\Application;
+use App\Notifications\AdminMessageNotification;
+use App\Notifications\ApplicationStatusChangedNotification;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\BulkAction;
 use Illuminate\Support\Facades\App;
+use Filament\Forms\Components\RichEditor;
 
 class ApplicationResource extends Resource
 {
@@ -33,7 +38,7 @@ class ApplicationResource extends Resource
     protected static ?string $pluralModelLabel = 'Lamaran';
 
     protected static ?int $navigationSort = 5;
-    
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);
@@ -43,82 +48,131 @@ class ApplicationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.full_name')
-                    ->label('Nama')
-                    ->searchable(),
-                    
-                Tables\Columns\TextColumn::make('vacancy.vacancy_name')
-                    ->label('Jabatan')
-                    ->searchable(),
-                    
-                Tables\Columns\TextColumn::make('vacancy.company.companies_name')
-                    ->label('Perusahaan')
-                    ->searchable(),
-                Tables\Columns\SelectColumn::make('status')
-                    ->options(Application::STATUSES)
-                    ->label('Status'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal Daftar')
-                    ->date()
-                    ->sortable(),
-            ])
+            Tables\Columns\TextColumn::make('user.full_name')
+            ->label('Nama')
+            ->searchable(),
+
+            Tables\Columns\TextColumn::make('vacancy.vacancy_name')
+            ->label('Jabatan')
+            ->searchable(),
+
+            Tables\Columns\TextColumn::make('vacancy.company.companies_name')
+            ->label('Perusahaan')
+            ->searchable(),
+            Tables\Columns\SelectColumn::make('status')
+            ->options(Application::STATUSES)
+            ->label('Status')
+            ->afterStateUpdated(function ($record, $state) {
+            $record->load(['vacancy.company', 'user']);
+
+            if ($record->user) {
+                $oldStatus = $record->getOriginal('status');
+                $record->user->notify(
+                    new ApplicationStatusChangedNotification($record, $oldStatus, $state)
+                );
+            }
+
+            // Cek kuota jika diterima
+            if ($state === 'diterima' && $record->vacancy) {
+                $record->vacancy->checkAndUpdateQuota();
+            }
+        }),
+            Tables\Columns\TextColumn::make('created_at')
+            ->label('Tanggal Daftar')
+            ->date()
+            ->sortable(),
+        ])
             ->defaultSort('created_at', 'desc')
             ->recordUrl(null)
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
-                    ->options(Application::STATUSES),
+            Tables\Filters\SelectFilter::make('status')
+            ->label('Status')
+            ->options(Application::STATUSES),
 
-                Tables\Filters\SelectFilter::make('id_vacancy')
-                    ->label('Lowongan')
-                    ->relationship('vacancy', 'vacancy_name')
-                    ->searchable()
-                    ->preload(),
-            ])
+            Tables\Filters\SelectFilter::make('id_vacancy')
+            ->label('Lowongan')
+            ->relationship('vacancy', 'vacancy_name')
+            ->searchable()
+            ->preload(),
+        ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('hapus pilihan'),
+            BulkActionGroup::make([
+                DeleteBulkAction::make()->label('hapus pilihan'),
 
-                    BulkAction::make('updateStatus')
-                        ->label('Ubah Status')
-                        ->icon('heroicon-o-arrow-path')
-                        ->form([
-                            Select::make('status')
-                                ->label('Status Baru')
-                                ->options(Application::STATUSES)
-                                ->required(),
-                        ])
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
-                            $records->each(function ($record) use ($data) {
-                                $record->update(['status' => $data['status']]);
-                            });
-                        })
-                        ->deselectRecordsAfterCompletion(),
+                BulkAction::make('updateStatus')
+                ->label('Ubah Status')
+                ->icon('heroicon-o-arrow-path')
+                ->form([
+                    Select::make('status')
+                    ->label('Status Baru')
+                    ->options(Application::STATUSES)
+                    ->required(),
+                ])
+                ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
+            $records->each(function ($record) use ($data) {
+                    $record->update(['status' => $data['status']]);
+                }
+                    );
+            })
+                ->deselectRecordsAfterCompletion(),
 
-                    BulkAction::make('export')
-                        ->label('Export Terpilih')
-                        ->icon('heroicon-o-arrow-down-tray')
-                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
-                            $firstApp = $records->first();
-                            if (!$firstApp || !$firstApp->vacancy) {
-                                return;
-                            }
-
-                            $service = new \App\Services\ApplicationExportService();
-                            $zipPath = $service->exportToZip(
-                                $records,
-                                $firstApp->vacancy->vacancy_name ?? 'Lowongan',
-                                $firstApp->vacancy->company->companies_name ?? 'Perusahaan'
+                BulkAction::make('sendMessage')
+                ->label('Kirim Pesan')
+                ->icon('heroicon-o-chat-bubble-left-right')
+                ->color('info')
+                ->form([
+                    TextInput::make('subject')
+                    ->label('Judul Pesan')
+                    ->required()
+                    ->maxLength(255),
+                    RichEditor::make('message')
+                    ->label('Isi Pesan')
+                    ->required()
+                    ->columnSpanFull()
+                    ->extraInputAttributes(['style' => 'min-height: 200px;']),
+                ])
+                ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
+            $notifiedUserIds = [];
+            $records->each(function ($record) use ($data, &$notifiedUserIds) {
+                    $record->load('user');
+                    if ($record->user && !in_array($record->user->id, $notifiedUserIds)) {
+                        $record->user->notify(
+                                new AdminMessageNotification($data['subject'], $data['message'])
                             );
+                        $notifiedUserIds[] = $record->user->id;
+                    }
+                }
+                    );
+            })
+                ->requiresConfirmation()
+                ->modalHeading('Kirim Pesan ke Pelamar')
+                ->modalDescription('Pesan akan dikirim ke semua pelamar yang dipilih.')
+                ->deselectRecordsAfterCompletion(),
 
-                            return response()->download($zipPath)->deleteFileAfterSend(true);
-                        })
-                        ->requiresConfirmation()
-                        ->modalHeading('Export Lamaran')
-                        ->modalDescription('Download data kandidat terpilih beserta CV dan Sertifikat sebagai ZIP?')
-                        ->deselectRecordsAfterCompletion(),
-                ])->label('Aksi'),
-            ]);
+                BulkAction::make('export')
+                ->label('Export Terpilih')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+            $firstApp = $records->first();
+            if (!$firstApp || !$firstApp->vacancy) {
+                return;
+            }
+
+            $service = new \App\Services\ApplicationExportService();
+            $zipPath = $service->exportToZip(
+                    $records,
+                    $firstApp->vacancy->vacancy_name ?? 'Lowongan',
+                    $firstApp->vacancy->company->companies_name ?? 'Perusahaan'
+                );
+
+            return response()->download($zipPath)->deleteFileAfterSend(true);
+        })
+                ->requiresConfirmation()
+                ->modalHeading('Export Lamaran')
+                ->modalDescription('Download data kandidat terpilih beserta CV dan Sertifikat sebagai ZIP?')
+                ->deselectRecordsAfterCompletion(),
+            ])->label('Aksi'),
+        ]);
     }
 
     public static function getRelations(): array
