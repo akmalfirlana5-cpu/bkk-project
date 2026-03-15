@@ -32,7 +32,7 @@ class ApplicationStatusChangedNotification extends Notification
         $statusLabels = Application::STATUSES;
 
         return [
-            'title' => 'Status Lamaran Diperbarui',
+            'title' => 'Status Lamaran Telah Diperbarui',
             'message' => 'Status lamaran Anda untuk posisi ' . $this->application->vacancy->vacancy_name
                 . ' di ' . $this->application->vacancy->company->companies_name
                 . ' berubah dari "' . ($statusLabels[$this->oldStatus] ?? $this->oldStatus)

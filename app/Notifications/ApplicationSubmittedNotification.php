@@ -30,7 +30,7 @@ class ApplicationSubmittedNotification extends Notification
         return [
             'title' => 'Lamaran Terkirim',
             'message' => 'Lamaran Anda untuk posisi ' . $this->application->vacancy->vacancy_name
-                . ' di ' . $this->application->vacancy->company->companies_name . ' berhasil dikirim.',
+                . ' di ' . $this->application->vacancy->company->companies_name . ' telah berhasil dikirim.',
             'vacancy_id' => $this->application->id_vacancy,
             'application_id' => $this->application->id,
         ];

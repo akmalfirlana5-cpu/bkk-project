@@ -61,22 +61,7 @@ class ApplicationResource extends Resource
             ->searchable(),
             Tables\Columns\SelectColumn::make('status')
             ->options(Application::STATUSES)
-            ->label('Status')
-            ->afterStateUpdated(function ($record, $state) {
-            $record->load(['vacancy.company', 'user']);
-
-            if ($record->user) {
-                $oldStatus = $record->getOriginal('status');
-                $record->user->notify(
-                    new ApplicationStatusChangedNotification($record, $oldStatus, $state)
-                );
-            }
-
-            // Cek kuota jika diterima
-            if ($state === 'diterima' && $record->vacancy) {
-                $record->vacancy->checkAndUpdateQuota();
-            }
-        }),
+            ->label('Status'),
             Tables\Columns\TextColumn::make('created_at')
             ->label('Tanggal Daftar')
             ->date()
