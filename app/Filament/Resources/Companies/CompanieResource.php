@@ -6,25 +6,32 @@ use App\Filament\Resources\Companies\Pages\CreateCompanie;
 use App\Filament\Resources\Companies\Pages\EditCompanie;
 use App\Filament\Resources\Companies\Pages\ListCompanies;
 use App\Models\Companie;
-use Filament\Tables;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\RichEditor;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use Filament\Actions\BulkAction;
-use Filament\Actions\BulkActionGroup;
 use Illuminate\Database\Eloquent\Collection;
 
 class CompanieResource extends Resource
 {
     protected static ?string $model = Companie::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.companies');
+    }
 
     protected static ?string $navigationLabel = 'Perusahaan';
 
@@ -48,7 +55,7 @@ class CompanieResource extends Resource
             FileUpload::make('mou')->label('MOU')->disk('public')->directory('companies'),
             TextInput::make('address')->label('Alamat Perusahaan'),
             TextInput::make('short_address')->label('Alamat Singkat Perusahaan'),
-            
+
         ]);
     }
 
@@ -58,26 +65,26 @@ class CompanieResource extends Resource
             Tables\Columns\ImageColumn::make('companies_logo')->label('Logo')->disk('public'),
             Tables\Columns\TextColumn::make('companies_name')->label('Nama')->searchable()->sortable(),
             Tables\Columns\TextColumn::make('companies_profile')->label('Profil')->limit(50),
-            Tables\Columns\TextColumn::make('short_address')->label('Kota / Provinsi')->searchable()->sortable(),  
+            Tables\Columns\TextColumn::make('short_address')->label('Kota / Provinsi')->searchable()->sortable(),
         ])
-        ->actions([
-            EditAction::make()
-                ->label('edit'),
-            DeleteAction::make()
-                ->label('Hapus'),
-        ])->actionsColumnLabel('Aksi')
-        ->toolbarActions([
-            BulkActionGroup::make([
-                BulkAction::make('deleteSelected')
-                ->label('Hapus Pilihan')
-                ->icon('heroicon-o-trash')
-                ->color('danger')
-                ->action(function (Collection $records) {
-                    $records->each->delete();
-                })
-                ->deselectRecordsAfterCompletion(),
-            ])->label('Aksi'),
-        ]);
+            ->actions([
+                EditAction::make()
+                    ->label('edit'),
+                DeleteAction::make()
+                    ->label('Hapus'),
+            ])->actionsColumnLabel('Aksi')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('deleteSelected')
+                        ->label('Hapus Pilihan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each->delete();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ])->label('Aksi'),
+            ]);
     }
 
     public static function getRelations(): array

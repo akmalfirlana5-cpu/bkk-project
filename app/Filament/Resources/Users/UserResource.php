@@ -7,28 +7,34 @@ use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextArea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextArea;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Tables;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Actions\BulkAction;
-use Filament\Actions\BulkActionGroup;
-
-use function Laravel\Prompts\select;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.users');
+    }
 
     protected static ?string $navigationLabel = 'Pengguna';
 
@@ -52,7 +58,7 @@ class UserResource extends Resource
             TextInput::make('email')->email()->unique(ignoreRecord: true)->label('Email'),
             Select::make('major')->options(User::MAJORS)->required()->label('Jurusan'),
             Select::make('role')->options(User::ROLES)->label('Role'),
-            TextArea::make('address')->label('Alamat'),    
+            TextArea::make('address')->label('Alamat'),
             TextInput::make('birth_place')->label('Tempat Lahir'),
             TextInput::make('no_hp')->tel()->label('Nomor HP'),
             FileUpload::make('CVuser')->label('CV')->disk('public')->directory('cv-users'),
@@ -70,7 +76,7 @@ class UserResource extends Resource
             Tables\Columns\TextColumn::make('full_name')->label('Nama Lengkap')->searchable()->sortable(),
             Tables\Columns\TextColumn::make('major')->label('Jurusan')->searchable()->sortable(),
             Tables\Columns\TextColumn::make('status')->label('Status')->sortable(),
-            ])
+        ])
             ->actions([
                 EditAction::make()
                     ->label('Edit'),
@@ -80,13 +86,13 @@ class UserResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('deleteSelected')
-                    ->label('Hapus Pilihan')
-                    ->icon('heroicon-o-trash')
-                    ->color('danger')
-                    ->action(function (Collection $records) {
-                        $records->each->delete();
-                    })
-                    ->deselectRecordsAfterCompletion(),
+                        ->label('Hapus Pilihan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each->delete();
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ])->label('Aksi'),
             ]);
     }
@@ -112,7 +118,4 @@ class UserResource extends Resource
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }
-
-    
 }
-

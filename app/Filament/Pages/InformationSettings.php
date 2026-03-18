@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use App\Models\InfoSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,10 +17,19 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
+use UnitEnum;
 
 class InformationSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.information_settings');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
@@ -73,9 +81,10 @@ class InformationSettings extends Page implements HasForms
 
     protected function resolveStorageImage(string $path): array
     {
-        if (!empty($path) && Storage::disk('public')->exists($path)) {
+        if (! empty($path) && Storage::disk('public')->exists($path)) {
             return [$path];
         }
+
         return [];
     }
 

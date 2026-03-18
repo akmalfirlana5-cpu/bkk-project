@@ -4,29 +4,37 @@ namespace App\Filament\Pages;
 
 use App\Models\HomepageSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class HomepageSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.homepage_settings');
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
     protected static ?string $navigationLabel = 'Pengaturan Beranda';
 
@@ -60,13 +68,13 @@ class HomepageSettings extends Page implements HasForms
         $welcome = HomepageSetting::getBySection('welcome');
         $welcomeImg = $welcome['image'] ?? '';
         // Only load images that exist on the storage disk
-        $welcomeImageArray = (!empty($welcomeImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($welcomeImg))
+        $welcomeImageArray = (! empty($welcomeImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($welcomeImg))
             ? [$welcomeImg] : [];
 
         // Load Survey section
         $survey = HomepageSetting::getBySection('survey');
         $surveyImg = $survey['image'] ?? '';
-        $surveyImageArray = (!empty($surveyImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($surveyImg))
+        $surveyImageArray = (! empty($surveyImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($surveyImg))
             ? [$surveyImg] : [];
 
         // Load other sections

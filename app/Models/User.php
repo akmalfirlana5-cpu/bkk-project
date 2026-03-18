@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Filament\Panel;
-use Maatwebsite\Excel;
-use Illuminate\Support\Facades\Hash;
-use Filament\Models\Contracts\HasName;
-use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser, HasName
 {
@@ -28,7 +26,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'email',
         'photo',
         'password',
-        'nisn', 
+        'nisn',
         'birth_place',
         'address',
         'no_hp',
@@ -36,18 +34,20 @@ class User extends Authenticatable implements FilamentUser, HasName
         'CVuser',
         'certificate',
         'status',
-        'graduation_year', 
+        'graduation_year',
         'role',
-        'nik'
+        'nik',
     ];
+
     protected static function booted(): void
-{
-    static::creating(function ($user) {
-        if (empty($user->password)) {
-            $user->password = 'pass00' . $user->nisn;
-        }
-    });
-}
+    {
+        static::creating(function ($user) {
+            if (empty($user->password)) {
+                $user->password = 'pass00'.$user->nisn;
+            }
+        });
+    }
+
     public function getFilamentName(): string
     {
         return $this->full_name ?? 'Admin';
@@ -75,7 +75,33 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function canAccessPanel(Panel $panel): bool
     {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isAdmin(): bool
+    {
         return $this->role === 'admin';
+    }
+
+    public function hasAdminPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return $this->adminPermissions()
+            ->where('permission', $permission)
+            ->exists();
+    }
+
+    public function adminPermissions(): HasMany
+    {
+        return $this->hasMany(AdminPermission::class);
     }
 
     public const MAJORS = [
@@ -89,6 +115,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     ];
 
     public const ROLES = [
+        'super_admin' => 'Super Admin',
         'admin' => 'Admin',
         'user' => 'User',
     ];
@@ -99,7 +126,6 @@ class User extends Authenticatable implements FilamentUser, HasName
         'wiraswasta' => 'Wiraswasta',
         'menganggur' => 'Menganggur',
     ];
-
 
     /**
      * The attributes that should be hidden for serialization.

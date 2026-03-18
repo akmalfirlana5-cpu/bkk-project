@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use App\Models\GlobalSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -18,10 +17,19 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
+use UnitEnum;
 
 class GlobalSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.global_settings');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
@@ -70,9 +78,10 @@ class GlobalSettings extends Page implements HasForms
 
     protected function resolveStorageImage(string $path): array
     {
-        if (!empty($path) && Storage::disk('public')->exists($path)) {
+        if (! empty($path) && Storage::disk('public')->exists($path)) {
             return [$path];
         }
+
         return [];
     }
 

@@ -6,33 +6,37 @@ use App\Filament\Resources\Vacancies\Pages\CreateVacancie;
 use App\Filament\Resources\Vacancies\Pages\EditVacancie;
 use App\Filament\Resources\Vacancies\Pages\ListVacancies;
 use App\Filament\Resources\Vacancies\Pages\ListVacancyApplications;
-use App\Filament\Resources\Vacancies\Schemas\VacancieForm;
-use App\Filament\Resources\Vacancies\Tables\VacanciesTable;
 use App\Models\Vacancie;
 use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms;
-use Filament\Tables;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkAction;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Actions\BulkActionGroup;
-
 
 class VacancieResource extends Resource
 {
     protected static ?string $model = \App\Models\vacancie::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.vacancies');
+    }
 
     protected static ?string $navigationLabel = 'Lowongan';
 
@@ -51,71 +55,71 @@ class VacancieResource extends Resource
         return $schema->schema([
 
             'company_id' => Select::make('company_id')
-            ->label('Perusahaan')
-            ->relationship('company', 'companies_name')
-            ->required()
-            ->searchable()
-            ->preload(),
+                ->label('Perusahaan')
+                ->relationship('company', 'companies_name')
+                ->required()
+                ->searchable()
+                ->preload(),
 
             TextInput::make('vacancy_name')
-            ->label('judul lowongan')
-            ->required(),
+                ->label('judul lowongan')
+                ->required(),
 
             TextInput::make('location')
-            ->label('lokasi')
-            ->required(),
+                ->label('lokasi')
+                ->required(),
 
             DatePicker::make('deadline')
-            ->label('batas akhir')
-            ->required(),
+                ->label('batas akhir')
+                ->required(),
 
             Select::make('loker_tipe')
-            ->label('tipe loker')
-            ->options(vacancie::LOKER_TYPES)
-            ->required()
-            ->live(),
+                ->label('tipe loker')
+                ->options(vacancie::LOKER_TYPES)
+                ->required()
+                ->live(),
 
             RichEditor::make('requirements')
-            ->json()
-            ->label('persyaratan')
-            ->required()
-            ->columnSpan('full')
-            ->extraInputAttributes(['style' => 'min-height: 200px;']),
+                ->json()
+                ->label('persyaratan')
+                ->required()
+                ->columnSpan('full')
+                ->extraInputAttributes(['style' => 'min-height: 200px;']),
 
             TextInput::make('salary')
-            ->label('gaji')
-            ->numeric(),
+                ->label('gaji')
+                ->numeric(),
 
             CheckboxList::make('major')
-            ->label('jurusan')
-            ->options(vacancie::MAJORS), 
+                ->label('jurusan')
+                ->options(vacancie::MAJORS),
 
             Select::make('employment_classification')
-            ->label('tipe pekerjaan')
-            ->options(vacancie::EMPLOYMENT_TYPES),
+                ->label('tipe pekerjaan')
+                ->options(vacancie::EMPLOYMENT_TYPES),
 
             TextInput::make('jobdesk')
-            ->label('deskripsi / posisi pekerjaan'),
+                ->label('deskripsi / posisi pekerjaan'),
 
             TextInput::make('email_company')
-            ->label('email perusahaan')
-            ->visible(fn (Get $get) => $get('loker_tipe') === 'keperusahaan'),
+                ->label('email perusahaan')
+                ->visible(fn (Get $get) => $get('loker_tipe') === 'keperusahaan'),
 
             TextInput::make('phone_company')
-            ->label('nomor telepon perusahaan')
-            ->visible(fn (Get $get) => $get('loker_tipe') === 'keperusahaan'),
+                ->label('nomor telepon perusahaan')
+                ->visible(fn (Get $get) => $get('loker_tipe') === 'keperusahaan'),
 
             TextInput::make('vacancy_number')
-            ->label('kuota lowongan')
-            ->numeric(), 
+                ->label('kuota lowongan')
+                ->numeric(),
 
             FileUpload::make('image')
-            ->label('gambar lowongan')
-            ->disk('public')
-            ->directory('vacancies')
-            ->image(),
+                ->label('gambar lowongan')
+                ->disk('public')
+                ->directory('vacancies')
+                ->image(),
 
-            ]);
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -127,63 +131,63 @@ class VacancieResource extends Resource
             Tables\Columns\TextColumn::make('deadline')->label('Batas waktu')->date()->sortable()
                 ->color(fn ($record) => $record->deadline && $record->deadline->isPast() ? 'danger' : null),
         ])
-        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN deadline < NOW() THEN 1 ELSE 0 END ASC, deadline DESC'))
-        ->actions([
-            \Filament\Actions\Action::make('lihatLamaran')
-                ->label('Lihat Lamaran')
-                ->icon('heroicon-o-document-text')
-                ->color('success')
-                ->url(fn ($record) => static::getUrl('applications', ['record' => $record])),
+            ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN deadline < NOW() THEN 1 ELSE 0 END ASC, deadline DESC'))
+            ->actions([
+                \Filament\Actions\Action::make('lihatLamaran')
+                    ->label('Lihat Lamaran')
+                    ->icon('heroicon-o-document-text')
+                    ->color('success')
+                    ->url(fn ($record) => static::getUrl('applications', ['record' => $record])),
                 EditAction::make()
-                ->label('edit'),
+                    ->label('edit'),
                 DeleteAction::make()
-                ->label('Hapus'),
-        ])->actionsColumnLabel('Aksi')
-        ->toolbarActions([
-            BulkActionGroup::make([
-                BulkAction::make('deleteSelected')
-                    ->label('Hapus Pilihan')
-                    ->icon('heroicon-o-trash')
-                    ->color('danger')
-                    ->action(function (Collection $records) {
-                        $records->each->delete();
-                    })
-                    ->deselectRecordsAfterCompletion(),
-                BulkAction::make('extendDeadline')
-                    ->label('Perpanjang Batas Waktu')
-                    ->icon('heroicon-o-calendar')
-                    ->color('primary')
-                    ->form([
-                        DatePicker::make('new_deadline')
-                            ->label('Atur Batas Waktu Baru')
-                            ->required(),
-                    ])
-                    ->action(function (Collection $records, array $data) {
-                        $newDeadline = $data['new_deadline'];
-                        $records->each(function ($record) use ($newDeadline) {
-                            $record->update(['deadline' => $newDeadline]);
-                        });
-                    })
-                    ->deselectRecordsAfterCompletion(),
-                BulkAction::make('changenumber')
-                    ->label('Ubah Kuota')
-                    ->icon('heroicon-o-user-group')
-                    ->color('secondary')
-                    ->form([
-                        TextInput::make('new_vacancy_number')
-                            ->label('Atur Kuota Baru')
-                            ->numeric()
-                            ->required(),
-                    ])
-                    ->action(function (Collection $records, array $data) {
-                        $newNumber = $data['new_vacancy_number'];
-                        $records->each(function ($record) use ($newNumber) {
-                            $record->update(['vacancy_number' => $newNumber]);
-                        });
-                    })
-                    ->deselectRecordsAfterCompletion(),
-            ])->label('Aksi'),
-        ]);
+                    ->label('Hapus'),
+            ])->actionsColumnLabel('Aksi')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('deleteSelected')
+                        ->label('Hapus Pilihan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each->delete();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('extendDeadline')
+                        ->label('Perpanjang Batas Waktu')
+                        ->icon('heroicon-o-calendar')
+                        ->color('primary')
+                        ->form([
+                            DatePicker::make('new_deadline')
+                                ->label('Atur Batas Waktu Baru')
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $newDeadline = $data['new_deadline'];
+                            $records->each(function ($record) use ($newDeadline) {
+                                $record->update(['deadline' => $newDeadline]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('changenumber')
+                        ->label('Ubah Kuota')
+                        ->icon('heroicon-o-user-group')
+                        ->color('secondary')
+                        ->form([
+                            TextInput::make('new_vacancy_number')
+                                ->label('Atur Kuota Baru')
+                                ->numeric()
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $newNumber = $data['new_vacancy_number'];
+                            $records->each(function ($record) use ($newNumber) {
+                                $record->update(['vacancy_number' => $newNumber]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ])->label('Aksi'),
+            ]);
     }
 
     public static function getRelations(): array
@@ -202,8 +206,4 @@ class VacancieResource extends Resource
             'applications' => ListVacancyApplications::route('/{record}/applications'),
         ];
     }
-
-    
-    
 }
-

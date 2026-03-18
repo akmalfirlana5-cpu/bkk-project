@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use App\Models\FaqSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
@@ -18,10 +17,19 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class FaqSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.faq_settings');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
@@ -40,7 +48,7 @@ class FaqSettings extends Page implements HasForms
     public function mount(): void
     {
         $heroImg = FaqSetting::getValue('hero_image', '');
-        $heroImageArray = (!empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
+        $heroImageArray = (! empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
             ? [$heroImg] : [];
 
         $this->form->fill([

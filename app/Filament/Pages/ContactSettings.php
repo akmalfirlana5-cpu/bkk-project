@@ -4,7 +4,6 @@ namespace App\Filament\Pages;
 
 use App\Models\ContactSetting;
 use BackedEnum;
-use UnitEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -15,10 +14,19 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class ContactSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.contact_settings');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhone;
 
@@ -37,7 +45,7 @@ class ContactSettings extends Page implements HasForms
     public function mount(): void
     {
         $heroImg = ContactSetting::getValue('hero_image', '');
-        $heroImageArray = (!empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
+        $heroImageArray = (! empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
             ? [$heroImg] : [];
 
         $this->form->fill([

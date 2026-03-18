@@ -5,30 +5,35 @@ namespace App\Filament\Resources\Announcements;
 use App\Filament\Resources\Announcements\Pages\CreateAnnouncement;
 use App\Filament\Resources\Announcements\Pages\EditAnnouncement;
 use App\Filament\Resources\Announcements\Pages\ListAnnouncements;
-use App\Filament\Resources\Announcements\Schemas\AnnouncementForm;
-use App\Filament\Resources\Announcements\Tables\AnnouncementsTable;
 use App\Models\Announcement;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\RichEditor;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkAction;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Actions\BulkActionGroup;
+use Illuminate\Database\Eloquent\Model;
 
 class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.announcements');
+    }
 
     protected static ?string $navigationLabel = 'Pengumuman';
 
@@ -46,23 +51,23 @@ class AnnouncementResource extends Resource
     {
         return $schema->schema([
             TextInput::make('headline')
-            ->required()
-            ->label('judul pengumuman'),
+                ->required()
+                ->label('judul pengumuman'),
             FileUpload::make('image')
-            ->required()
-            ->label('gambar pengumuman')
-            ->disk('public')
-            ->directory('announcements')
-            ->image(),
+                ->required()
+                ->label('gambar pengumuman')
+                ->disk('public')
+                ->directory('announcements')
+                ->image(),
             RichEditor::make('content')
-            ->required()
-            ->json()
-            ->label('isi pengumuman')
-            ->columnSpan('full')
-            ->extraInputAttributes(['style' => 'min-height: 200px;']),
+                ->required()
+                ->json()
+                ->label('isi pengumuman')
+                ->columnSpan('full')
+                ->extraInputAttributes(['style' => 'min-height: 200px;']),
             DatePicker::make('active_until')
-            ->required()
-            ->label('aktif hingga'),
+                ->required()
+                ->label('aktif hingga'),
         ]);
     }
 
@@ -74,47 +79,45 @@ class AnnouncementResource extends Resource
             Tables\Columns\TextColumn::make('active_until')->label('Aktif Sampai')->date()->sortable()
                 ->color(fn ($record) => $record->active_until && \Carbon\Carbon::parse($record->active_until)->isPast() ? 'danger' : null),
         ])
-        ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN active_until < NOW() THEN 1 ELSE 0 END DESC, active_until DESC'))
-        ->actions([
-            EditAction::make()
-                ->label('edit'),
-            DeleteAction::make()
-                ->label('Hapus'),
-        ])
-        ->actionsColumnLabel('Aksi')
-        ->actionsAlignment('start')
-        ->toolbarActions([
-            BulkActionGroup::make([
-            BulkAction::make('deleteSelected')
-                ->label('Hapus Pilihan')
-                ->icon('heroicon-o-trash')
-                ->color('danger')
-                ->action(function (Collection $records) {
-                    $records->each->delete();
-                })
-                ->deselectRecordsAfterCompletion(),
-            BulkAction::make('extendActiveUntil')
-                ->label('Sesuaikan Tanggal Aktif')
-                ->icon('heroicon-o-calendar')
-                ->color('primary')
-                ->form([
-                    DatePicker::make('new_active_until')
-                        ->label('Atur Tanggal Aktif Baru')
-                        ->required(),
-                ])
-                ->action(function (Collection $records, array $data) {
-                    $newDate = $data['new_active_until'];
-                    $records->each(function ($record) use ($newDate) {
-                        $record->update(['active_until' => $newDate]);
-                    });
-                })
-                ->deselectRecordsAfterCompletion(),
-        
-            ])->label('Aksi'),
-        ]) ;
-    }
+            ->modifyQueryUsing(fn ($query) => $query->orderByRaw('CASE WHEN active_until < NOW() THEN 1 ELSE 0 END DESC, active_until DESC'))
+            ->actions([
+                EditAction::make()
+                    ->label('edit'),
+                DeleteAction::make()
+                    ->label('Hapus'),
+            ])
+            ->actionsColumnLabel('Aksi')
+            ->actionsAlignment('start')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('deleteSelected')
+                        ->label('Hapus Pilihan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each->delete();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('extendActiveUntil')
+                        ->label('Sesuaikan Tanggal Aktif')
+                        ->icon('heroicon-o-calendar')
+                        ->color('primary')
+                        ->form([
+                            DatePicker::make('new_active_until')
+                                ->label('Atur Tanggal Aktif Baru')
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $newDate = $data['new_active_until'];
+                            $records->each(function ($record) use ($newDate) {
+                                $record->update(['active_until' => $newDate]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion(),
 
-    
+                ])->label('Aksi'),
+            ]);
+    }
 
     public static function getRelations(): array
     {
@@ -144,5 +147,4 @@ class Post extends Model
             'content' => 'array',
         ];
     }
-
 }

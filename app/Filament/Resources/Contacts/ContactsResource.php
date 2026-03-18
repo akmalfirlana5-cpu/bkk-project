@@ -4,32 +4,35 @@ namespace App\Filament\Resources\Contacts;
 
 use App\Filament\Resources\Contacts\Pages\CreateContacts;
 use App\Filament\Resources\Contacts\Pages\EditContacts;
-use App\Filament\Resources\Contacts\Pages\ViewContacts;
 use App\Filament\Resources\Contacts\Pages\ListContacts;
+use App\Filament\Resources\Contacts\Pages\ViewContacts;
 use App\Filament\Resources\Contacts\Schemas\ContactsForm;
 use App\Models\Contacts;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\DeleteAction;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
-use Filament\Actions\BulkAction;
-use Filament\Actions\BulkActionGroup;
-
-
-
-use function Laravel\Prompts\table;
 
 class ContactsResource extends Resource
 {
     protected static ?string $model = Contacts::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.contacts');
+    }
 
     protected static ?string $navigationLabel = 'Masukan';
 
@@ -52,41 +55,41 @@ class ContactsResource extends Resource
     {
         return $table->columns([
 
-        Split::make([
-            TextColumn::make('firstname')->label('Nama')->searchable()->sortable(),
-            Stack::make([
-                        TextColumn::make('email')
+            Split::make([
+                TextColumn::make('firstname')->label('Nama')->searchable()->sortable(),
+                Stack::make([
+                    TextColumn::make('email')
                         ->label('Email')
                         ->icon('heroicon-m-envelope')
                         ->searchable()
                         ->sortable(),
-                        TextColumn::make('message')
+                    TextColumn::make('message')
                         ->label('Pesan'
                         )->limit(100),
+                ]),
+                TextColumn::make('created_at')->label('Dikirim Pada')->dateTime()->sortable(),
             ]),
-            TextColumn::make('created_at')->label('Dikirim Pada')->dateTime()->sortable(),
-        ]),
         ])
-        ->actions([
-            ViewAction::make()
-                ->label('Lihat'),
-            DeleteAction::make()
-                ->label('Hapus'),
-        ])
-        ->actionsColumnLabel('Aksi')
-        ->actionsAlignment('end')
-        ->toolbarActions([
-            BulkActionGroup::make([
-                BulkAction::make('deleteSelected')
-                ->label('Hapus Pilihan')
-                ->icon('heroicon-o-trash')
-                ->color('danger')
-                ->action(function (Collection $records) {
-                    $records->each->delete();
-                })
-                ->deselectRecordsAfterCompletion(),
-            ])->label('Aksi'),
-        ]);
+            ->actions([
+                ViewAction::make()
+                    ->label('Lihat'),
+                DeleteAction::make()
+                    ->label('Hapus'),
+            ])
+            ->actionsColumnLabel('Aksi')
+            ->actionsAlignment('end')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('deleteSelected')
+                        ->label('Hapus Pilihan')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                            $records->each->delete();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ])->label('Aksi'),
+            ]);
     }
 
     public static function getRelations(): array

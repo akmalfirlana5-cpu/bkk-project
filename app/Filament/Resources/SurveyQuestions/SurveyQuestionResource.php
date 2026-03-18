@@ -2,34 +2,46 @@
 
 namespace App\Filament\Resources\SurveyQuestions;
 
-use App\Filament\Resources\SurveyQuestions\Pages\ListSurveyQuestions;
 use App\Filament\Resources\SurveyQuestions\Pages\CreateSurveyQuestion;
 use App\Filament\Resources\SurveyQuestions\Pages\EditSurveyQuestion;
-use App\Models\SurveyCategory;
+use App\Filament\Resources\SurveyQuestions\Pages\ListSurveyQuestions;
 use App\Models\SurveyQuestion;
 use BackedEnum;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\TagsInput;
 use Filament\Tables;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
+use Filament\Tables\Table;
 
 class SurveyQuestionResource extends Resource
 {
     protected static ?string $model = SurveyQuestion::class;
 
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.survey_questions');
+    }
+
     protected static ?string $navigationLabel = 'Soal Survey';
+
     protected static ?string $modelLabel = 'Soal Survey';
+
     protected static ?string $pluralModelLabel = 'Soal Survey';
+
     protected static ?int $navigationSort = 8;
-    protected static string | \UnitEnum | null $navigationGroup = 'Survey Kepuasan';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Survey Kepuasan';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
     public static function form(Schema $schema): Schema
@@ -64,7 +76,7 @@ class SurveyQuestionResource extends Resource
                     $defaultOptions = [
                         'Sangat Baik', 'Baik', 'Cukup', 'Kurang', 'Sangat Kurang',
                         'Sangat Setuju', 'Setuju', 'Kurang Setuju', 'Tidak Setuju',
-                        'Ya', 'Tidak', 'Sering', 'Kadang-kadang', 'Jarang', 'Tidak Pernah'
+                        'Ya', 'Tidak', 'Sering', 'Kadang-kadang', 'Jarang', 'Tidak Pernah',
                     ];
 
                     $existing = \App\Models\SurveyQuestion::pluck('options')
