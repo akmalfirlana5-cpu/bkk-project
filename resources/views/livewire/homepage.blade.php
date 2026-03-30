@@ -1,5 +1,5 @@
 <div>
-<section class="pt-30 lg:pt-25">
+<section id="hero" class="pt-30 lg:pt-25">
     <div class="container mx-auto px-5 lg:px-0">
         <div class="swiper hero-swiper w-full h-[85vh] overflow-hidden rounded-[24px]">
             <div class="swiper-wrapper relative">
@@ -50,7 +50,7 @@
     </div>
 </section>
 
-<section class="py-15 md:py-20">
+<section id="statistik" class="py-15 md:py-20">
     <div class="container mx-auto px-5 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-0 w-[90%]">
          @foreach ($statisticContent as $statistic)
             <div class="flex flex-col items-center" 
@@ -84,7 +84,7 @@
     </div>
 </section>
 @if ( $homepageContent['welcome']['is_visible'] === 'true')
-    <section class="py-15">
+    <section id="sambutan" class="py-15">
     <div class="container mx-auto px-5 lg:px-0 flex flex-col lg:flex-row items-start gap-12 lg:gap-18">
         <div class="w-full lg:w-[45%] shadow-lg rounded-[20px]">
             <img  
@@ -111,7 +111,7 @@
     </div>
 </section>
 @endif
-<section>
+<section id="lowongan">
     <div class="container mx-auto px-5 lg:px-0 relative py-16 md:py-32">
         <h2 class="heading-42s text-bkkNeutral-900 mb-4">
             {{ $homepageContent['vacancies']['title'] }}
@@ -227,7 +227,7 @@
     </div>
 </section>
 
-<section class="py-15 md:py-24 px-5 lg:px-0">
+<section id="tracer-study" class="py-15 md:py-24 px-5 lg:px-0">
     <div 
         style="background-image: url('{{ asset('/assets/static/background/Tracer-Home.webp') }}')"
         class="container mx-auto px-5 lg:px-16 py-8 lg:py-16 bg-white shadow-lg rounded-[24px] bg-cover bg-left">
@@ -291,7 +291,7 @@
     </div>
 </section>
 
-<section>  
+<section id="pengumuman">
     <div class="container mx-auto px-5 lg:px-0 relative py-16 md:py-32">
         <h2 class="heading-42s text-bkkNeutral-900 mb-4">
             {{ $homepageContent['announcements']['title'] }}
@@ -372,7 +372,7 @@
     </div>
 </section>
 
-<section class="py-16 md:py-24 px-5 lg:px-0">  
+<section id="survey" class="py-16 md:py-24 px-5 lg:px-0">
     <div class="container mx-auto px-5 lg:px-16 py-8 lg:py-24 bg-white shadow-lg rounded-[24px]">
         <div class="flex flex-col-reverse lg:flex-row items-center gap-5 md:gap-10">
             <div class="w-full lg:w-[50%]">
@@ -400,7 +400,7 @@
     </div>
 </section>
 
-<section>  
+<section id="testimoni">
     <div class="container mx-auto px-5 lg:px-0 relative py-16 md:py-32">
         <h2 class="heading-42s text-bkkNeutral-900 mb-4">Testimoni Alumni</h2>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-9 gap-6 lg:gap-0">

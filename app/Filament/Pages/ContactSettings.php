@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\ContactSetting;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -19,6 +20,17 @@ use UnitEnum;
 class ContactSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('preview')
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray')
+                ->url(route('kontak'), shouldOpenInNewTab: true),
+        ];
+    }
 
     public static function canAccess(): bool
     {
@@ -64,6 +76,14 @@ class ContactSettings extends Page implements HasForms
             Section::make('Header Halaman Kontak')
                 ->description('Judul dan deskripsi yang tampil di bagian hero halaman kontak.')
                 ->schema([
+                    \Filament\Schemas\Components\Actions::make([
+                        Action::make('preview_kontak_hero')
+                            ->label('Lihat Section Hero')
+                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                            ->color('gray')
+                            ->size('sm')
+                            ->url(route('kontak').'#hero', shouldOpenInNewTab: true),
+                    ]),
                     TextInput::make('hero_title')
                         ->label('Judul Hero')
                         ->required(),

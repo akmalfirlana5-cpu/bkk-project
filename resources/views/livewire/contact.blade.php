@@ -1,5 +1,5 @@
 <div>
-    <section class="pt-30 lg:pt-25">
+    <section id="hero" class="pt-30 lg:pt-25">
         <div 
             style="background-image: url('{{ asset('/assets/static/background/hero-section.png') }}')"
             class="container mx-auto px-5 lg:px-0 rounded-3xl bg-cover bg-center relative h-[50vh] overflow-hidden">
@@ -21,7 +21,7 @@
             </div>
         </div>
     </section>
-    <section class="py-15 lg:py-20">
+    <section id="kontak-form" class="py-15 lg:py-20">
         <div class="container mx-auto px-5 lg:px-0">
             <h2 class="heading-42s text-bkkNeutral-900 mb-4">{{ $contactContent['section_title'][0] }}</h1>
             <div class="paragraph-16r text-bkkNeutral-700 mb-9">

@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\GlobalSetting;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -22,6 +23,17 @@ use UnitEnum;
 class GlobalSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('preview')
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray')
+                ->url(route('beranda'), shouldOpenInNewTab: true),
+        ];
+    }
 
     public static function canAccess(): bool
     {

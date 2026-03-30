@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Models\ProfileSetting;
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
@@ -26,6 +28,37 @@ use UnitEnum;
 class ProfileSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ActionGroup::make([
+                Action::make('preview_visi_misi')
+                    ->label('Visi Misi')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('visi-misi'), shouldOpenInNewTab: true),
+                Action::make('preview_struktur')
+                    ->label('Struktur Organisasi')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('struktur-organisasi'), shouldOpenInNewTab: true),
+                Action::make('preview_program')
+                    ->label('Program Kerja')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('program-kerja'), shouldOpenInNewTab: true),
+                Action::make('preview_alur')
+                    ->label('Alur Kegiatan')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('alur-kegiatan'), shouldOpenInNewTab: true),
+                Action::make('preview_dokumen')
+                    ->label('Dokumen Pendukung')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('dokumen-pendukung'), shouldOpenInNewTab: true),
+            ])
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray'),
+        ];
+    }
 
     public static function canAccess(): bool
     {

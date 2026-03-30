@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Models\InfoSetting;
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -22,6 +24,29 @@ use UnitEnum;
 class InformationSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ActionGroup::make([
+                Action::make('preview_lowongan')
+                    ->label('Halaman Lowongan')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('lowongan'), shouldOpenInNewTab: true),
+                Action::make('preview_pengumuman')
+                    ->label('Halaman Pengumuman')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('pengumuman'), shouldOpenInNewTab: true),
+                Action::make('preview_tracer')
+                    ->label('Halaman Tracer Study')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('tracer-study'), shouldOpenInNewTab: true),
+            ])
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray'),
+        ];
+    }
 
     public static function canAccess(): bool
     {

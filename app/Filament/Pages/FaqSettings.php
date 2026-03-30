@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\FaqSetting;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
@@ -22,6 +23,17 @@ use UnitEnum;
 class FaqSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('preview')
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray')
+                ->url(route('faq'), shouldOpenInNewTab: true),
+        ];
+    }
 
     public static function canAccess(): bool
     {
@@ -67,6 +79,14 @@ class FaqSettings extends Page implements HasForms
             Section::make('Header Halaman FAQ')
                 ->description('Judul dan deskripsi yang tampil di bagian hero halaman FAQ.')
                 ->schema([
+                    \Filament\Schemas\Components\Actions::make([
+                        Action::make('preview_faq_hero')
+                            ->label('Lihat Section Hero')
+                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                            ->color('gray')
+                            ->size('sm')
+                            ->url(route('faq').'#hero', shouldOpenInNewTab: true),
+                    ]),
                     TextInput::make('hero_title')
                         ->label('Judul Hero')
                         ->required(),
@@ -84,6 +104,14 @@ class FaqSettings extends Page implements HasForms
             Section::make('Judul Section Pertanyaan')
                 ->description('Judul dan deskripsi di atas daftar pertanyaan.')
                 ->schema([
+                    \Filament\Schemas\Components\Actions::make([
+                        Action::make('preview_faq_konten')
+                            ->label('Lihat Section Pertanyaan')
+                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                            ->color('gray')
+                            ->size('sm')
+                            ->url(route('faq').'#faq-konten', shouldOpenInNewTab: true),
+                    ]),
                     TextInput::make('section_title')
                         ->label('Judul Section')
                         ->required(),
