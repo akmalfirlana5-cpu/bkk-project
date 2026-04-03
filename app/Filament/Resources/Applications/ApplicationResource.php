@@ -6,21 +6,31 @@ use App\Filament\Resources\Applications\Pages\CreateApplication;
 use App\Filament\Resources\Applications\Pages\EditApplication;
 use App\Filament\Resources\Applications\Pages\ListApplications;
 use App\Models\Application;
+use App\Notifications\AdminMessageNotification;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
 use Filament\Tables;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkAction;
-use Illuminate\Support\Facades\App;
+use Filament\Tables\Table;
 
 class ApplicationResource extends Resource
 {
     protected static ?string $model = Application::class;
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.applications');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
@@ -33,7 +43,7 @@ class ApplicationResource extends Resource
     protected static ?string $pluralModelLabel = 'Lamaran';
 
     protected static ?int $navigationSort = 5;
-    
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);
@@ -46,11 +56,11 @@ class ApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('user.full_name')
                     ->label('Nama')
                     ->searchable(),
-                    
+
                 Tables\Columns\TextColumn::make('vacancy.vacancy_name')
                     ->label('Jabatan')
                     ->searchable(),
-                    
+
                 Tables\Columns\TextColumn::make('vacancy.company.companies_name')
                     ->label('Perusahaan')
                     ->searchable(),
@@ -91,8 +101,42 @@ class ApplicationResource extends Resource
                         ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
                             $records->each(function ($record) use ($data) {
                                 $record->update(['status' => $data['status']]);
-                            });
+                            }
+                            );
                         })
+                        ->deselectRecordsAfterCompletion(),
+
+                    BulkAction::make('sendMessage')
+                        ->label('Kirim Pesan')
+                        ->icon('heroicon-o-chat-bubble-left-right')
+                        ->color('info')
+                        ->form([
+                                        TextInput::make('subject')
+                                            ->label('Judul Pesan')
+                                            ->required()
+                                            ->maxLength(255),
+                                        RichEditor::make('message')
+                                            ->label('Isi Pesan')
+                                            ->required()
+                                            ->columnSpanFull()
+                                            ->extraInputAttributes(['style' => 'min-height: 200px;']),
+                                    ])
+                        ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data): void {
+                            $notifiedUserIds = [];
+                            $records->each(function ($record) use ($data, &$notifiedUserIds) {
+                                $record->load('user');
+                                if ($record->user && ! in_array($record->user->id, $notifiedUserIds)) {
+                                    $record->user->notify(
+                                        new AdminMessageNotification($data['subject'], $data['message'])
+                                    );
+                                    $notifiedUserIds[] = $record->user->id;
+                                }
+                            }
+                            );
+                        })
+                        ->requiresConfirmation()
+                        ->modalHeading('Kirim Pesan ke Pelamar')
+                        ->modalDescription('Pesan akan dikirim ke semua pelamar yang dipilih.')
                         ->deselectRecordsAfterCompletion(),
 
                     BulkAction::make('export')
@@ -100,11 +144,11 @@ class ApplicationResource extends Resource
                         ->icon('heroicon-o-arrow-down-tray')
                         ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
                             $firstApp = $records->first();
-                            if (!$firstApp || !$firstApp->vacancy) {
+                            if (! $firstApp || ! $firstApp->vacancy) {
                                 return;
                             }
 
-                            $service = new \App\Services\ApplicationExportService();
+                            $service = new \App\Services\ApplicationExportService;
                             $zipPath = $service->exportToZip(
                                 $records,
                                 $firstApp->vacancy->vacancy_name ?? 'Lowongan',

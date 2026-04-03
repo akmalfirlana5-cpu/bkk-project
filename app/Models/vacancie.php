@@ -28,6 +28,7 @@ class vacancie extends Model
         'phone_company',
         'entryId',
         'vacancy_number',
+        'quota_status',
     ];
 
     protected $casts = [
@@ -52,6 +53,53 @@ class vacancie extends Model
     {
         return $this->hasMany(Application::class, 'id_vacancy');
     }
+
+    /**
+     * Hitung jumlah lamaran yang diterima untuk lowongan ini.
+     */
+    public function acceptedApplicationsCount(): int
+    {
+        return $this->applications()->where('status', 'diterima')->count();
+    }
+
+    /**
+     * Cek apakah kuota lowongan sudah penuh.
+     */
+    public function isQuotaFull(): bool
+    {
+        if (empty($this->vacancy_number)) {
+            return false;
+        }
+
+        return $this->acceptedApplicationsCount() >= $this->vacancy_number;
+    }
+
+    /**
+     * Cek dan update status kuota. Jika penuh, auto-reject lamaran pending.
+     */
+    public function checkAndUpdateQuota(): void
+    {
+        if (!$this->isQuotaFull()) {
+            return;
+        }
+
+        $this->update(['quota_status' => 'fulfilled']);
+
+        // Auto-reject lamaran yang masih diproses
+        $pendingApplications = $this->applications()
+            ->where('status', 'diproses')
+            ->with('user')
+            ->get();
+
+        foreach ($pendingApplications as $application) {
+            $application->update(['status' => 'ditolak']);
+        }
+    }
+
+    public const QUOTA_STATUSES = [
+        'open' => 'Tersedia',
+        'fulfilled' => 'Kuota Terpenuhi',
+    ];
 
     public const MAJORS = [
         'Animasi' => 'Animasi',

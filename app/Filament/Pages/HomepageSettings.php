@@ -4,29 +4,49 @@ namespace App\Filament\Pages;
 
 use App\Models\HomepageSetting;
 use BackedEnum;
-use UnitEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class HomepageSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('preview')
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray')
+                ->url(route('beranda'), shouldOpenInNewTab: true),
+        ];
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.homepage_settings');
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
     protected static ?string $navigationLabel = 'Pengaturan Beranda';
 
@@ -60,13 +80,13 @@ class HomepageSettings extends Page implements HasForms
         $welcome = HomepageSetting::getBySection('welcome');
         $welcomeImg = $welcome['image'] ?? '';
         // Only load images that exist on the storage disk
-        $welcomeImageArray = (!empty($welcomeImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($welcomeImg))
+        $welcomeImageArray = (! empty($welcomeImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($welcomeImg))
             ? [$welcomeImg] : [];
 
         // Load Survey section
         $survey = HomepageSetting::getBySection('survey');
         $surveyImg = $survey['image'] ?? '';
-        $surveyImageArray = (!empty($surveyImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($surveyImg))
+        $surveyImageArray = (! empty($surveyImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($surveyImg))
             ? [$surveyImg] : [];
 
         // Load other sections
@@ -136,6 +156,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Tampilkan / Sembunyikan')
                         ->icon(Heroicon::OutlinedEye)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_beranda')
+                                    ->label('Lihat Halaman Beranda')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda'), shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Atur Section yang Ditampilkan')
                                 ->description('Aktifkan atau nonaktifkan section yang tampil di halaman beranda.')
                                 ->schema([
@@ -154,6 +182,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Hero Carousel')
                         ->icon(Heroicon::OutlinedPhoto)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_hero')
+                                    ->label('Lihat Section Hero')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#hero', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Kelola Slide Hero Carousel')
                                 ->description('Tambah, edit, atau hapus slide yang tampil di bagian atas halaman beranda.')
                                 ->schema([
@@ -199,6 +235,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Sambutan Kepsek')
                         ->icon(Heroicon::OutlinedUser)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_sambutan')
+                                    ->label('Lihat Section Sambutan')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#sambutan', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Konten Sambutan Kepala Sekolah')
                                 ->schema([
                                     TextInput::make('welcome_title')
@@ -229,6 +273,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Lowongan Kerja')
                         ->icon(Heroicon::OutlinedBriefcase)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_lowongan')
+                                    ->label('Lihat Section Lowongan')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#lowongan', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Judul & Deskripsi Section Lowongan')
                                 ->description('Data lowongan diambil dari database. Anda hanya bisa mengatur judul dan deskripsi section.')
                                 ->schema([
@@ -245,6 +297,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Tracer Study')
                         ->icon(Heroicon::OutlinedChartBar)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_tracer')
+                                    ->label('Lihat Section Tracer Study')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#tracer-study', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Konten Section Tracer Study')
                                 ->schema([
                                     TextInput::make('tracer_study_title')
@@ -309,6 +369,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Pengumuman')
                         ->icon(Heroicon::OutlinedBellAlert)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_pengumuman')
+                                    ->label('Lihat Section Pengumuman')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#pengumuman', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Judul & Deskripsi Section Pengumuman')
                                 ->description('Data pengumuman diambil dari database. Anda hanya bisa mengatur judul dan deskripsi section.')
                                 ->schema([
@@ -325,6 +393,14 @@ class HomepageSettings extends Page implements HasForms
                         ->label('Survei Kepuasan')
                         ->icon(Heroicon::OutlinedClipboardDocumentCheck)
                         ->schema([
+                            \Filament\Schemas\Components\Actions::make([
+                                Action::make('preview_survey')
+                                    ->label('Lihat Section Survei')
+                                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                    ->color('gray')
+                                    ->size('sm')
+                                    ->url(route('beranda').'#survey', shouldOpenInNewTab: true),
+                            ]),
                             Section::make('Konten Section Survei Kepuasan')
                                 ->schema([
                                     TextInput::make('survey_title')

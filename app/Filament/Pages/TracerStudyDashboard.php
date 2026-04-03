@@ -2,25 +2,33 @@
 
 namespace App\Filament\Pages;
 
-use BackedEnum;
-use Filament\Pages\Page;
-use Filament\Support\Icons\Heroicon;
-use App\Filament\Widgets\WorkFillsTableWidget;
+use App\Exports\TracerStudyExport;
 use App\Filament\Widgets\CollegeFillsTableWidget;
 use App\Filament\Widgets\EntrepreneurFillsTableWidget;
-use App\Filament\Widgets\UnemployedFillsTableWidget;
 use App\Filament\Widgets\TracerStudyAllTableWidget;
-use App\Models\WorkFill;
+use App\Filament\Widgets\UnemployedFillsTableWidget;
+use App\Filament\Widgets\WorkFillsTableWidget;
 use App\Models\CollegeFill;
 use App\Models\EntrepreneurFill;
 use App\Models\UnemployedFill;
-use Livewire\Attributes\Url;
+use App\Models\WorkFill;
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
-use App\Exports\TracerStudyExport;
+use Filament\Pages\Page;
+use Filament\Support\Icons\Heroicon;
+use Livewire\Attributes\Url;
 
 class TracerStudyDashboard extends Page
 {
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.tracer_study');
+    }
+
     protected static ?string $navigationLabel = 'Tracer Study';
 
     protected static ?string $title = 'Tracer Study';
@@ -61,8 +69,8 @@ class TracerStudyDashboard extends Page
                 ])
                 ->action(function (array $data) {
                     $type = $data['category'];
-                    $fileName = 'Tracer_Study_' . ucfirst($type) . '_' . date('Y-m-d_H-i-s') . '.xlsx';
-                    
+                    $fileName = 'Tracer_Study_'.ucfirst($type).'_'.date('Y-m-d_H-i-s').'.xlsx';
+
                     return \Maatwebsite\Excel\Facades\Excel::download(
                         new TracerStudyExport($type),
                         $fileName

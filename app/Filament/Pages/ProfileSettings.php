@@ -4,12 +4,13 @@ namespace App\Filament\Pages;
 
 use App\Models\ProfileSetting;
 use BackedEnum;
-use UnitEnum;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -22,12 +23,52 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
+use UnitEnum;
 
 class ProfileSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
+    protected function getHeaderActions(): array
+    {
+        return [
+            ActionGroup::make([
+                Action::make('preview_visi_misi')
+                    ->label('Visi Misi')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('visi-misi'), shouldOpenInNewTab: true),
+                Action::make('preview_struktur')
+                    ->label('Struktur Organisasi')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('struktur-organisasi'), shouldOpenInNewTab: true),
+                Action::make('preview_program')
+                    ->label('Program Kerja')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('program-kerja'), shouldOpenInNewTab: true),
+                Action::make('preview_alur')
+                    ->label('Alur Kegiatan')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('alur-kegiatan'), shouldOpenInNewTab: true),
+                Action::make('preview_dokumen')
+                    ->label('Dokumen Pendukung')
+                    ->icon(Heroicon::OutlinedEye)
+                    ->url(route('dokumen-pendukung'), shouldOpenInNewTab: true),
+            ])
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray'),
+        ];
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.profile_settings');
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
 
     protected static ?string $navigationLabel = 'Pengaturan Profil';
 
@@ -88,9 +129,10 @@ class ProfileSettings extends Page implements HasForms
 
     protected function resolveStorageImage(string $path): array
     {
-        if (!empty($path) && Storage::disk('public')->exists($path)) {
+        if (! empty($path) && Storage::disk('public')->exists($path)) {
             return [$path];
         }
+
         return [];
     }
 

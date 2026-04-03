@@ -28,6 +28,7 @@ class VacancyDetail extends Component
 
         $this->otherVacancies = vacancie::where('entryId', '!=', $this->vacancyId)
         ->where('deadline', '>=', now())
+        ->where('quota_status', 'open')
         ->where( function ($q) {
             foreach ($this->vacancy->major as $major) {
                 $q->orWhereJsonContains('major', $major);
@@ -58,6 +59,13 @@ class VacancyDetail extends Component
         // Cek apakah user sudah melengkapi CV
         if (empty(auth()->user()->CVuser)) {
             session()->flash('error_cv', true);
+            return;
+        }
+
+        // Cek apakah kuota lowongan sudah penuh
+        $this->vacancy->refresh();
+        if ($this->vacancy->isQuotaFull()) {
+            session()->flash('error_quota', true);
             return;
         }
 

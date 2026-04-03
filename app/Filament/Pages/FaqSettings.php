@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\FaqSetting;
 use BackedEnum;
-use UnitEnum;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\FileUpload;
@@ -18,10 +18,30 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 
 class FaqSettings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('preview')
+                ->label('Lihat Tampilan')
+                ->icon(Heroicon::OutlinedEye)
+                ->color('gray')
+                ->url(route('faq'), shouldOpenInNewTab: true),
+        ];
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('page.faq_settings');
+    }
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
@@ -40,7 +60,7 @@ class FaqSettings extends Page implements HasForms
     public function mount(): void
     {
         $heroImg = FaqSetting::getValue('hero_image', '');
-        $heroImageArray = (!empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
+        $heroImageArray = (! empty($heroImg) && \Illuminate\Support\Facades\Storage::disk('public')->exists($heroImg))
             ? [$heroImg] : [];
 
         $this->form->fill([
@@ -59,6 +79,14 @@ class FaqSettings extends Page implements HasForms
             Section::make('Header Halaman FAQ')
                 ->description('Judul dan deskripsi yang tampil di bagian hero halaman FAQ.')
                 ->schema([
+                    \Filament\Schemas\Components\Actions::make([
+                        Action::make('preview_faq_hero')
+                            ->label('Lihat Section Hero')
+                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                            ->color('gray')
+                            ->size('sm')
+                            ->url(route('faq').'#hero', shouldOpenInNewTab: true),
+                    ]),
                     TextInput::make('hero_title')
                         ->label('Judul Hero')
                         ->required(),
@@ -76,6 +104,14 @@ class FaqSettings extends Page implements HasForms
             Section::make('Judul Section Pertanyaan')
                 ->description('Judul dan deskripsi di atas daftar pertanyaan.')
                 ->schema([
+                    \Filament\Schemas\Components\Actions::make([
+                        Action::make('preview_faq_konten')
+                            ->label('Lihat Section Pertanyaan')
+                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                            ->color('gray')
+                            ->size('sm')
+                            ->url(route('faq').'#faq-konten', shouldOpenInNewTab: true),
+                    ]),
                     TextInput::make('section_title')
                         ->label('Judul Section')
                         ->required(),

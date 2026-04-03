@@ -50,6 +50,17 @@
     --color-bkkNeutral-50: #FBFCFD;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+    overflow-y: scroll;
+}
+
+
 .fi-sidebar {
     width: 280px;
     background-color: white;

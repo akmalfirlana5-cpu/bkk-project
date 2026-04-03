@@ -6,27 +6,40 @@ use App\Filament\Resources\SurveyResponses\Pages\ListSurveyResponses;
 use App\Filament\Resources\SurveyResponses\Pages\ViewSurveyResponse;
 use App\Models\SurveyResponse;
 use BackedEnum;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Actions\ViewAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkAction;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
 
 class SurveyResponseResource extends Resource
 {
     protected static ?string $model = SurveyResponse::class;
 
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isSuperAdmin() || $user->hasAdminPermission('resource.survey_responses');
+    }
+
     protected static ?string $navigationLabel = 'Hasil Survey';
+
     protected static ?string $modelLabel = 'Hasil Survey';
+
     protected static ?string $pluralModelLabel = 'Hasil Survey';
+
     protected static ?int $navigationSort = 9;
-    protected static string | \UnitEnum | null $navigationGroup = 'Survey Kepuasan';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Survey Kepuasan';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     public static function form(Schema $schema): Schema
@@ -73,18 +86,18 @@ class SurveyResponseResource extends Resource
                         ->icon('heroicon-o-arrow-down-tray')
                         ->action(function (Collection $records) {
                             $firstRecord = $records->first();
-                            if (!$firstRecord) {
+                            if (! $firstRecord) {
                                 return;
                             }
 
                             $export = new \App\Exports\SurveyResponsesExport($records);
-                            
+
                             $categoryIds = $records->pluck('category_id')->unique();
-                            $namePart = $categoryIds->count() > 1 
-                                ? 'Multi_Kategori' 
+                            $namePart = $categoryIds->count() > 1
+                                ? 'Multi_Kategori'
                                 : str()->slug($firstRecord->category->name ?? 'survey');
 
-                            $fileName = 'Survey_' . $namePart . '_' . now()->format('Ymd') . '.xlsx';
+                            $fileName = 'Survey_'.$namePart.'_'.now()->format('Ymd').'.xlsx';
 
                             return $export->download($fileName);
                         })

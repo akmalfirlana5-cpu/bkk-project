@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Observers\ApplicationObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([ApplicationObserver::class])]
 class Application extends Model
 {
     protected $fillable = [
@@ -11,12 +14,9 @@ class Application extends Model
         'id_user',
         'id_company',
         'status',
-
-            
     ];
 
     public const STATUSES = [
-        "dikirim" => "Dikirim",
         "diproses" => "Diproses",
         "diterima" => "Diterima",
         "ditolak" => "Ditolak",
