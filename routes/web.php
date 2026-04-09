@@ -1,36 +1,36 @@
 <?php
 
-use App\Livewire\Faq;
-use App\Livewire\Login;
-use App\Livewire\Contact;
-use App\Livewire\Homepage;
-use App\Livewire\Profil\VisiMisi;
-use App\Livewire\Vacancy\Vacancy;
-use App\Livewire\Profil\WorkProgram;
-use App\Livewire\Profil\ActivityFlow;
-use Illuminate\Support\Facades\Route;
-use App\Livewire\User\FillTracerStudy;
-use App\Livewire\Vacancy\VacancyDetail;
-use App\Livewire\Information\TracerStudy;
-use App\Livewire\Information\Announcement;
-use App\Livewire\Information\Survey;
-use App\Livewire\Information\SuccessSurvey;
-use App\Http\Controllers\ProfileController;
 use App\Livewire\Company\Company;
-use App\Livewire\Profil\SupportingDocuments;
-use App\Livewire\Profil\OrganizationStructure;
+use App\Livewire\Contact;
+use App\Livewire\Faq;
+use App\Livewire\Homepage;
+use App\Livewire\Information\Announcement;
 use App\Livewire\Information\AnnouncementDetail;
+use App\Livewire\Information\TracerStudy;
+use App\Livewire\Profil\ActivityFlow;
+use App\Livewire\Profil\OrganizationStructure;
+use App\Livewire\Profil\SupportingDocuments;
+use App\Livewire\Profil\VisiMisi;
+use App\Livewire\Profil\WorkProgram;
+use App\Livewire\Survey\SuccessSurvey;
+use App\Livewire\Survey\Survey;
 use App\Livewire\User\ApplicationHistory\ApplicationHistory;
+use App\Livewire\User\FillTracerStudy;
+use App\Livewire\User\Partials\Survey\SurveyForm;
 use App\Livewire\User\Profile\PersonalData;
 use App\Livewire\User\SuccessTracerStudy;
+use App\Livewire\Vacancy\Vacancy;
+use App\Livewire\Vacancy\VacancyDetail;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('beranda');
 Route::get('/faq', Faq::class)->name('faq');
 Route::get('/kontak', Contact::class)->name('kontak');
 
 // Survey Routes
-Route::get('/survey/{slug}', Survey::class)->name('survey.show');
-Route::get('/survey/{slug}/terima-kasih', SuccessSurvey::class)->name('survey.thanks');
+Route::get('/survey', Survey::class)->name('survey');
+Route::get('/survey/sukses', SuccessSurvey::class)->name('survey-sukses');
+Route::get('/survey/{type}', SurveyForm::class)->name('survey-detail');
 
 // ProfilRoute
 Route::get('/visi-misi', VisiMisi::class)->name('visi-misi')->prefix('profil');

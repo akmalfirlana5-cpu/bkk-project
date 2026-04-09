@@ -50,7 +50,7 @@
                     <div 
                         @click="selectedContent = '{{ $document['data']['title'] }}'"
                         class="min-w-max border-l-4 border-l-transparent border-b border-b-bkkNeutral-200 py-4 px-6 paragraph-16s cursor-pointer transition duration-300 last:border-b-0"
-                        :class="selectedContent === '{{ $document['data']['title'] }}' ? 'border-l-bkkBlue-700! text-bkkBlue-700 bg-bkkBlue-100' : ' text-bkkNeutral-700 bg-transparent'">
+                        :class="selectedContent === '{{ $document['data']['title'] }}' ? 'border-l-primary! text-primary bg-primary-ultra-light' : ' text-bkkNeutral-700 bg-transparent'">
                         {{ $document['data']['title'] }}
                     </div>
                 @endforeach

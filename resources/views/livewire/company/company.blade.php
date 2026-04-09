@@ -30,7 +30,7 @@
                     <div class="heading-16 mb-3">Kata Kunci Perusahaan</div>
                     <div class="relative">
                         <input 
-                            class="py-3 px-6 border border-bkkNeutral-200 rounded-xl w-full outline-none focus:border-bkkBlue-700 paragraph-14r"
+                            class="py-3 px-6 border border-bkkNeutral-200 rounded-xl w-full focus:ring-primary focus:border-primary paragraph-14r"
                             wire:model.live.debounce.500ms="filterSearch"
                             type="text"
                             placeholder="Masukkan kata kunci perusahaan atau lokasi"
@@ -39,7 +39,7 @@
                 </div>
                 <div class=" md:w-[10%]">
                     <button 
-                        class="md:w-full py-2 md:py-3 px-6 bg-bkkBlue-700 rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-bkkBlue-800 transition duration-300"
+                        class="md:w-full py-2 md:py-3 px-6 bg-primary rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-primary-hover transition duration-300"
                     >
                         Cari
                     </button>
@@ -119,7 +119,7 @@
                                     </div>
                                     <a 
                                         @click="openModal = true; modalIndex = {{ $company->id }}"
-                                        class="w-full lg:w-auto text-center lg:text-start paragraph-16s text-bkkNeutral-50 bg-bkkBlue-700 hover:bg-bkkBlue-800 py-3 px-4 rounded-[12px] transition duration-300 cursor-pointer">
+                                        class="w-full lg:w-auto text-center lg:text-start paragraph-16s text-bkkNeutral-50 bg-primary hover:bg-primary-hover py-3 px-4 rounded-[12px] transition duration-300 cursor-pointer">
                                         Detail Perusahaan
                                     </a>
                                 </div>
@@ -215,11 +215,11 @@
                             </div>
                             @empty
                                 <div class="col-span-2 flex flex-col items-center justify-center py-20 px-6 bg-white rounded-[32px] border border-bkkNeutral-100 shadow-sm">
-                                    <div class="w-24 h-24 bg-bkkBlue-50 rounded-full flex items-center justify-center mb-6">
+                                    <div class="w-24 h-24 bg-bkkBlue-50 text-primary rounded-full flex items-center justify-center mb-6">
                                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M15.5 15.5L19 19" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M5 7H19C20.1046 7 21 7.89543 21 9V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V9C3 7.89543 3.89543 7 5 7Z" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M9 7V5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M15.5 15.5L19 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M5 7H19C20.1046 7 21 7.89543 21 9V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V9C3 7.89543 3.89543 7 5 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M9 7V5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
 

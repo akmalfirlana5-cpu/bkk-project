@@ -62,7 +62,7 @@
                     {{ $tracerContent['tracer_study']['cta_description'] }}
                 </div>
                 <a  href="{{ route('isi-tracer-study') }}"
-                    class="w-full lg:w-auto justify-self-start flex justify-center items-center gap-3 py-3 px-6 bg-bkkBlue-700 hover:bg-bkkBlue-800 transition duration-300 rounded-[8px] group">
+                    class="w-full lg:w-auto justify-self-start flex justify-center items-center gap-3 py-3 px-6 bg-primary hover:bg-primary-hover transition duration-300 rounded-[8px] group">
                     <span class="paragraph-16s text-bkkNeutral-50">
                         {{ $tracerContent['tracer_study']['cta_text'] }}
                     </span>

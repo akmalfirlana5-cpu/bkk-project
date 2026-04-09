@@ -62,7 +62,7 @@
                 @unless ($paginator->onFirstPage())
                     <button type="button" wire:click="previousPage('{{ $paginator->getPageName() }}')"
                             x-on:click="{{ $scrollIntoViewJsSnippet }}"
-                            class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-bkkNeutral-600 hover:text-white border border-bkkNeutral-600 hover:border-bkkBlue-700 bg-transparent hover:bg-bkkBlue-700 transition ease-in-out duration-150 cursor-pointer"
+                            class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-bkkNeutral-600 hover:text-white border border-bkkNeutral-600 hover:border-primary bg-transparent hover:bg-primary transition ease-in-out duration-150 cursor-pointer"
                             aria-label="{{ __('pagination.previous') }}">
                         <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 1L1 5L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -79,14 +79,14 @@
                     @else
                         @if ($element == $currentPage)
                             <span
-                                    class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-white bg-bkkBlue-700 paragraph-15r select-none">
+                                    class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-white bg-primary paragraph-15r select-none">
                                 {{ $element }}
                             </span>
                         @else
                             <button type="button"
                                     wire:click="gotoPage({{ $element }}, '{{ $paginator->getPageName() }}')"
                                     x-on:click="{{ $scrollIntoViewJsSnippet }}"
-                                    class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-bkkNeutral-600 hover:text-white  border border-bkkNeutral-600 hover:border-bkkBlue-700 bg-transparent hover:bg-bkkBlue-700 transition cursor-pointer paragraph-15r">
+                                    class="rounded-xl w-[48px] h-[48px] flex items-center justify-center text-bkkNeutral-600 hover:text-white  border border-bkkNeutral-600 hover:border-primary bg-transparent hover:bg-primary transition cursor-pointer paragraph-15r">
                                 {{ $element }}
                             </button>
                         @endif
@@ -97,7 +97,7 @@
                 @if ($paginator->hasMorePages())
                     <button type="button" wire:click="nextPage('{{ $paginator->getPageName() }}')"
                             x-on:click="{{ $scrollIntoViewJsSnippet }}"
-                            class="rounded-xl w-[48px] h-[48px] flex items-center justify-center  transition ease-in-out duration-150 cursor-pointer text-bkkNeutral-600 hover:text-white border border-bkkNeutral-600 hover:border-bkkBlue-700 bg-transparent hover:bg-bkkBlue-700"
+                            class="rounded-xl w-[48px] h-[48px] flex items-center justify-center  transition ease-in-out duration-150 cursor-pointer text-bkkNeutral-600 hover:text-white border border-bkkNeutral-600 hover:border-primary bg-transparent hover:bg-primary"
                             aria-label="{{ __('pagination.next') }}">
                         <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

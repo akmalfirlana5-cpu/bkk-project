@@ -7,7 +7,7 @@
                     <div class="heading-16 mb-3">Kata Kunci Pekerjaan</div>
                     <div class="relative">
                         <input 
-                            class="py-3 px-6 border border-bkkNeutral-200 rounded-xl w-full outline-none focus:border-bkkBlue-700 paragraph-14r"
+                            class="py-3 px-6 border border-bkkNeutral-200 rounded-xl w-full focus:ring-primary focus:border-primary paragraph-14r"
                             wire:model.live.debounce.500ms="filterSearch"
                             type="text"
                             placeholder="Masukkan kata kunci"
@@ -16,7 +16,7 @@
                 </div>
                 <div class=" md:w-[10%]">
                     <button 
-                        class="md:w-full py-3 px-6 bg-bkkBlue-700 rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-bkkBlue-800 transition duration-300"
+                        class="md:w-full py-3 px-6 bg-primary rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-primary-hover transition duration-300"
                     >
                         Cari
                     </button>
@@ -85,12 +85,12 @@
                     </a>
                 @empty
                     <div class="flex flex-col items-center justify-center py-20 px-6 bg-white rounded-[32px] border border-bkkNeutral-100 shadow-sm">
-                    <div class="w-24 h-24 bg-bkkBlue-50 rounded-full flex items-center justify-center mb-6">
+                    <div class="w-24 h-24 bg-bkkBlue-50 text-primary rounded-full flex items-center justify-center mb-6">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M14 2V8H20" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 13H16" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 17H12" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 13H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 17H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
 
@@ -100,7 +100,7 @@
                     </p>
 
                     <a href="{{ route('lowongan') }}" 
-                    class="px-8 py-3 bg-bkkBlue-700 hover:bg-bkkBlue-800 text-white rounded-xl paragraph-16s transition duration-300 shadow-lg shadow-bkkBlue-200 cursor-pointer">
+                    class="px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl paragraph-16s transition duration-300 shadow-lg shadow-bkkBlue-200 cursor-pointer">
                         Cari Lowongan Sekarang
                     </a>
                 </div>

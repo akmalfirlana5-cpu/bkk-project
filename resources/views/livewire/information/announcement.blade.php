@@ -37,13 +37,13 @@
                 </div>
                 <div class="flex justify-end gap-3 w-full lg:w-[35%]">
                     <input 
-                        class="w-full lg:w-[300px] py-3 px-6 border border-bkkNeutral-200 rounded-xl outline-none focus:border-bkkBlue-700 paragraph-14r"
+                        class="w-full lg:w-[300px] py-3 px-6 border border-bkkNeutral-200 rounded-xl focus:ring-primary focus:border-primary paragraph-14r"
                         type="text"
                         wire:model.live.debounce.500ms="filterSearch"
                         placeholder="Masukkan kata kunci"
                     />
                     <button 
-                        class="py-3 px-6 bg-bkkBlue-700 rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-bkkBlue-800 transition duration-300">
+                        class="py-3 px-6 bg-primary rounded-xl text-bkkNeutral-50 paragraph-16s cursor-pointer hover:bg-primary-hover transition duration-300">
                         Cari
                     </button>
                 </div>
@@ -73,7 +73,7 @@
                                     Diunggah pada {{ $announcement->created_at->translatedFormat('d F Y') }}
                                 </div>
                                 <a  href="{{ route('pengumuman-detail', $announcement->id) }}"
-                                    class="w-full lg:w-auto justify-self-center flex justify-center items-center gap-3 py-3 px-6 bg-bkkBlue-700 hover:bg-bkkBlue-800 transition duration-300 rounded-[8px] group">
+                                    class="w-full lg:w-auto justify-self-center flex justify-center items-center gap-3 py-3 px-6 bg-primary hover:bg-primary-hover transition duration-300 rounded-[8px] group">
                                     <span class="paragraph-16s text-bkkNeutral-50">Baca Selengkapnya</span>
                                     <svg class="shrink-0 group-hover:translate-x-1 transition duration-300" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -84,11 +84,11 @@
                     </div>
                 @empty
                     <div class="col-span-2 flex flex-col items-center justify-center py-20 px-6 bg-white rounded-[32px] border border-bkkNeutral-100 shadow-sm">
-                        <div class="w-24 h-24 bg-bkkBlue-50 rounded-full flex items-center justify-center mb-6">
+                        <div class="w-24 h-24 bg-bkkBlue-50 text-primary rounded-full flex items-center justify-center mb-6">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 6H6C4.89543 6 4 6.89543 4 8V16C4 17.1046 4.89543 18 6 18H11L15 21V3L11 6Z" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M19 8C20.1046 8 21 8.89543 21 10V14C21 15.1046 20.1046 16 19 16" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M15 12H17" stroke="#073AE4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M11 6H6C4.89543 6 4 6.89543 4 8V16C4 17.1046 4.89543 18 6 18H11L15 21V3L11 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19 8C20.1046 8 21 8.89543 21 10V14C21 15.1046 20.1046 16 19 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
 

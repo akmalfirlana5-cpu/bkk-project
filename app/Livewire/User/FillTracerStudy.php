@@ -33,6 +33,8 @@ class FillTracerStudy extends Component
     {
         $this->formData = array_merge($this->formData, $data);
         $this->currentStep = 2;
+
+        $this->dispatch('next-step-scrolled');
     }
 
     #[On('step2-completed')]
@@ -40,12 +42,16 @@ class FillTracerStudy extends Component
     {
         $this->formData = array_merge($this->formData, $data);
         $this->saveAllData();
+
+        $this->dispatch('next-step-scrolled');
     }
 
     #[On('go-to-previous-step')]
     public function previousStep()
     {
         $this->currentStep = 1;
+
+        $this->dispatch('next-step-scrolled');
     }
 
     private function saveAllData()

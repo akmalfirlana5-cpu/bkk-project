@@ -34,7 +34,7 @@
                         <div 
                             @click="open = !open; openFaq = {{ $loop->index }}"
                             class="flex items-center justify-between transition duration-300 cursor-pointer"
-                            :class="open === true && openFaq == {{ $loop->index }} ? 'text-bkkBlue-700' : 'text-bkkNeutral-900'">
+                            :class="open === true && openFaq == {{ $loop->index }} ? 'text-primary' : 'text-bkkNeutral-900'">
                             <h2 class="heading-16s">
                                 {{ \Filament\Forms\Components\RichEditor\RichContentRenderer::make
                                 ($items['title']) }}

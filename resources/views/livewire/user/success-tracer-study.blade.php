@@ -16,7 +16,7 @@
             Data Tracer Study Anda telah berhasil disimpan. Terima kasih atas partisipasi Anda dalam membantu pendataan alumni SMKN 4 Malang.
         </p>
         
-        <a href="{{ route('beranda') }}" class="inline-block px-8 py-3 bg-bkkBlue-700 text-white font-medium rounded-xl hover:bg-bkkBlue-800 transition duration-300">
+        <a href="{{ route('beranda') }}" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-xl hover:bg-primary-hover transition duration-300">
             Kembali ke Beranda
         </a>
     </div>

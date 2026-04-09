@@ -11,6 +11,13 @@
 @import 'swiper/css/pagination';
 
 @theme {
+
+    /* dynamic-theme-website */
+    --color-primary: var(--color-primary);
+    --color-primary-hover: var(--color-primary-hover);
+    --color-primary-light: var(--color-primary-light);
+    --color-primary-ultra-light: var(--color-primary-ultra-lightlight);
+
     /* Blue */
     --color-bkkBlue-950: #020D31;
     --color-bkkBlue-900: #021245;

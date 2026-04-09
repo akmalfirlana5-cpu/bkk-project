@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SurveyResponse extends Model
 {
-    protected $table = 'survey_responses';
+    protected $table = 'survey_participants';
 
     protected $fillable = [
         'category_id',

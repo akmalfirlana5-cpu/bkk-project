@@ -38,7 +38,7 @@
                     class="w-full lg:w-[50%] p-6">
                     @if (session('success'))
                         <div x-data="{ open: true }" x-show="open"
-                            class="w-full rounded-xl p-4 flex gap-2 mb-6 items-center border border-bkkBlue-700 col-span-2 text-bkkBlue-700">
+                            class="w-full rounded-xl p-4 flex gap-2 mb-6 items-center border border-primary col-span-2 text-primary">
                             <svg class="w-6 h-6 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +55,7 @@
                     @endif
                     @error('error')
                         <div x-data="{ open: true }" x-show="open"
-                            class="w-full rounded-xl p-4  flex gap-2 mb-6 items-center border border-bkkBlue-700 text-bkkBlue-700 col-span-2">
+                            class="w-full rounded-xl p-4  flex gap-2 mb-6 items-center border border-primary text-primary col-span-2">
                             <svg class="w-6 h-6 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -76,8 +76,8 @@
                                     type="text" 
                                     wire:model="contact.firstName" 
                                     placeholder="Masukkan nama depan"
-                                    class="paragraph-14r text-bkkNeutral-900 outline-none 
-                                    border border-bkkNeutral-200 rounded-2xl focus:border-bkkBlue-700 py-3.5 px-6"/>
+                                    class="paragraph-14r text-bkkNeutral-900 focus:ring-primary 
+                                    border border-bkkNeutral-200 rounded-2xl focus:border-primary py-3.5 px-6"/>
                                 <div class="absolute -bottom-6">
                                     @error('contact.firstName')
                                         <span class="text-red-500 text-xs ">{{ $message }}</span>
@@ -91,8 +91,8 @@
                                     type="text" 
                                     wire:model="contact.lastName" 
                                     placeholder="Masukkan nama belakang"
-                                    class="paragraph-14r text-bkkNeutral-900 outline-none 
-                                    border border-bkkNeutral-200 rounded-2xl focus:border-bkkBlue-700 py-3.5 px-6"/>
+                                    class="paragraph-14r text-bkkNeutral-900 focus:ring-primary 
+                                    border border-bkkNeutral-200 rounded-2xl focus:border-primary py-3.5 px-6"/>
                                 <div class="absolute -bottom-6">
                                     @error('contact.lastName')
                                         <span class="text-red-500 text-xs ">{{ $message }}</span>
@@ -107,8 +107,8 @@
                                     type="email" 
                                     wire:model="contact.email" 
                                     placeholder="Masukkan email"
-                                    class="paragraph-14r text-bkkNeutral-900 outline-none 
-                                    border border-bkkNeutral-200 rounded-2xl focus:border-bkkBlue-700 py-3.5 px-6"/>
+                                    class="paragraph-14r text-bkkNeutral-900 focus:ring-primary 
+                                    border border-bkkNeutral-200 rounded-2xl focus:border-primary py-3.5 px-6"/>
                             <div class="absolute -bottom-6">
                                 @error('contact.email')
                                     <span class="text-red-500 text-xs ">{{ $message }}</span>
@@ -124,8 +124,8 @@
                                     wire:model="contact.message" 
                                     placeholder="Tuliskan pesan atau masukan"
                                     rows="5"
-                                    class="paragraph-14r text-bkkNeutral-900 outline-none 
-                                    border border-bkkNeutral-200 rounded-2xl focus:border-bkkBlue-700 py-3.5 px-6">
+                                    class="paragraph-14r text-bkkNeutral-900 focus:ring-primary 
+                                    border border-bkkNeutral-200 rounded-2xl focus:border-primary py-3.5 px-6">
                             </textarea>
                             <div class="absolute -bottom-6">
                                 @error('contact.message')
@@ -136,7 +136,7 @@
                         <div class="flex justify-end">
                             <button 
                                 type="submit" 
-                                class="w-full lg:w-auto justify-self-end px-6 py-3 bg-bkkBlue-700 paragraph-16s hover:bg-bkkBlue-800 text-bkkNeutral-50 rounded-lg cursor-pointer transition duration-300">
+                                class="w-full lg:w-auto justify-self-end px-6 py-3 bg-primary paragraph-16s hover:bg-primary-hover text-bkkNeutral-50 rounded-lg cursor-pointer transition duration-300">
                                 Kirim Pesan
                             </button>
                         </div>

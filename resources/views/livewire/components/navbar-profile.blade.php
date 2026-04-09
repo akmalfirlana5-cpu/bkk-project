@@ -16,10 +16,13 @@
             x-cloak
             @click.outside="openUserDropdown = false"
             x-show="openUserDropdown"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-4"
+            x-transition:enter-end="opacity-100 translate-y-0"
             class="absolute top-12 -right-3 bg-white shadow-xl z-50 border border-bkkNeutral-100 rounded-2xl p-6 w-[250px]">
             <div class="flex flex-col gap-4">
                 <a href="{{ route('data-pribadi') }}"
-                    class="paragraph-16r {{ request()->routeIs('data-pribadi') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300 flex items-center gap-3">
+                    class="paragraph-16r {{ request()->routeIs('data-pribadi') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300 flex items-center gap-3">
                     <svg 
                         class="w-4 h-4 shrink-0"
                         width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +34,7 @@
                     </span>
                 </a>
                 <a href="{{ route('riwayat-lamaran') }}"
-                    class="paragraph-16r {{ request()->routeIs('riwayat-lamaran') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300 flex items-center gap-3">
+                    class="paragraph-16r {{ request()->routeIs('riwayat-lamaran') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300 flex items-center gap-3">
                     <svg 
                         class="w-4 h-4 shrink-0"
                         width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +45,7 @@
                     </span>
                 </a>
                 <a href="{{ route('isi-tracer-study') }}"
-                    class="paragraph-16r {{ request()->routeIs('isi-tracer-study') ? 'text-bkkBlue-700' : 'text-bkkNeutral-900 hover:text-bkkBlue-700' }} transition duration-300 flex items-center gap-3">
+                    class="paragraph-16r {{ request()->routeIs('isi-tracer-study') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300 flex items-center gap-3">
                     <svg 
                         class="w-4 h-4 shrink-0"
                         width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
