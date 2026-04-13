@@ -67,7 +67,7 @@
         <!-- Tahun Lulus -->
         <div>
             <label class="block paragraph-14s text-bkkNeutral-700 mb-2">
-                Tahun Lulus <span class="text-red-500">*</span>
+                Tahun<span class="text-red-500">*</span>
             </label>
             <input type="date" wire:model="graduation_year"
                 class="w-full px-4 py-3 border border-bkkNeutral-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent">

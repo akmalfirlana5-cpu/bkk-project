@@ -21,6 +21,7 @@
                     placeholder="Masukkan NISN"
                     class="paragraph-14r text-bkkNeutral-900 focus:ring-primary 
                     border border-bkkNeutral-100 rounded-2xl focus:border-primary py-3.5 px-6"/>
+                @error('nisn') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
             </div>
             <div class="w-full flex flex-col gap-3 mb-9" x-data="{ showPassword: false }">
             <label for="password" class="paragraph-16r text-bkkNeutral-900">Password</label>

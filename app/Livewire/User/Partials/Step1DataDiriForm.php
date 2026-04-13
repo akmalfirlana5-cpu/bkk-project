@@ -23,7 +23,7 @@ class Step1DataDiriForm extends Component
             'address'   => 'required',
             'no_hp'     => 'required|min:12',
             'major'     => 'required',
-            'graduation_year' => 'required',
+            'graduation_year' => 'required|date',
             'status'    => 'required',
         ]);
 
