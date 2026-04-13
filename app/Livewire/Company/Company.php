@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Company;
 
-use App\Models\companie;
+use App\Models\Companie;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -26,7 +26,7 @@ class Company extends Component
 
     public function render()
     {
-        $query = companie::query();
+        $query = Companie::query();
 
         $query->when($this->filterSearch, function ($q) {
             $q->whereAny(['companies_name', 'short_address'], 'like', '%' . $this->filterSearch . '%' );

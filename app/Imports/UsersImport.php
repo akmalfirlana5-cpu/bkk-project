@@ -49,7 +49,7 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnError, \Maatwebsite
 
         // 4. Normalisasi Jurusan
         $inputJurusan = isset($row['jurusan']) ? trim($row['jurusan']) : '';
-        $validMajors = \App\Models\vacancie::MAJORS;
+        $validMajors = \App\Models\Vacancie::MAJORS;
         $finalMajor = $inputJurusan; // Default pakai input user
 
         // Coba cari match yang case-insensitive dari daftar baku

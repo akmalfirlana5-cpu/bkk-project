@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 
-class vacancie extends Model
+class Vacancie extends Model
 {
     protected $table = 'vacancies';
 
@@ -39,7 +39,7 @@ class vacancie extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(companie::class, 'company_id');
+        return $this->belongsTo(Companie::class, 'company_id');
     }
 
     protected static function booted(): void

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 use App\Models\User;
-use App\Models\vacancie;
+use App\Models\Vacancie;
 use App\Models\Application;
 use App\Models\Contacts;
 
@@ -23,7 +23,7 @@ class StatsOverview extends StatsOverviewWidget
                 'iconColor' => 'text-indigo-600',
                 'iconBg' => 'bg-indigo-200/80',
             ]),
-            Stat::make('Total lowongan', vacancie::where('deadline', '>', now())->count())
+            Stat::make('Total lowongan', Vacancie::where('deadline', '>', now())->count())
             ->description('Lowongan tersedia')
             ->icon('heroicon-m-briefcase')
             ->view('filament.widgets.custom-stat')

@@ -14,7 +14,7 @@ class UsersTemplateExport implements FromArray, WithStyles, WithColumnWidths
 
     public function array(): array
     {
-        $majors = implode(', ', array_keys(\App\Models\vacancie::MAJORS));
+        $majors = implode(', ', array_keys(\App\Models\Vacancie::MAJORS));
         
         return [
             // Row 1: Header (Wajib di Baris 1 agar terbaca sistem dengan baik)

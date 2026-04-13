@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\announcement;
+use App\Models\Announcement;
 use App\Models\HomepageSetting;
 use App\Models\User;
-use App\Models\vacancie;
+use App\Models\Vacancie;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
@@ -72,9 +72,9 @@ class Homepage extends Component
 
     public function mount()
     {
-        $this->vacancies = vacancie::where('deadline', '>=', now())
+        $this->vacancies = Vacancie::where('deadline', '>=', now())
             ->latest()->take(6)->get();
-        $this->announcements = announcement::where('active_until', '>=', now())
+        $this->announcements = Announcement::where('active_until', '>=', now())
             ->latest()->take(3)->get();
         // Ambil data Homepage settings
         $this->homepageContent = HomepageSetting::all()
@@ -100,7 +100,7 @@ class Homepage extends Component
             ->whereNotNull('status')
             ->count();
         // Jumlah loker tersedia
-        $this->vacanciesTotal = vacancie::where('deadline', '>=', now())
+        $this->vacanciesTotal = Vacancie::where('deadline', '>=', now())
             ->count();
 
         $this-> statisticContent = [

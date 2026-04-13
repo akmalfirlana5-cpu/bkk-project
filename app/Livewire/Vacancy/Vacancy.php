@@ -3,7 +3,7 @@
 namespace App\Livewire\Vacancy;
 
 use App\Models\InfoSetting;
-use App\Models\vacancie;
+use App\Models\Vacancie;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -81,7 +81,7 @@ class Vacancy extends Component
     {
         $userMajor = auth()->check() ? auth()->user()->major : null;
 
-        $query = vacancie::with('company')
+        $query = Vacancie::with('company')
             ->where('deadline', '>=', now())
             ->where('quota_status', 'open');
 
