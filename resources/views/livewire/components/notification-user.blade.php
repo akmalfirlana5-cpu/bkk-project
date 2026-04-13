@@ -1,14 +1,14 @@
 <div>
     <div 
         x-data="{ openNotif: false }"
-        class="text-bkkNeutral-900 relative hidden lg:block">
-        
+        class="text-bkkNeutral-900 relative ">
         <div  
             @click="openNotif = !openNotif"
             class="w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-bkkNeutral-100 rounded-full transition relative">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.6667 19.6667V21C15.6667 23.2091 13.8758 25 11.6667 25C9.45753 25 7.66667 23.2091 7.66667 21V19.6667M15.6667 19.6667H7.66667M15.6667 19.6667H20.454C20.964 19.6667 21.2203 19.6667 21.4268 19.597C21.8213 19.4639 22.13 19.1542 22.263 18.7597C22.333 18.5524 22.333 18.2953 22.333 17.7813C22.333 17.5563 22.3327 17.4438 22.3151 17.3366C22.2818 17.1339 22.2032 16.9418 22.0834 16.775C22.0201 16.6868 21.9397 16.6064 21.7811 16.4478L21.2617 15.9284C21.0942 15.7608 21 15.5335 21 15.2965V10.3333C21 5.17867 16.8213 0.999987 11.6667 1C6.51202 1.00001 2.33333 5.17869 2.33333 10.3333V15.2966C2.33333 15.5336 2.23899 15.7608 2.07142 15.9284L1.55208 16.4477C1.39301 16.6068 1.31339 16.6867 1.25 16.775C1.13021 16.9418 1.05086 17.1339 1.0176 17.3366C1 17.4438 1 17.5563 1 17.7813C1 18.2953 1 18.5523 1.06994 18.7597C1.203 19.1541 1.51306 19.4639 1.90755 19.597C2.11408 19.6667 2.36935 19.6667 2.87941 19.6667H7.66667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="20" height="20" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.6667 19.6667V21C15.6667 23.2091 13.8758 25 11.6667 25C9.45753 25 7.66667 23.2091 7.66667 21V19.6667M15.6667 19.6667H7.66667M15.6667 19.6667H20.454C20.964 19.6667 21.2203 19.6667 21.4268 19.597C21.8213 19.4639 22.13 19.1542 22.263 18.7597C22.333 18.5524 22.333 18.2953 22.333 17.7813C22.333 17.5563 22.3327 17.4438 22.3151 17.3366C22.2818 17.1339 22.2032 16.9418 22.0834 16.775C22.0201 16.6868 21.9397 16.6064 21.7811 16.4478L21.2617 15.9284C21.0942 15.7608 21 15.5335 21 15.2965V10.3333C21 5.17867 16.8213 0.999987 11.6667 1C6.51202 1.00001 2.33333 5.17869 2.33333 10.3333V15.2966C2.33333 15.5336 2.23899 15.7608 2.07142 15.9284L1.55208 16.4477C1.39301 16.6068 1.31339 16.6867 1.25 16.775C1.13021 16.9418 1.05086 17.1339 1.0176 17.3366C1 17.4438 1 17.5563 1 17.7813C1 18.2953 1 18.5523 1.06994 18.7597C1.203 19.1541 1.51306 19.4639 1.90755 19.597C2.11408 19.6667 2.36935 19.6667 2.87941 19.6667H7.66667" stroke="#181D25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
+
             
             @if(count($notifications) > 0)
                 <span class="absolute top-1.5 right-1.5 w-4 h-4 bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
@@ -24,7 +24,7 @@
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 translate-y-4"
             x-transition:enter-end="opacity-100 translate-y-0"
-            class="absolute top-12 -right-2 bg-white shadow-2xl z-50 border border-bkkNeutral-100 rounded-3xl w-[380px] overflow-hidden">
+            class="absolute top-12 -right-13 md:-right-2 bg-white shadow-2xl z-50 border border-bkkNeutral-100 rounded-3xl w-[380px] overflow-hidden">
             
             <div class="px-6 py-4 border-b border-bkkNeutral-50 flex justify-between items-center bg-bkkNeutral-50/50">
                 <h3 class="heading-16s text-bkkNeutral-900">Notifikasi</h3>
@@ -83,21 +83,4 @@
         </div>
     </div>
 
-    <div class="flex lg:hidden items-center gap-4 my-6 p-4 bg-bkkNeutral-100 rounded-2xl">
-        <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-sm">
-            <img 
-                src="{{ Auth::user()->photo 
-                ? \Illuminate\Support\Facades\Storage::url(Auth::user()->photo) 
-                : asset('assets/static/partial/fallbackUser.webp') }}" 
-                class="w-full h-full object-cover object-center" />
-        </div>
-        <div class="flex flex-col">
-            <span class="paragraph-16s text-bkkNeutral-900 leading-tight">
-                {{ Auth::user()->full_name }}
-            </span>
-            <span class="paragraph-12r text-bkkNeutral-500 mt-1">
-                {{ Auth::user()->major ?? 'Alumni' }}
-            </span>
-        </div>
-    </div>
 </div>

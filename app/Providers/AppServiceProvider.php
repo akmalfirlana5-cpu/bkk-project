@@ -43,6 +43,5 @@ class AppServiceProvider extends ServiceProvider
             View::share('Global_settings', $settings);
         }
 
-        // dump($settings);
     }
 }

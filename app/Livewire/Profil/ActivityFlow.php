@@ -21,8 +21,6 @@ class ActivityFlow extends Component
                return $items->pluck('value', 'key');
             })
             ->toArray();
-
-        dump($this->activityContent);
     }
     public function render()
     {

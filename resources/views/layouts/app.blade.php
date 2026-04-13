@@ -203,22 +203,28 @@
             <nav x-data="{open: false}" class="lg:hidden bg-bkkNeutral-50 fixed top-0 z-[99] w-full">
                 <div class="relative z-50 bg-bkkNeutral-50 py-8 shadow-sm">
                     <div class="container mx-auto flex justify-between items-center px-5">
-                        <a href="{{ route('beranda') }}" class="w-[124px] overflow-hidden group">
+                        <a href="{{ route('beranda') }}" class="w-[124px] max-h-[40px] overflow-hidden group">
                             <img 
                                 class="group-hover:scale-110 transition duration-300 w-full h-full object-contain" 
                                 src="{{ $Global_settings['navbar']['logo'] 
                                     ? asset('storage/' . $Global_settings['navbar']['logo'])
                                     : asset('/assets/static/partial/image-fallback.webp') }}"/>
                         </a>
-                        
-                        <button @click="open = !open" class="focus:outline-none cursor-pointer">
-                            <svg x-show="!open" class="w-7 h-7 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/>
-                            </svg>
-                            <svg x-show="open" x-cloak class="w-7 h-7 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                            </svg>
-                        </button>
+
+                        <div class="flex items-center gap-6">
+                            @auth
+                                <livewire:components.notification-user />
+                            @endauth
+                            
+                            <button @click="open = !open" class="focus:outline-none cursor-pointer">
+                                <svg x-show="!open" class="w-7 h-7 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/>
+                                </svg>
+                                <svg x-show="open" x-cloak class="w-7 h-7 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -232,7 +238,7 @@
                     x-transition:leave-start="translate-y-0" 
                     x-transition:leave-end="-translate-y-full" 
                     x-cloak
-                    class="fixed top-0 left-0 pt-30 w-full h-full bg-bkkNeutral-50 z-40 flex flex-col p-5 space-y-2">
+                    class="fixed h-screen  w-full bg-bkkNeutral-50 z-40 flex flex-col p-5 space-y-2">
                     @auth
                         <livewire:components.navbar-profile />
                         {{-- Divider --}}
@@ -244,7 +250,7 @@
                             <div class="flex items-center justify-between">
                                 <div 
                                     class="paragraph-16s transition duration-300">
-                                    User page
+                                    Halaman User
                                 </div>
                                 <svg 
                                     class="transition duration-300"
@@ -378,6 +384,17 @@
                         class="paragraph-16s {{ request()->routeIs('kontak') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300">
                         Kontak
                     </a>
+
+                    <a  
+                    @click="openModalLogin = true"
+                    class="w-full lg:w-auto mt-8 flex justify-center items-center gap-3 py-3 px-6 bg-primary hover:bg-primary-hover transition duration-300 rounded-[8px] group">
+                        <span class="paragraph-16s text-bkkNeutral-50">
+                            Login
+                        </span>
+                        <svg class="shrink-0 group-hover:translate-x-1 transition duration-300" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6L14 1M19 6L14 11M19 6H1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
                 </div>
             </nav>
 
@@ -388,7 +405,7 @@
                 x-show="openModalLogin === true">
                 <div 
                     @click.outside = "openModalLogin = false"
-                    class="w-full md:w-[500px] min-h-[400px] px-16 pt-15 pb-8 bg-bkkNeutral-50 rounded-2xl relative mx-5 lg:mx-0">
+                    class="w-full md:w-[500px] min-h-[400px] px-5 md:px-16 pt-15 pb-8 bg-bkkNeutral-50 rounded-2xl relative mx-5 lg:mx-0">
                     <livewire:components.login />
                 </div>
             </div>
