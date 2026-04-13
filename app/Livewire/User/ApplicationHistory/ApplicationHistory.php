@@ -3,8 +3,8 @@
 namespace App\Livewire\User\ApplicationHistory;
 
 use Livewire\Component;
-use App\Models\companie;
-use App\Models\vacancie;
+use App\Models\Companie;
+use App\Models\Vacancie;
 use App\Models\Application;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;

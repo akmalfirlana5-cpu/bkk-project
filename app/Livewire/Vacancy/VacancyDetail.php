@@ -4,7 +4,7 @@ namespace App\Livewire\Vacancy;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Models\vacancie;
+use App\Models\Vacancie;
 use App\Models\Application;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
@@ -22,11 +22,11 @@ class VacancyDetail extends Component
     public function mount($id)
     {
         $this->vacancyId = $id;
-        $this->vacancy = vacancie::with('company')
+        $this->vacancy = Vacancie::with('company')
         ->where('entryId', $this->vacancyId)
         ->firstOrFail();
 
-        $this->otherVacancies = vacancie::where('entryId', '!=', $this->vacancyId)
+        $this->otherVacancies = Vacancie::where('entryId', '!=', $this->vacancyId)
         ->where('deadline', '>=', now())
         ->where('quota_status', 'open')
         ->where( function ($q) {

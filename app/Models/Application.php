@@ -32,6 +32,6 @@ class Application extends Model
     }
     public function company()
     {
-        return $this->belongsTo(companie::class, 'id_company');
+        return $this->belongsTo(Companie::class, 'id_company');
     }
 }

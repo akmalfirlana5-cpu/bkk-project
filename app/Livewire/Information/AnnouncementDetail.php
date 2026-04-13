@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Information;
 
-use App\Models\announcement;
+use App\Models\Announcement;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
@@ -17,7 +17,7 @@ class AnnouncementDetail extends Component
     public function mount($id)
     {
         $this->announcementId = $id;
-        $this->announcement = announcement::where('id', $this->announcementId)
+        $this->announcement = Announcement::where('id', $this->announcementId)
         ->firstOrFail();
     }
 

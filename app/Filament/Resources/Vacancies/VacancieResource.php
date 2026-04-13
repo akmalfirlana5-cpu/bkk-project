@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class VacancieResource extends Resource
 {
-    protected static ?string $model = \App\Models\vacancie::class;
+    protected static ?string $model = \App\Models\Vacancie::class;
 
     public static function canAccess(): bool
     {
@@ -75,7 +75,7 @@ class VacancieResource extends Resource
 
             Select::make('loker_tipe')
                 ->label('tipe loker')
-                ->options(vacancie::LOKER_TYPES)
+                ->options(Vacancie::LOKER_TYPES)
                 ->required()
                 ->live(),
 
@@ -92,11 +92,11 @@ class VacancieResource extends Resource
 
             CheckboxList::make('major')
                 ->label('jurusan')
-                ->options(vacancie::MAJORS),
+                ->options(Vacancie::MAJORS),
 
             Select::make('employment_classification')
                 ->label('tipe pekerjaan')
-                ->options(vacancie::EMPLOYMENT_TYPES),
+                ->options(Vacancie::EMPLOYMENT_TYPES),
 
             TextInput::make('jobdesk')
                 ->label('deskripsi / posisi pekerjaan'),

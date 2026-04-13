@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Vacancies\Pages;
 
 use App\Filament\Resources\Vacancies\VacancieResource;
 use App\Models\Application;
-use App\Models\vacancie;
+use App\Models\Vacancie;
 use App\Notifications\AdminMessageNotification;
 use App\Notifications\ApplicationStatusChangedNotification;
 use Filament\Actions\BulkAction;
@@ -33,7 +33,7 @@ class ListVacancyApplications extends Page implements HasTable
 
     protected string $view = 'filament.resources.vacancies.pages.list-vacancy-applications';
 
-    public vacancie $record;
+    public Vacancie $record;
 
     public function getTitle(): string|Htmlable
     {

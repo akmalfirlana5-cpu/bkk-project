@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class companie extends Model
+class Companie extends Model
 {
     protected $table = 'companies';
 
@@ -22,7 +22,7 @@ class companie extends Model
 
     public function vacancies(): HasMany
     {
-        return $this->hasMany(vacancie::class, 'company_id');
+        return $this->hasMany(Vacancie::class, 'company_id');
     }
       
 }
