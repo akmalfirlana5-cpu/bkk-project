@@ -37,7 +37,7 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-6 bg-white rounded-3xl shadow-lg">
+                <div class="p-6 bg-white rounded-3xl shadow-lg" wire:ignore>
                     <h2 class="heading-32s text-bkkNeutral-900 mb-6">Distribusi Status Alumni</h2>
                     <div class="h-[300px]">
                         <canvas id="pieChart"></canvas>
