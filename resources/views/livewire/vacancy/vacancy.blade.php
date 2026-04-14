@@ -182,7 +182,7 @@
                                                 )
                                                     x-text="vacancyName.length > 15 ? vacancyName.substring(0, 15) + '...' : vacancyName"
                                                 @else
-                                                    x-text="vacancyName.length > 40 ? vacancyName.substring(0, 45) + '...' : vacancyName"
+                                                    x-text="vacancyName.length > 25 ? vacancyName.substring(0, 25) + '...' : vacancyName"
                                                 @endif>
                                             </h3>
                                             <div class="paragraph-14r text-bkkNeutral-700 capitalize">
