@@ -174,7 +174,16 @@
                                             class="space-y-1">
                                             <h3 
                                                 class="heading-20s text-black capitalize"
-                                                x-text="vacancyName.length > 15 ? vacancyName.substring(0, 15) + '...' : vacancyName">
+                                                @if (
+                                                    $vacancies->onFirstPage() &&               
+                                                    $loop->index < 4 &&                        
+                                                    $userMajor &&                              
+                                                    in_array($userMajor, $vacancy->major)
+                                                )
+                                                    x-text="vacancyName.length > 15 ? vacancyName.substring(0, 15) + '...' : vacancyName"
+                                                @else
+                                                    x-text="vacancyName.length > 40 ? vacancyName.substring(0, 45) + '...' : vacancyName"
+                                                @endif>
                                             </h3>
                                             <div class="paragraph-14r text-bkkNeutral-700 capitalize">
                                                 {{ $vacancy->company->companies_name }}
