@@ -372,6 +372,9 @@
                                 class="paragraph-16r {{ request()->routeIs('tracer-study') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300">
                                 Tracer Study
                             </a>
+                            <a href="{{ route('survey') }}"
+                                class="paragraph-16r {{ request()->routeIs('survey') ? 'text-primary' : 'text-bkkNeutral-900 hover:text-primary' }} transition duration-300">Survey Kepuasan
+                            </a>
                         </div>
                     </div>
                     <a 
