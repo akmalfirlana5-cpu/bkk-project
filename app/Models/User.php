@@ -32,7 +32,11 @@ class User extends Authenticatable implements FilamentUser, HasName
         'no_hp',
         'major',
         'CVuser',
-        'certificate',
+        'domicile',
+        'entry_year',
+        'major_description',
+        'hard_skills',
+        'soft_skills',
         'status',
         'graduation_year',
         'role',
@@ -56,6 +60,16 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function workFill()
     {
         return $this->hasOne(WorkFill::class, 'id_user');
+    }
+
+    public function portfolios()
+    {
+        return $this->hasMany(Portfolio::class);
+    }
+
+    public function pklExperiences()
+    {
+        return $this->hasMany(PklExperience::class);
     }
 
     public function collegeFill()

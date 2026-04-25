@@ -21,6 +21,7 @@ use App\Livewire\User\Profile\PersonalData;
 use App\Livewire\User\SuccessTracerStudy;
 use App\Livewire\Vacancy\Vacancy;
 use App\Livewire\Vacancy\VacancyDetail;
+use App\Http\Controllers\CvController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('beranda');
@@ -57,4 +58,7 @@ Route::middleware('auth.modal')->group(function () {
     Route::get('/tracer-study-sukses', SuccessTracerStudy::class)->middleware('auth.modal')->name('tracer-study-sukses')->prefix('user');
     Route::get('/data-pribadi', PersonalData::class)->middleware('auth.modal')->name('data-pribadi')->prefix('user');
     Route::get('/riwayat-lamaran', ApplicationHistory::class)->middleware('auth.modal')->name('riwayat-lamaran')->prefix('user');
-}); 
+    
+    // Download CV (PDF)
+    Route::get('/cv/download', [CvController::class, 'generate'])->name('cv.download');
+});  
