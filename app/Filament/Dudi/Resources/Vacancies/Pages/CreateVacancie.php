@@ -9,6 +9,8 @@ class CreateVacancie extends CreateRecord
 {
     protected static string $resource = VacancieResource::class;
 
+    protected static ?string $title = "Buat Lowongan";
+    
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['company_id'] = auth()->user()->company_id;

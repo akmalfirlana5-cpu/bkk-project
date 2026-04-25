@@ -28,6 +28,7 @@ class VacancieResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Daftar Lowongan';
 
+    protected static ?int $navigationSort = 2;
     public static function form(Schema $schema): Schema
     {
         return VacancieForm::configure($schema);

@@ -26,6 +26,8 @@ class ApplicationResource extends Resource
 
     protected static ?string $modelLabel = 'Lamaran';
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $pluralModelLabel = 'Daftar Lamaran';
 
     public static function form(Schema $schema): Schema
@@ -49,7 +51,7 @@ class ApplicationResource extends Resource
     {
         return [
             'index' => ListApplications::route('/'),
-            'create' => CreateApplication::route('/create'),
+            'create' => CreateApplication::route('/create') ,
             'edit' => EditApplication::route('/{record}/edit'),
         ];
     }

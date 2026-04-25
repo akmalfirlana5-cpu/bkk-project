@@ -12,6 +12,8 @@ class CompanyProfile extends Page implements \Filament\Forms\Contracts\HasForms
     protected static ?string $navigationLabel = 'Profil Perusahaan';
     protected static ?string $title = 'Profil Perusahaan';
 
+    protected static ?int $navigationSort = 1;
+
     protected string $view = 'filament.dudi.pages.company-profile';
 
     public ?array $data = [];
@@ -28,34 +30,49 @@ class CompanyProfile extends Page implements \Filament\Forms\Contracts\HasForms
     {
         return $schema
             ->schema([
-                \Filament\Forms\Components\TextInput::make('companies_name')
-                    ->label('Nama Perusahaan')
-                    ->required(),
-                \Filament\Forms\Components\FileUpload::make('companies_logo')
-                    ->label('Logo Perusahaan')
-                    ->image()
-                    ->directory('company-logos'),
-                \Filament\Forms\Components\Textarea::make('address')
-                    ->label('Alamat Lengkap')
-                    ->required(),
-                \Filament\Forms\Components\TextInput::make('short_address')
-                    ->label('Kota/Kabupaten')
-                    ->required(),
-                \Filament\Forms\Components\TextInput::make('field')
-                    ->label('Bidang Usaha'),
-                \Filament\Forms\Components\TextInput::make('employee')
-                    ->label('Jumlah Pekerja'),
-                \Filament\Forms\Components\TextInput::make('phone')
-                    ->label('Nomor Telepon'),
-                \Filament\Forms\Components\TextInput::make('email')
-                    ->label('Email Perusahaan')
-                    ->email(),
-                \Filament\Forms\Components\TextInput::make('website')
-                    ->label('Website'),
-                \Filament\Forms\Components\RichEditor::make('companies_profile')
-                    ->label('Profil Singkat'),
-                \Filament\Forms\Components\RichEditor::make('description')
-                    ->label('Deskripsi Lengkap'),
+                \Filament\Schemas\Components\Section::make('Informasi Dasar')
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('companies_name')
+                            ->label('Nama Perusahaan')
+                            ->required(),
+                        \Filament\Forms\Components\TextInput::make('field')
+                            ->label('Bidang Usaha'),
+                        \Filament\Forms\Components\TextInput::make('employee')
+                            ->label('Jumlah Pekerja'),
+                        \Filament\Forms\Components\TextInput::make('website')
+                            ->label('Website'),
+                    ])->columns(2),
+
+                \Filament\Schemas\Components\Section::make('Kontak & Alamat')
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('email')
+                            ->label('Email Perusahaan')
+                            ->email(),
+                        \Filament\Forms\Components\TextInput::make('phone')
+                            ->label('Nomor Telepon'),
+                        \Filament\Forms\Components\TextInput::make('short_address')
+                            ->label('Kota/Kabupaten')
+                            ->required(),
+                        \Filament\Forms\Components\Textarea::make('address')
+                            ->label('Alamat Lengkap')
+                            ->required()
+                            ->rows(3),
+                    ])->columns(2),
+
+                \Filament\Schemas\Components\Section::make('Media & Deskripsi')
+                    ->schema([
+                        \Filament\Forms\Components\FileUpload::make('companies_logo')
+                            ->label('Logo Perusahaan')
+                            ->image()
+                            ->directory('company-logos')
+                            ->columnSpanFull(),
+                        \Filament\Forms\Components\RichEditor::make('companies_profile')
+                            ->label('Profil Singkat')
+                            ->columnSpanFull(),
+                        \Filament\Forms\Components\RichEditor::make('description')
+                            ->label('Deskripsi Lengkap')
+                            ->columnSpanFull(),
+                    ])->columns(2),
             ])
             ->statePath('data');
     }
