@@ -37,7 +37,7 @@ class AdminResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Pengguna';
 
     protected static ?string $slug = 'admins';
 

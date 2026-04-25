@@ -42,6 +42,8 @@ class VacancieResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Lowongan & Lamaran';
+
     protected static ?string $modelLabel = 'Lowongan';
 
     protected static ?string $pluralModelLabel = 'Daftar Lowongan';

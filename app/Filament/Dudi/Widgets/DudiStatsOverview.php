@@ -34,16 +34,16 @@ class DudiStatsOverview extends StatsOverviewWidget
                 ->icon('heroicon-m-briefcase')
                 ->view('filament.widgets.custom-stat')
                 ->extraAttributes([
-                    'iconColor' => 'text-emerald-600',
-                    'iconBg' => 'bg-emerald-200/80',
+                    'iconColor' => 'text-emerald-600 dark:text-emerald-400',
+                    'iconBg' => 'bg-emerald-200/80 dark:bg-emerald-500/20',
                 ]),
             Stat::make('Total Lamaran Masuk', $totalLamaran)
                 ->description('Semua lamaran yang masuk')
                 ->icon('heroicon-m-document-text')
                 ->view('filament.widgets.custom-stat')
                 ->extraAttributes([
-                    'iconColor' => 'text-blue-600',
-                    'iconBg' => 'bg-blue-200/80',
+                    'iconColor' => 'text-blue-600 dark:text-blue-400',
+                    'iconBg' => 'bg-blue-200/80 dark:bg-blue-500/20',
                 ]),
         ];
     }

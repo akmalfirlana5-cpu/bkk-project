@@ -40,7 +40,7 @@ class SurveyQuestionResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Survey Kepuasan';
+    protected static string|\UnitEnum|null $navigationGroup = 'Survey & Tracer Study';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 

@@ -43,6 +43,8 @@ class AnnouncementResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Daftar Pengumuman';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Informasi & Pengumuman';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBellAlert;
 
     protected static ?string $recordTitleAttribute = 'announcement';

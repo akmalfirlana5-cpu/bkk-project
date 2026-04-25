@@ -64,18 +64,34 @@ html {
 .fi-sidebar {
     width: 280px;
     background-color: white;
+
+    .dark & {
+        background-color: var(--color-bkkNeutral-950);
+    }
 }
 
 .fi-main {
     background-color: #F9FAFB;
+
+    .dark & {
+        background-color: #0c0e12;
+    }
 }
 
 .fi-sidebar-item-label {
     color : var(--color-bkkNeutral-800);
+
+    .dark & {
+        color: var(--color-bkkNeutral-200);
+    }
 }
 
 .fi-sidebar-item-icon {
     color: var(--color-bkkNeutral-800) !important;
+
+    .dark & {
+        color: var(--color-bkkNeutral-400) !important;
+    }
 }
 
 /* ============================================aktif============================================== */
@@ -135,7 +151,11 @@ html {
     height: 40px; 
     background-color: var(--color-bkkNeutral-100);
     border-radius: 0 8px 8px 0;
-    transition: all 0.2s ease-in-out; 
+    transition: all 0.2s ease-in-out;
+
+    .dark & {
+        background-color: var(--color-bkkNeutral-800);
+    }
 }
 
 

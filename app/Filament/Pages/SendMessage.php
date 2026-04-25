@@ -37,6 +37,8 @@ class SendMessage extends Page implements HasForms
 
     protected static ?int $navigationSort = 8;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Informasi & Pengumuman';
+
     protected string $view = 'filament.pages.send-message';
 
     public ?array $data = [];

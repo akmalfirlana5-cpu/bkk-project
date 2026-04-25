@@ -40,6 +40,8 @@ class ApplicationResource extends Resource
 
     protected static ?string $modelLabel = 'Lamaran';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Lowongan & Lamaran';
+
     protected static ?string $pluralModelLabel = 'Lamaran';
 
     protected static ?int $navigationSort = 5;

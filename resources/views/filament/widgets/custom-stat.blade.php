@@ -17,7 +17,7 @@
         @endphp
 
         @if ($icon = $getIcon())
-            <div class="rounded-2xl p-2 {{ $iconBg }} dark:bg-opacity-10">
+            <div class="rounded-2xl p-2 {{ $iconBg }}">
                 <x-filament::icon
                     :icon="$icon"
                     class="h-8 w-8 {{ $iconColor }}"

@@ -36,7 +36,9 @@ class UserResource extends Resource
         return $user->isSuperAdmin() || $user->hasAdminPermission('resource.users');
     }
 
-    protected static ?string $navigationLabel = 'Pengguna';
+    protected static ?string $navigationLabel = 'Kelola Alumni';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Pengguna';
 
     protected static ?int $navigationSort = 2;
 

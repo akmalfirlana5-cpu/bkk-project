@@ -30,6 +30,7 @@ class DudiPanelProvider extends PanelProvider
             ->authGuard('dudi')
             ->favicon(asset('assets/static/logo/icon/logo-bkk-crop.webp'))
             ->brandLogo(asset('assets/static/logo/logo-bkk.png'))
+            ->darkMode(true)
             ->viteTheme('resources/css/filament/dudi/theme.css')
             ->colors([
                 'primary' => Color::Indigo,

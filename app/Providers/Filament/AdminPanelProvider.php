@@ -28,9 +28,17 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('assets/static/logo/icon/logo-bkk-crop.webp'))
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
+            ->darkMode(true)
             ->brandLogo(asset('assets/static/logo/logo-bkk.png'))
             ->colors([
                 'primary' => Color::Indigo,
+            ])
+            ->navigationGroups([
+                'Lowongan & Lamaran',
+                'Informasi & Pengumuman',
+                'Survey & Tracer Study',
+                'Manajemen Pengguna',
+                'Pengaturan Halaman',
             ])
             ->globalSearch(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

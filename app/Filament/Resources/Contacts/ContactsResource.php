@@ -42,6 +42,8 @@ class ContactsResource extends Resource
 
     protected static ?string $pluralModelLabel = 'daftar masukan';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Informasi & Pengumuman';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
 
     protected static ?string $recordTitleAttribute = 'contact';
