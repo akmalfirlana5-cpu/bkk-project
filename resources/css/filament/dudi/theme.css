@@ -1,0 +1,8 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import "tailwindcss";
+
+@plugin "@tailwindcss/forms";
+
+@source '../../../../app/Filament/Dudi/**/*';
+@source '../../../../resources/views/filament/dudi/**/*';
+@source '../../../../resources/views/filament/widgets/**/*';

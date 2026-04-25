@@ -18,11 +18,19 @@ class Companie extends Model
         'employee',
         'short_address',
         'mou',
+        'phone',
+        'email',
+        'website',
+        'description',
     ];
 
     public function vacancies(): HasMany
     {
         return $this->hasMany(Vacancie::class, 'company_id');
     }
-      
+
+    public function dudiUsers(): HasMany
+    {
+        return $this->hasMany(DudiUser::class, 'company_id');
+    }
 }
