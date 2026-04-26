@@ -5,6 +5,7 @@ namespace App\Filament\Dudi\Resources\Vacancies;
 use App\Filament\Dudi\Resources\Vacancies\Pages\CreateVacancie;
 use App\Filament\Dudi\Resources\Vacancies\Pages\EditVacancie;
 use App\Filament\Dudi\Resources\Vacancies\Pages\ListVacancies;
+use App\Filament\Dudi\Resources\Vacancies\Pages\ListVacancyApplications;
 use App\Filament\Dudi\Resources\Vacancies\Schemas\VacancieForm;
 use App\Filament\Dudi\Resources\Vacancies\Tables\VacanciesTable;
 use App\Models\Vacancie;
@@ -52,6 +53,7 @@ class VacancieResource extends Resource
             'index' => ListVacancies::route('/'),
             'create' => CreateVacancie::route('/create'),
             'edit' => EditVacancie::route('/{record}/edit'),
+            'applications' => ListVacancyApplications::route('/{record}/applications'),
         ];
     }
 

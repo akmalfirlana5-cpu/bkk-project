@@ -85,9 +85,9 @@ class Vacancie extends Model
 
         $this->update(['quota_status' => 'fulfilled']);
 
-        // Auto-reject lamaran yang masih diproses
+        // Auto-reject semua lamaran yang belum memiliki keputusan final
         $pendingApplications = $this->applications()
-            ->where('status', 'diproses')
+            ->whereNotIn('status', ['diterima', 'ditolak'])
             ->with('user')
             ->get();
 

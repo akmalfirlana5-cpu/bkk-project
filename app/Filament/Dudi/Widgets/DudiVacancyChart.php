@@ -10,7 +10,9 @@ class DudiVacancyChart extends ChartWidget
 
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 6;
+
+    protected ?string $maxHeight = '225px';
 
     protected function getData(): array
     {

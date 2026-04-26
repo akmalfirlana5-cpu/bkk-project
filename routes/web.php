@@ -62,3 +62,6 @@ Route::middleware('auth.modal')->group(function () {
     // Download CV (PDF)
     Route::get('/cv/download', [CvController::class, 'generate'])->name('cv.download');
 });  
+
+// CV untuk HRD (tidak dalam auth guard user)
+Route::get('/cv/view/{user}', [CvController::class, 'generateForUser'])->name('cv.view-user');

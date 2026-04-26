@@ -17,7 +17,9 @@ class Application extends Model
     ];
 
     public const STATUSES = [
-        "diproses" => "Diproses",
+        "belum_diproses" => "Belum Diproses",
+        "lolos_berkas" => "Lolos Berkas",
+        "interview" => "Interview",
         "diterima" => "Diterima",
         "ditolak" => "Ditolak",
     ];

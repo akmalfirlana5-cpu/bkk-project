@@ -11,6 +11,7 @@ class TracerStudyLineChart extends ChartWidget
     protected ?string $heading = 'Tren Pengisian Tracer Study';
     protected static ?int $sort = 1;
     protected int|string|array $columnSpan = 7;
+    protected ?string $maxHeight = '225px';
     
 
     protected function getData(): array

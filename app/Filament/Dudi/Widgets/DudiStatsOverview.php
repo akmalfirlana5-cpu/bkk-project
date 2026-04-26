@@ -7,11 +7,12 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class DudiStatsOverview extends StatsOverviewWidget
 {
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 6;
+    protected static ?int $sort = 1;
 
     protected function getColumns(): int
     {
-        return 2;
+        return 1;
     }
 
     protected function getStats(): array

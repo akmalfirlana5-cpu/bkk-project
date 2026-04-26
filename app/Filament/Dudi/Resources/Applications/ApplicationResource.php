@@ -30,6 +30,9 @@ class ApplicationResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Daftar Lamaran';
 
+    // Disembunyikan dari navigasi — digantikan oleh Kanban Board
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Schema $schema): Schema
     {
         return ApplicationForm::configure($schema);

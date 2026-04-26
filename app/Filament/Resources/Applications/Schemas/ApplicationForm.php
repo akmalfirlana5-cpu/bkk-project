@@ -19,12 +19,7 @@ class ApplicationForm
                     ->required()
                     ->numeric(),
                 Select::make('status')
-                    ->options([
-            'dikirim' => 'Dikirim',
-            'diproses' => 'Diproses',
-            'diterima' => 'Diterima',
-            'ditolak' => 'Ditolak',
-        ])
+                    ->options(\App\Models\Application::STATUSES)
                     ->required(),
             ]);
     }

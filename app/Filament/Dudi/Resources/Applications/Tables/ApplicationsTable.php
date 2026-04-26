@@ -24,7 +24,9 @@ class ApplicationsTable
                 \Filament\Tables\Columns\BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
-                        'primary' => 'diproses',
+                        'primary' => 'belum_diproses',
+                        'warning' => 'lolos_berkas',
+                        'info' => 'interview',
                         'success' => 'diterima',
                         'danger' => 'ditolak',
                     ]),

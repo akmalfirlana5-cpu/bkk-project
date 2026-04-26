@@ -6,6 +6,8 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class DudiDashboard extends BaseDashboard
 {
+    protected string $view = 'filament.dudi.pages.dudi-dashboard';
+
     public function getColumns(): int|array
     {
         return 12;

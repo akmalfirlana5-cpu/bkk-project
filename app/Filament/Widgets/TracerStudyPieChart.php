@@ -10,6 +10,7 @@ class TracerStudyPieChart extends ChartWidget
     protected ?string $heading = 'Distribusi Status Alumni';
     protected static ?int $sort = 2;
     protected int|string|array $columnSpan = 5;
+    protected ?string $maxHeight = '225px';
     
 
     protected function getData(): array

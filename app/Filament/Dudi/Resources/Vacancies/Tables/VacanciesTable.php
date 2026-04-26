@@ -29,6 +29,11 @@ class VacanciesTable
                 //
             ])
             ->recordActions([
+                \Filament\Actions\Action::make('lihatLamaran')
+                    ->label('Lihat Lamaran')
+                    ->icon('heroicon-o-document-text')
+                    ->color('success')
+                    ->url(fn ($record) => \App\Filament\Dudi\Resources\Vacancies\VacancieResource::getUrl('applications', ['record' => $record])),
                 EditAction::make(),
             ])
             ->toolbarActions([

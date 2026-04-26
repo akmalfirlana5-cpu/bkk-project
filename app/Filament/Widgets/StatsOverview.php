@@ -31,7 +31,7 @@ class StatsOverview extends StatsOverviewWidget
                 'iconColor' => 'text-emerald-600 dark:text-emerald-400',
                 'iconBg' => 'bg-emerald-200/80 dark:bg-emerald-500/20',
             ]),
-            Stat::make('Total lamaran', Application::where('status', 'diproses')->count())
+            Stat::make('Total lamaran', Application::where('status', 'belum_diproses')->count())
             ->description('Lamaran yang masuk')
             ->icon('heroicon-m-document-text')
             ->view('filament.widgets.custom-stat')
