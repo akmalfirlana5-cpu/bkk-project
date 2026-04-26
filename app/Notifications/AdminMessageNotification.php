@@ -28,6 +28,7 @@ class AdminMessageNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'type' => 'admin-message',
             'title' => $this->subject,
             'message' => $this->messageBody,
         ];

@@ -22,16 +22,23 @@ class NotificationUser extends Component
             ->get();
 
         
+        
         foreach ($dbNotifs as $notif) {
            
             $payload = json_decode($notif->data, true);
+            $type = $payload['type'] ?? 'job-notif';
+
+            // Retroactive check for older admin messages that don't have vacancy_id or application_id
+            if ($type === 'job-notif' && !isset($payload['vacancy_id']) && !isset($payload['application_id'])) {
+                $type = 'admin-message';
+            }
 
             $this->notifications[] = [
                 'id' => $notif->id,
-                'type' => 'job-notif',
+                'type' => $type,
                 'title' => $payload['title'] ?? 'Info Lowongan',
                 'message' => $payload['message'] ?? '',
-                'link' => isset($payload['vacancy_id']) ? route('lowongan-detail', $payload['vacancy_id']) : '#',
+                'link' => $type === 'admin-message' ? '#' : (isset($payload['application_id']) ? route('riwayat-lamaran') : (isset($payload['vacancy_id']) ? route('lowongan-detail', $payload['vacancy_id']) : '#')),
                 'created_at' => $notif->created_at,
                 'is_read' => !is_null($notif->read_at),
             ];
@@ -64,7 +71,9 @@ class NotificationUser extends Component
                 ->update(['read_at' => now()]);
         }
 
-        return redirect($link);
+        if ($link !== '#') {
+            return redirect($link);
+        }
     }
     
     public function render()
