@@ -1,0 +1,33 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-Cp-tWwuo.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/filament/admin/theme.css": {
+    "file": "assets/theme-DzqoT5_H.css",
+    "src": "resources/css/filament/admin/theme.css"
+  },
+  "resources/css/filament/dudi/theme.css": {
+    "file": "assets/theme-388xzqDA.css",
+    "src": "resources/css/filament/dudi/theme.css",
+    "isEntry": true,
+    "name": "theme",
+    "names": [
+      "theme.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BIOUsApv.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-DDQ4uUkz.css"
+    ]
+  }
+}
