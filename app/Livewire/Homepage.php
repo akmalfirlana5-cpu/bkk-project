@@ -96,9 +96,20 @@ class Homepage extends Component
         }
 
         // Lulusan Terserap
-        $this->graduates_absorbed = User::where('status', '!=', 'menganggur')
+        $this->graduates_absorbed = User::where('role', 'user')
+            ->where('status', '!=', 'menganggur')
             ->whereNotNull('status')
             ->count();
+        
+        // Tingkat Keterserapan: (User yang mengisi / Total User) * 100
+        // Atau (User Terserap / User yang mengisi) * 100. Sesuai instruksi: user yg mengisi / total user
+        $totalUsers = User::where('role', 'user')->count();
+        $filledUsers = User::where('role', 'user')->whereNotNull('status')->count();
+        $absorptionPercentage = $totalUsers > 0 ? round(($filledUsers / $totalUsers) * 100) : 0;
+
+        // Mitra Industri
+        $mitraIndustriTotal = \App\Models\Companie::count();
+
         // Jumlah loker tersedia
         $this->vacanciesTotal = Vacancie::where('deadline', '>=', now())
             ->count();
@@ -106,7 +117,7 @@ class Homepage extends Component
         $this-> statisticContent = [
             [
                 'title' => 'Mitra Industri',
-                'amount' => 260,
+                'amount' => $mitraIndustriTotal,
                 'suffix' => '+',
             ],
             [
@@ -116,7 +127,7 @@ class Homepage extends Component
             ],
             [
                 'title' => 'Tingkat Keterserapan',
-                'amount' => 85,
+                'amount' => $absorptionPercentage,
                 'suffix' => '%',
             ],
             [
