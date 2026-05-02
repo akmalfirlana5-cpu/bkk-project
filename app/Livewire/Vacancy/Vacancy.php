@@ -3,6 +3,7 @@
 namespace App\Livewire\Vacancy;
 
 use App\Models\InfoSetting;
+use App\Models\Major;
 use App\Models\Vacancie;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -45,15 +46,7 @@ class Vacancy extends Component
         $this->resetPage();
     }
 
-    public $kompetensiKeahlians = [
-        'Teknik Grafika',
-        'Teknik Logistik',
-        'Teknik Mekatronika',
-        'Desain Komunikasi Visual',
-        'Rekayasa Perangkat Lunak',
-        'Animasi',  
-        'Perhotelan',
-    ];
+    public $kompetensiKeahlians = [];
 
     public $tipePekerjaans = [
         'Full-time',
@@ -75,6 +68,9 @@ class Vacancy extends Component
                return $items->pluck('value', 'key');
             })
             ->toArray();
+
+        // Ambil daftar kompetensi keahlian dari database
+        $this->kompetensiKeahlians = Major::orderBy('name')->pluck('name')->toArray();
     }
 
     public function render()

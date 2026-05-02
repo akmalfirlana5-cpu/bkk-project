@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User\Partials;
 
+use App\Models\Major;
 use Livewire\Component;
 
 class Step1DataDiriForm extends Component
@@ -33,6 +34,8 @@ class Step1DataDiriForm extends Component
 
     public function render()
     {
-        return view('livewire.user.partials.step1-data-diri-form');
+        return view('livewire.user.partials.step1-data-diri-form', [
+            'majors' => Major::orderBy('name')->pluck('name')->toArray(),
+        ]);
     }
 }

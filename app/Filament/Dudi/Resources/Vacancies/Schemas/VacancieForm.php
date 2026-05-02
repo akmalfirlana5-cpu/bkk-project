@@ -33,7 +33,7 @@ class VacancieForm
                     ->numeric(),
                 \Filament\Forms\Components\CheckboxList::make('major')
                     ->label('jurusan')
-                    ->options(\App\Models\Vacancie::MAJORS),
+                    ->options(fn () => \App\Models\Vacancie::getMajorOptions()),
                 \Filament\Forms\Components\Select::make('employment_classification')
                     ->label('tipe pekerjaan')
                     ->options(\App\Models\Vacancie::EMPLOYMENT_TYPES),

@@ -94,7 +94,7 @@ class VacancieResource extends Resource
 
             CheckboxList::make('major')
                 ->label('jurusan')
-                ->options(Vacancie::MAJORS),
+                ->options(fn () => Vacancie::getMajorOptions()),
 
             Select::make('employment_classification')
                 ->label('tipe pekerjaan')

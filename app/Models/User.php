@@ -130,15 +130,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         return $this->hasMany(AdminPermission::class);
     }
 
-    public const MAJORS = [
-        'Animasi' => 'Animasi',
-        'Desain Komunikasi Visual' => 'Desain Komunikasi Visual',
-        'Logistik' => 'Logistik',
-        'Perhotelan' => 'Perhotelan',
-        'Teknik Grafika' => 'Teknik Grafika',
-        'Teknik Komputer dan Jaringan' => 'Teknik Komputer dan Jaringan',
-        'Rekayasa Perangkat Lunak' => 'Rekayasa Perangkat Lunak',
-    ];
+
 
     public const ROLES = [
         'super_admin' => 'Super Admin',

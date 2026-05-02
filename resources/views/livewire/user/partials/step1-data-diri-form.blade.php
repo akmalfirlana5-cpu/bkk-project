@@ -53,13 +53,9 @@
             <select wire:model="major"
                 class="w-full px-4 py-3 border border-bkkNeutral-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-white">
                 <option value="" selected hidden>Pilih jurusan</option>
-                <option value="Animasi">Animasi</option>
-                <option value="Desain Komunikasi Visual">Desain Komunikasi Visual</option>
-                <option value="Logistik">Logistik</option>
-                <option value="Perhotelan">Perhotelan</option>
-                <option value="Teknik Grafika">Teknik Grafika</option>
-                <option value="Teknik Komputer dan Jaringan">Teknik Komputer dan Jaringan</option>
-                <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                @foreach ($majors as $major)
+                    <option value="{{ $major }}">{{ $major }}</option>
+                @endforeach
             </select>
             @error('major') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>

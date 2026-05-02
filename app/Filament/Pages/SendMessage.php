@@ -74,7 +74,7 @@ class SendMessage extends Page implements HasForms
                         Select::make('major')
                             ->label('Filter Jurusan')
                             ->placeholder('Semua Jurusan')
-                            ->options(User::MAJORS)
+                            ->options(fn () => \App\Models\Major::orderBy('name')->pluck('name', 'name')->toArray())
                             ->live()
                             ->afterStateUpdated(fn (\Filament\Schemas\Components\Utilities\Set $set) => $set('selectedUsers', [])),
 

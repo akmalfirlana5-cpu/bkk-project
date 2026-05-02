@@ -101,16 +101,14 @@ class Vacancie extends Model
         'fulfilled' => 'Kuota Terpenuhi',
     ];
 
-    public const MAJORS = [
-        'Animasi' => 'Animasi',
-        'Desain Komunikasi Visual' => 'Desain Komunikasi Visual',
-        'Logistik' => 'Logistik',
-        'Perhotelan' => 'Perhotelan',
-        'Teknik Grafika' => 'Teknik Grafika',
-        'Teknik Komputer dan Jaringan' => 'Teknik Komputer dan Jaringan',
-        'Rekayasa Perangkat Lunak' => 'Rekayasa Perangkat Lunak',
-        'Mekatronika' => 'Mekatronika',
-    ];
+    /**
+     * Ambil daftar jurusan secara dinamis dari tabel majors.
+     * Format: ['nama' => 'nama'] untuk Filament options.
+     */
+    public static function getMajorOptions(): array
+    {
+        return \App\Models\Major::orderBy('name')->pluck('name', 'name')->toArray();
+    }
 
     public const EMPLOYMENT_TYPES = [
         'full-time' => 'Full Time',
