@@ -16,11 +16,13 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $logo = \App\Models\GlobalSetting::getValue('navbar', 'logo');
+        $logoUrl = $logo ? \Illuminate\Support\Facades\Storage::url($logo) : asset('assets/static/logo/logo-bkk.png');
+
         return $panel
             ->default()
             ->id('admin')
@@ -29,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->darkMode(true)
-            ->brandLogo(asset('assets/static/logo/logo-bkk.png'))
+            ->brandLogo($logoUrl)
             ->colors([
                 'primary' => Color::Indigo,
             ])

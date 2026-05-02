@@ -23,13 +23,16 @@ class DudiPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $logo = \App\Models\GlobalSetting::getValue('navbar', 'logo');
+        $logoUrl = $logo ? \Illuminate\Support\Facades\Storage::url($logo) : asset('assets/static/logo/logo-bkk.png');
+
         return $panel
             ->id('dudi')
             ->path('dudi')
             ->login()
             ->authGuard('dudi')
             ->favicon(asset('assets/static/logo/icon/logo-bkk-crop.webp'))
-            ->brandLogo(asset('assets/static/logo/logo-bkk.png'))
+            ->brandLogo($logoUrl)
             ->darkMode(true)
             ->viteTheme('resources/css/filament/dudi/theme.css')
             ->colors([

@@ -31,6 +31,8 @@ class User extends Authenticatable implements FilamentUser, HasName
         'address',
         'no_hp',
         'major',
+        'major_id',
+        'student_class_id',
         'CVuser',
         'domicile',
         'entry_year',
@@ -85,6 +87,16 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function unemployedFill()
     {
         return $this->hasOne(UnemployedFill::class, 'id_user');
+    }
+
+    public function majorRelation()
+    {
+        return $this->belongsTo(Major::class, 'major_id');
+    }
+
+    public function studentClass()
+    {
+        return $this->belongsTo(StudentClass::class, 'student_class_id');
     }
 
     public function canAccessPanel(Panel $panel): bool

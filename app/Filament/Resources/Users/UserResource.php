@@ -58,7 +58,22 @@ class UserResource extends Resource
             TextInput::make('full_name')->required()->label('Nama lengkap'),
             FileUpload::make('photo')->label('Foto Profil')->disk('public')->directory('user-photos'),
             TextInput::make('email')->email()->unique(ignoreRecord: true)->label('Email'),
-            Select::make('major')->options(User::MAJORS)->required()->label('Jurusan'),
+            Select::make('major_id')
+                ->relationship('majorRelation', 'name')
+                ->required()
+                ->label('Jurusan')
+                ->reactive()
+                ->afterStateUpdated(fn (callable $set) => $set('student_class_id', null)),
+            Select::make('student_class_id')
+                ->relationship('studentClass', 'name', function ($query, callable $get) {
+                    $majorId = $get('major_id');
+                    if ($majorId) {
+                        return $query->where('major_id', $majorId);
+                    }
+                    return $query;
+                })
+                ->label('Kelas')
+                ->placeholder(fn (callable $get) => $get('major_id') ? 'Pilih Kelas' : 'Pilih Jurusan terlebih dahulu'),
             Select::make('role')->options(User::ROLES)->label('Role'),
             TextArea::make('address')->label('Alamat'),
             TextInput::make('birth_place')->label('Tempat Lahir'),
@@ -76,7 +91,8 @@ class UserResource extends Resource
             Tables\Columns\ImageColumn::make('photo')->label('Foto Profil')->disk('public')->rounded(),
             Tables\Columns\TextColumn::make('nisn')->label('NISN')->searchable(),
             Tables\Columns\TextColumn::make('full_name')->label('Nama Lengkap')->searchable()->sortable(),
-            Tables\Columns\TextColumn::make('major')->label('Jurusan')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('majorRelation.name')->label('Jurusan')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('studentClass.name')->label('Kelas')->searchable()->sortable(),
             Tables\Columns\TextColumn::make('status')->label('Status')->sortable(),
         ])
             ->actions([
