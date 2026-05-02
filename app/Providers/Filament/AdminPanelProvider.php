@@ -20,8 +20,12 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $logo = \App\Models\GlobalSetting::getValue('navbar', 'logo');
-        $logoUrl = $logo ? \Illuminate\Support\Facades\Storage::url($logo) : asset('assets/static/logo/logo-bkk.png');
+        try {
+            $logo = \App\Models\GlobalSetting::getValue('navbar', 'logo');
+            $logoUrl = $logo ? \Illuminate\Support\Facades\Storage::url($logo) : asset('assets/static/logo/logo-bkk.png');
+        } catch (\Exception $e) {
+            $logoUrl = asset('assets/static/logo/logo-bkk.png');
+        }
 
         return $panel
             ->default()
